@@ -53,7 +53,7 @@ public class PsychoKittyGame extends ApplicationAdapter {
         font.setColor(Color.WHITE);
         font.getData().setScale(2);
 
-        // load the images for the droplet and the cat, 64x64 pixels each
+        // load the images for the droplet and the cat, 64x64 pixels eachs
         dropImage = new Texture(Gdx.files.internal("Characters/droplet.png"));
         catImage = new Texture(Gdx.files.internal("Characters/cat.png"));
 
