@@ -93,8 +93,6 @@ public class PsychoKittyGame extends ApplicationAdapter {
         cat.y = 20;
         cat.width = 64;
         cat.height = 64;
-
-
     }
 
     @Override
@@ -112,7 +110,6 @@ public class PsychoKittyGame extends ApplicationAdapter {
         raindrops.add(raindrop);
 
         lastDropTime = TimeUtils.nanoTime();
-
     }
 
     @Override
@@ -176,10 +173,11 @@ public class PsychoKittyGame extends ApplicationAdapter {
 
 
         //KEyboard interface
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+        /*if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             cat.x -= 200 * delta;
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
             cat.x += 200 * delta;
+            */
 
 
         //Katze am rand aufhalten
