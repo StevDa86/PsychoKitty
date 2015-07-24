@@ -14,12 +14,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 
 import java.util.Iterator;
 
@@ -38,6 +37,8 @@ public class PsychoKittyGame extends ApplicationAdapter {
 
     private Rectangle cat;
 
+    private float delta;
+
     private int score;
     private String scorename;
 
@@ -48,14 +49,15 @@ public class PsychoKittyGame extends ApplicationAdapter {
     public Array<Rectangle> raindrops;
     private long lastDropTime;
 
-    private int catSpeed = 2;
+    private float catSpeed;
+    Vector2 position, touchPos;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont();
         font.setColor(Color.WHITE);
-        font.getData().setScale(2);
+        font.getData().setScale(1);
 
         // load the images for the droplet and the cat, 64x64 pixels each
         dropImage = new Texture(Gdx.files.internal("Characters/droplet.png"));
@@ -65,9 +67,11 @@ public class PsychoKittyGame extends ApplicationAdapter {
         dropSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/cat.mp3"));
         rainMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/dream.mp3"));
 
+        touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - 64 / 2, 0);
 
         score = 0;
         scorename = "Score:" + 0;
+        catSpeed = 200f;
 
         rainMusic.setLooping(true);
         rainMusic.play();
@@ -83,7 +87,6 @@ public class PsychoKittyGame extends ApplicationAdapter {
         foreground = new Texture(Gdx.files.internal("Backgrounds/FGSC1.png"));
 
         raindrops = new Array<Rectangle>();
-
 
         cat = new Rectangle();
         cat.x = Gdx.graphics.getWidth() / 2 - 64 / 2;
@@ -134,19 +137,36 @@ public class PsychoKittyGame extends ApplicationAdapter {
 
     @Override
     public void render() {
+        delta = Gdx.graphics.getDeltaTime();
+
+
+        //setup user interaction
+        if (Gdx.input.isTouched()) {
+            touchPos.set(Gdx.input.getX() - 32, Gdx.input.getY());
+        }
+
+        if (touchPos.x > cat.x)
+            cat.x += catSpeed * delta;
+        else if (touchPos.x < cat.x)
+            cat.x -= catSpeed * delta;
+
+        if (Math.abs(touchPos.x - cat.x) < 5)
+            cat.x = touchPos.x;
+
+        //cat.x = touchPos.x - 100 / 2;
+
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         camera.update();
-
-
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
         //Zeichne hintergründe
+        srcy -= 1;
         batch.draw(background, 0, 0, 0, srcy, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
 
-        srcy -= 1;
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
         batch.draw(catImage, cat.x, cat.y, 100, 100);
         for (Rectangle raindrop : raindrops) {
@@ -154,38 +174,25 @@ public class PsychoKittyGame extends ApplicationAdapter {
         }
         batch.end();
 
-        //setup user interaction
-        if (Gdx.input.isTouched()) {
-            Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touchPos);
 
-            //cat.x = touchPos.x - 100 / 2;
-            if (touchPos.x > cat.x)
-                    cat.x += touchPos.x * catSpeed * Gdx.graphics.getDeltaTime();
-            else
-                cat.x -= 100 * Gdx.graphics.getDeltaTime();
-
-        }
-
-
-       //KEyboard interface
+        //KEyboard interface
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-            cat.x -= 200 * Gdx.graphics.getDeltaTime();
+            cat.x -= 200 * delta;
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-            cat.x += 200 * Gdx.graphics.getDeltaTime();
+            cat.x += 200 * delta;
 
 
         //Katze am rand aufhalten
-        if (cat.x > Gdx.graphics.getWidth()-100)
+
+        if (cat.x > Gdx.graphics.getWidth() - 100)
             cat.x = Gdx.graphics.getWidth() - 100;
         if (cat.x < 0)
             cat.x = 0;
 
+
         //Raindrops
 
         if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnRaindrop();
-
 
 
         Iterator<Rectangle> iter = raindrops.iterator();
@@ -202,8 +209,6 @@ public class PsychoKittyGame extends ApplicationAdapter {
 
         }
     }
-
-
 
 
 }
