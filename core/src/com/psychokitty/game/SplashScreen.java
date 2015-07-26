@@ -9,16 +9,26 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.TimeUtils;
 
 /**
  * Created by steven on 24.07.15.
  */
+
 public class SplashScreen implements Screen {
+
     private Texture texture = new Texture(Gdx.files.internal(Constants.splashImage));
     private Image splashImage = new Image(texture);
     private Stage stage = new Stage();
     private Sound splashSound = Gdx.audio.newSound(Gdx.files.internal(Constants.soundMiau));
+    ;
+    private float delay = 1;
+
+    final PsychoKittyGame game;
+
+    public SplashScreen(final PsychoKittyGame gam) {
+        game = gam;
+        splashSound.play();
+    }
 
     @Override
     public void render(float delta) {
@@ -32,21 +42,19 @@ public class SplashScreen implements Screen {
     public void resize(int width, int height) {
     }
 
+
     @Override
     public void show() {
-
         splashImage.setPosition(Gdx.graphics.getWidth() / 2 - splashImage.getWidth() / 2, Gdx.graphics.getHeight() / 2 - splashImage.getHeight() / 2);
         stage.addActor(splashImage);
-        splashSound.play();
 
-
-        splashImage.addAction(Actions.sequence(Actions.alpha(0)
-                , Actions.fadeIn(1.5f), Actions.delay(4), Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
-            }
-        })));
+        splashImage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(1.5f),
+                Actions.delay(3), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game));
+                    }
+                })));
     }
 
     @Override
@@ -66,6 +74,7 @@ public class SplashScreen implements Screen {
     public void dispose() {
         texture.dispose();
         stage.dispose();
+        splashSound.dispose();
     }
 
 }

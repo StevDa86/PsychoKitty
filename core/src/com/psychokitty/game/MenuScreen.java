@@ -13,9 +13,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  * Created by steven on 24.07.15.
  */
 public class MenuScreen implements Screen {
-    private Texture texture = new Texture(Gdx.files.internal(Constants.foregroundImage));
+    private Texture texture = new Texture(Gdx.files.internal(Constants.backgroundMenu));
     private Image splashImage = new Image(texture);
     private Stage stage = new Stage();
+
+    final PsychoKittyGame game;
+
+    public MenuScreen(final PsychoKittyGame gam) {
+        game = gam;
+    }
 
     @Override
     public void render(float delta) {
@@ -31,14 +37,14 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-        splashImage.setPosition(Gdx.graphics.getWidth()/2 - splashImage.getWidth()/2, Gdx.graphics.getHeight()/2 - splashImage.getHeight()/2);
+        splashImage.setPosition(Gdx.graphics.getWidth() / 2 - splashImage.getWidth() / 2, Gdx.graphics.getHeight() / 2 - splashImage.getHeight() / 2);
         stage.addActor(splashImage);
 
         splashImage.addAction(Actions.sequence(Actions.alpha(0)
-                , Actions.fadeIn(1.5f), Actions.delay(4), Actions.run(new Runnable() {
+                , Actions.fadeIn(1.0f), Actions.delay(2), Actions.run(new Runnable() {
             @Override
             public void run() {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game));
             }
         })));
     }
@@ -61,6 +67,4 @@ public class MenuScreen implements Screen {
         texture.dispose();
         stage.dispose();
     }
-
 }
-
