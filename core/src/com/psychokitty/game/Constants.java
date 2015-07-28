@@ -5,7 +5,7 @@ package com.psychokitty.game;
  */
 public class Constants {
     //Values
-    public static final float catspeed = 200f;
+    public static final float catspeed = 350f;
 
     //Images
     public static final String backgroundImage = "Backgrounds/SC1BG.jpg";
