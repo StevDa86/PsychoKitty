@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
 
 import java.util.Iterator;
 
@@ -59,9 +61,15 @@ public class GameScreen implements Screen {
     public GameScreen(final PsychoKittyGame gam) {
         this.game = gam;
         batch = new SpriteBatch();
-        font = new BitmapFont();
-        font.setColor(Color.WHITE);
-        font.getData().setScale(1);
+
+        //Text definition
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Light.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = (int)(22 * Gdx.graphics.getDensity());
+        parameter.borderColor = Color.BLACK;
+        parameter.borderWidth = 1;
+        font = generator.generateFont(parameter);
+        generator.dispose();
 
         // load the images for the droplet and the cat, 64x64 pixels each
         dropImage = new Texture(Gdx.files.internal(Constants.catnipImage));
@@ -95,7 +103,6 @@ public class GameScreen implements Screen {
         cat.y = 20;
         cat.width = 64;
         cat.height = 64;
-
     }
 
     @Override
@@ -115,7 +122,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
         deltaTime = Gdx.graphics.getDeltaTime();
 
         //setup user interaction
