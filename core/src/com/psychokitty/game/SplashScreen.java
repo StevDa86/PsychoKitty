@@ -3,12 +3,14 @@ package com.psychokitty.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.assets.AssetManager;
 
 /**
  * Created by steven on 24.07.15.
@@ -19,15 +21,14 @@ public class SplashScreen implements Screen {
     private Texture texture = new Texture(Gdx.files.internal(Constants.splashImage));
     private Image splashImage = new Image(texture);
     private Stage stage = new Stage();
-    private Sound splashSound = Gdx.audio.newSound(Gdx.files.internal(Constants.soundMiau));
-    ;
-    private float delay = 1;
+    private Music splashSound = Gdx.audio.newMusic(Gdx.files.internal(Constants.soundSplash));
+
 
     final PsychoKittyGame game;
 
     public SplashScreen(final PsychoKittyGame gam) {
         game = gam;
-        splashSound.play();
+
     }
 
     @Override
@@ -36,6 +37,7 @@ public class SplashScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+
     }
 
     @Override
@@ -45,6 +47,10 @@ public class SplashScreen implements Screen {
 
     @Override
     public void show() {
+        splashSound.setVolume(1);
+        splashSound.play();
+
+
         splashImage.setPosition(Gdx.graphics.getWidth() / 2 - splashImage.getWidth() / 2, Gdx.graphics.getHeight() / 2 - splashImage.getHeight() / 2);
         stage.addActor(splashImage);
 

@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
     private Texture dropImage;
     private Texture catImage;
 
-    private Sound dropSound;
+    private Sound catSound;
     private Music rainMusic;
 
     private OrthographicCamera camera;
@@ -75,11 +75,12 @@ public class GameScreen implements Screen {
         dropImage = new Texture(Gdx.files.internal(Constants.catnipImage));
         catImage = new Texture(Gdx.files.internal(Constants.playerImage));
 
+
         // load the drop sound effect and the rain background "music"
-        dropSound = Gdx.audio.newSound(Gdx.files.internal(Constants.soundMiau));
+        catSound = Gdx.audio.newSound(Gdx.files.internal(Constants.soundMiau));
         rainMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicDream));
 
-        touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - 64 / 2, 0);
+        touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - Constants.catsize/ 2, 0);
 
         score = 0;
         scorename = "Score:" + 0;
@@ -99,10 +100,10 @@ public class GameScreen implements Screen {
         raindrops = new Array<Rectangle>();
 
         cat = new Rectangle();
-        cat.x = Gdx.graphics.getWidth() / 2 - 64 / 2;
+        cat.x = Gdx.graphics.getWidth() / 2 - Constants.catsize / 2;
         cat.y = 20;
-        cat.width = 64;
-        cat.height = 64;
+        cat.width = Constants.catsize;
+        cat.height = Constants.catsize;
     }
 
     @Override
@@ -150,7 +151,7 @@ public class GameScreen implements Screen {
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
 
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
-        batch.draw(catImage, cat.x, cat.y, 100, 100);
+        batch.draw(catImage, cat.x, cat.y, Constants.catsize, Constants.catsize);
         for (Rectangle raindrop : raindrops) {
             batch.draw(dropImage, raindrop.x, raindrop.y, 80, 80);
         }
@@ -171,7 +172,7 @@ public class GameScreen implements Screen {
             raindrop.y -= 300 * Gdx.graphics.getDeltaTime();
             if (raindrop.y + 64 < 0) iter.remove();
             if (raindrop.overlaps(cat)) {
-                dropSound.play();
+                catSound.play();
                 score++;
                 scorename = "Score: " + score;
                 iter.remove();
@@ -202,7 +203,7 @@ public class GameScreen implements Screen {
         rainMusic.dispose();
         dropImage.dispose();
         catImage.dispose();
-        dropSound.dispose();
+        catSound.dispose();
         background.dispose();
         foreground.dispose();
     }

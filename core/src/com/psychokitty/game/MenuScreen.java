@@ -3,6 +3,7 @@ package com.psychokitty.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,6 +17,7 @@ public class MenuScreen implements Screen {
     private Texture texture = new Texture(Gdx.files.internal(Constants.backgroundMenu));
     private Image splashImage = new Image(texture);
     private Stage stage = new Stage();
+    private Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicDream));
 
     final PsychoKittyGame game;
 
@@ -37,6 +39,8 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
+        menuMusic.setVolume(1);
+        menuMusic.play();
         splashImage.setPosition(Gdx.graphics.getWidth() / 2 - splashImage.getWidth() / 2, Gdx.graphics.getHeight() / 2 - splashImage.getHeight() / 2);
         stage.addActor(splashImage);
 
@@ -66,5 +70,6 @@ public class MenuScreen implements Screen {
     public void dispose() {
         texture.dispose();
         stage.dispose();
+        menuMusic.dispose();
     }
 }
