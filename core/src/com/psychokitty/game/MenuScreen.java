@@ -17,7 +17,7 @@ public class MenuScreen implements Screen {
     private Texture texture = new Texture(Gdx.files.internal(Constants.backgroundMenu));
     private Image splashImage = new Image(texture);
     private Stage stage = new Stage();
-    private Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicDream));
+    private Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicMenu));
 
     final PsychoKittyGame game;
 
@@ -27,7 +27,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0, 255, 255, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
