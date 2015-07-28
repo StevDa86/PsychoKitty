@@ -18,6 +18,7 @@ public class Constants {
 
     //Sounds n Music
     public static final String soundMiau = "Sounds/cat.mp3";
-    public static final String musicDream = "Music/dream.mp3";
+    public static final String musicDream = "Music/MenuMusic.wav";
     public static final String soundSplash = "Sounds/splash.mp3";
+    public static final String musicMenu = "Music/MenuMusic.wav";
 }
