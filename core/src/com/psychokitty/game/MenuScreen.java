@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Scaling;
 
 /**
  * Created by steven on 24.07.15.
@@ -24,6 +25,9 @@ public class MenuScreen implements Screen {
 
     private Stage stage = new Stage();
     private Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicMenu));
+
+    private Texture texture = new Texture(Gdx.files.internal(Constants.backgroundMenu));
+    private Image menuBackground = new Image(texture);
 
     private Skin skin;
 
@@ -34,6 +38,8 @@ public class MenuScreen implements Screen {
         BitmapFont font = new BitmapFont();
         skin = new Skin();
         skin.add("default", font);
+
+
 
         //Create a texture
         Pixmap pixmap = new Pixmap((int)Gdx.graphics.getWidth()/4,(int)Gdx.graphics.getHeight()/10, Pixmap.Format.RGB888);
@@ -73,6 +79,11 @@ public class MenuScreen implements Screen {
         menuMusic.setVolume(1);
         menuMusic.setLooping(true);
         menuMusic.play();
+
+        menuBackground.setHeight(Gdx.graphics.getHeight());
+        menuBackground.setScaling(Scaling.fillY);
+        menuBackground.setPosition(Gdx.graphics.getWidth() / 2 - menuBackground.getWidth() / 2, Gdx.graphics.getHeight() / 2 - menuBackground.getHeight() / 2);
+        stage.addActor(menuBackground);
 
         Gdx.input.setInputProcessor(stage);// Make the stage consume events
 
