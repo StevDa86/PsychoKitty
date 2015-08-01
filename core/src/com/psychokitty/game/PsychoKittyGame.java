@@ -9,12 +9,18 @@ public class PsychoKittyGame extends Game {
     private SpriteBatch batch;
     private BitmapFont font;
 
+    private AdsController adsController;
+
+    public PsychoKittyGame(AdsController adsController) {
+        this.adsController = adsController;
+    }
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont();
-        this.setScreen(new SplashScreen(this));
+        adsController.showBannerAd();
+        this.setScreen(new SplashScreen(this, adsController));
     }
 
     public void render() {

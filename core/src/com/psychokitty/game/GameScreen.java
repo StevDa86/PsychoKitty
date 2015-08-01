@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-
 import java.util.Iterator;
 
 /**
@@ -55,6 +54,7 @@ public class GameScreen implements Screen {
     public Array<Rectangle> raindrops;
     private long lastDropTime;
 
+
     Vector2 touchPos;
 
 
@@ -65,7 +65,7 @@ public class GameScreen implements Screen {
         //Text definition
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Light.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = (int)(22 * Gdx.graphics.getDensity());
+        parameter.size = (int) (22 * Gdx.graphics.getDensity());
         parameter.borderColor = Color.BLACK;
         parameter.borderWidth = 1;
         font = generator.generateFont(parameter);
@@ -80,7 +80,7 @@ public class GameScreen implements Screen {
         catSound = Gdx.audio.newSound(Gdx.files.internal(Constants.soundMiau));
         rainMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicDream));
 
-        touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - Constants.catsize/ 2, 0);
+        touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - Constants.catsize / 2, 0);
 
         score = 0;
         scorename = "Score:" + 0;

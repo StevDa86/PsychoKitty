@@ -4,13 +4,11 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.assets.AssetManager;
 
 /**
  * Created by steven on 24.07.15.
@@ -23,12 +21,13 @@ public class SplashScreen implements Screen {
     private Stage stage = new Stage();
     private Music splashSound = Gdx.audio.newMusic(Gdx.files.internal(Constants.soundSplash));
 
-
     final PsychoKittyGame game;
+    public AdsController adcont;
 
-    public SplashScreen(final PsychoKittyGame gam) {
+
+    public SplashScreen(final PsychoKittyGame gam, AdsController adsController) {
         game = gam;
-
+        adcont = adsController;
     }
 
     @Override
@@ -37,7 +36,6 @@ public class SplashScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-
     }
 
     @Override
@@ -50,7 +48,6 @@ public class SplashScreen implements Screen {
         splashSound.setVolume(1);
         splashSound.play();
 
-
         splashImage.setPosition(Gdx.graphics.getWidth() / 2 - splashImage.getWidth() / 2, Gdx.graphics.getHeight() / 2 - splashImage.getHeight() / 2);
         stage.addActor(splashImage);
 
@@ -58,7 +55,7 @@ public class SplashScreen implements Screen {
                 Actions.delay(3), Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game));
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game,adcont ));
                     }
                 })));
     }

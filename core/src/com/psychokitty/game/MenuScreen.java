@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -29,23 +28,24 @@ public class MenuScreen implements Screen {
     private Texture texture = new Texture(Gdx.files.internal(Constants.backgroundMenu));
     private Image menuBackground = new Image(texture);
 
+
     private Skin skin;
 
     final PsychoKittyGame game;
+    public AdsController adcont;
 
-    private void createBasicSkin(){
+    private void createBasicSkin() {
         //Create a font
         BitmapFont font = new BitmapFont();
         skin = new Skin();
         skin.add("default", font);
 
 
-
         //Create a texture
-        Pixmap pixmap = new Pixmap((int)Gdx.graphics.getWidth()/4,(int)Gdx.graphics.getHeight()/10, Pixmap.Format.RGB888);
+        Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth() / 4, (int) Gdx.graphics.getHeight() / 10, Pixmap.Format.RGB888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
-        skin.add("background",new Texture(pixmap));
+        skin.add("background", new Texture(pixmap));
 
         //Create a button style
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -57,8 +57,9 @@ public class MenuScreen implements Screen {
 
     }
 
-    public MenuScreen(final PsychoKittyGame gam) {
+    public MenuScreen(final PsychoKittyGame gam, AdsController adsController) {
         game = gam;
+        adcont = adsController;
 
     }
 
@@ -92,9 +93,9 @@ public class MenuScreen implements Screen {
         TextButton newDonateButton = new TextButton("Donate Paypal", skin);
         TextButton newExitButton = new TextButton("Exit", skin);
 
-        newGameButton.setPosition(Gdx.graphics.getWidth()/2 - Gdx.graphics.getWidth()/8 , Gdx.graphics.getHeight()/2 + 100);
-        newDonateButton.setPosition(Gdx.graphics.getWidth()/2 - Gdx.graphics.getWidth()/8 , Gdx.graphics.getHeight()/2 );
-        newExitButton.setPosition(Gdx.graphics.getWidth()/2 - Gdx.graphics.getWidth()/8 , Gdx.graphics.getHeight()/2 - 100);
+        newGameButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2 + 100);
+        newDonateButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2);
+        newExitButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2 - 100);
 
         stage.addActor(newGameButton);
         stage.addActor(newDonateButton);
@@ -102,8 +103,9 @@ public class MenuScreen implements Screen {
 
         newGameButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                adcont.hideBannerAd();
                 // Do something interesting here...
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game));
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game));
             }
         });
         newDonateButton.addListener(new ClickListener() {
