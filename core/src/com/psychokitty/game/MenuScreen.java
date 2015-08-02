@@ -42,16 +42,16 @@ public class MenuScreen implements Screen {
 
 
         //Create a texture
-        Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth() / 4, (int) Gdx.graphics.getHeight() / 10, Pixmap.Format.RGB888);
+        Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth() / 2, (int) Gdx.graphics.getHeight() / 10, Pixmap.Format.RGB888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
-        skin.add("background", new Texture(pixmap));
+        skin.add("Buttons", new Texture(pixmap));
 
         //Create a button style
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.newDrawable("background", Color.GRAY);
-        textButtonStyle.down = skin.newDrawable("background", Color.DARK_GRAY);
-        textButtonStyle.over = skin.newDrawable("background", Color.LIGHT_GRAY);
+        textButtonStyle.up = skin.newDrawable("Buttons", Color.GRAY);
+        textButtonStyle.down = skin.newDrawable("Buttons", Color.DARK_GRAY);
+        textButtonStyle.over = skin.newDrawable("Buttons", Color.LIGHT_GRAY);
         textButtonStyle.font = skin.getFont("default");
         skin.add("default", textButtonStyle);
 
@@ -93,9 +93,9 @@ public class MenuScreen implements Screen {
         TextButton newDonateButton = new TextButton("Donate Paypal", skin);
         TextButton newExitButton = new TextButton("Exit", skin);
 
-        newGameButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2 + 100);
-        newDonateButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2);
-        newExitButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2 - 100);
+        newGameButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 100);
+        newDonateButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
+        newExitButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 100);
 
         stage.addActor(newGameButton);
         stage.addActor(newDonateButton);
@@ -105,7 +105,7 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 adcont.hideBannerAd();
                 // Do something interesting here...
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game));
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game, adcont));
             }
         });
         newDonateButton.addListener(new ClickListener() {

@@ -1,6 +1,9 @@
 package com.psychokitty.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -19,14 +22,16 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.awt.event.KeyEvent;
 import java.util.Iterator;
 
 /**
  * Created by steven on 25.07.15.
  */
-public class GameScreen implements Screen {
+public class GameScreen implements Screen, InputProcessor {
 
     final PsychoKittyGame game;
+    public AdsController adcont;
 
     private SpriteBatch batch;
     private BitmapFont font;
@@ -58,9 +63,12 @@ public class GameScreen implements Screen {
     Vector2 touchPos;
 
 
-    public GameScreen(final PsychoKittyGame gam) {
+    public GameScreen(final PsychoKittyGame gam, AdsController adsController) {
         this.game = gam;
+        adcont = adsController;
         batch = new SpriteBatch();
+
+        Gdx.input.setInputProcessor(this);
 
         //Text definition
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Light.ttf"));
@@ -124,6 +132,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         deltaTime = Gdx.graphics.getDeltaTime();
+
 
         //setup user interaction
         if (Gdx.input.isTouched()) {
@@ -207,4 +216,52 @@ public class GameScreen implements Screen {
         background.dispose();
         foreground.dispose();
     }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.BACK){
+            // Do your optional back button handling (show pause menu?)
+            dispose();
+            adcont.showBannerAd();
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
+    }
+
+
 }
