@@ -55,7 +55,7 @@ public class SplashScreen implements Screen {
                 Actions.delay(3), Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game,adcont ));
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game,adcont));
                     }
                 })));
     }

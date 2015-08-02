@@ -1,5 +1,8 @@
 package com.psychokitty.game.android;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +67,15 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 		});
 	}
 
-	@Override
+    @Override
+    public boolean isWifiConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        return (ni != null && ni.isConnected());
+    }
+
+    @Override
 	public void hideBannerAd() {
 		runOnUiThread(new Runnable() {
 			@Override

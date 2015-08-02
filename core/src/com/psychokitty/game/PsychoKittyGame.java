@@ -13,7 +13,11 @@ public class PsychoKittyGame extends Game {
     private AdsController adsController;
 
     public PsychoKittyGame(AdsController adsController) {
-        this.adsController = adsController;
+        if (adsController != null) {
+            this.adsController = adsController;
+        } else {
+            this.adsController = new DummyAdsController();
+        }
     }
 
     @Override
@@ -21,7 +25,9 @@ public class PsychoKittyGame extends Game {
         Gdx.input.setCatchBackKey(true);
         batch = new SpriteBatch();
         font = new BitmapFont();
-        adsController.showBannerAd();
+        //Werbung nur bei aktiven WIFI
+        if(adsController.isWifiConnected()) {adsController.showBannerAd();}
+
         this.setScreen(new SplashScreen(this, adsController));
     }
 
