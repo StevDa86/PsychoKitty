@@ -1,4 +1,4 @@
-package com.psychokitty.game;
+package com.psychokitty.game.AdMob;
 
 /**
  * Created by steven on 01.08.15.

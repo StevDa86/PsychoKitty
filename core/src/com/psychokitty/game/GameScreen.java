@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -17,12 +18,14 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.awt.event.KeyEvent;
 import java.util.Iterator;
 
 /**
@@ -31,7 +34,7 @@ import java.util.Iterator;
 public class GameScreen implements Screen, InputProcessor {
 
     final PsychoKittyGame game;
-    public AdsController adcont;
+    public com.psychokitty.game.AdMob.AdsController adcont;
 
     private SpriteBatch batch;
     private BitmapFont font;
@@ -44,6 +47,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     private OrthographicCamera camera;
     private Viewport viewport;
+    private Highscore highscore;
 
     private Rectangle cat;
 
@@ -52,21 +56,22 @@ public class GameScreen implements Screen, InputProcessor {
     private int score;
     private String scorename;
 
+
     private Texture background;
     private Texture foreground;
-    private int srcy;
+    private int backgroundSpeed;
 
     public Array<Rectangle> raindrops;
     private long lastDropTime;
 
-
     Vector2 touchPos;
 
-
-    public GameScreen(final PsychoKittyGame gam, AdsController adsController) {
+    public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
         adcont = adsController;
         batch = new SpriteBatch();
+        highscore = new Highscore();
+        highscore.config();
 
         Gdx.input.setInputProcessor(this);
 
@@ -82,7 +87,6 @@ public class GameScreen implements Screen, InputProcessor {
         // load the images for the droplet and the cat, 64x64 pixels each
         dropImage = new Texture(Gdx.files.internal(Constants.catnipImage));
         catImage = new Texture(Gdx.files.internal(Constants.playerImage));
-
 
         // load the drop sound effect and the rain background "music"
         catSound = Gdx.audio.newSound(Gdx.files.internal(Constants.soundMiau));
@@ -112,6 +116,7 @@ public class GameScreen implements Screen, InputProcessor {
         cat.y = 20;
         cat.width = Constants.catsize;
         cat.height = Constants.catsize;
+
     }
 
     @Override
@@ -132,7 +137,6 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void render(float delta) {
         deltaTime = Gdx.graphics.getDeltaTime();
-
 
         //setup user interaction
         if (Gdx.input.isTouched()) {
@@ -155,13 +159,15 @@ public class GameScreen implements Screen, InputProcessor {
         batch.begin();
 
         //Zeichne hintergründe
-        srcy -= 1;
-        batch.draw(background, 0, 0, 0, srcy, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        backgroundSpeed -= 1;
+        batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
 
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
         batch.draw(catImage, cat.x, cat.y, Constants.catsize, Constants.catsize);
+
         for (Rectangle raindrop : raindrops) {
+
             batch.draw(dropImage, raindrop.x, raindrop.y, 80, 80);
         }
         batch.end();
@@ -172,7 +178,7 @@ public class GameScreen implements Screen, InputProcessor {
         if (cat.x < 0)
             cat.x = 0;
 
-        //Raindrops
+        //Drop icons
         if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnRaindrop();
 
         Iterator<Rectangle> iter = raindrops.iterator();
@@ -219,10 +225,21 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.BACK){
-            // Do your optional back button handling (show pause menu?)
+        if(keycode == Input.Keys.BACK)
+        {
             dispose();
-            adcont.showBannerAd();
+            highscore.setHighScore(score);
+
+            if(adcont.isWifiConnected()) {adcont.showBannerAd();}
+            //adcont.showBannerAd();
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
+        }
+        else if (keycode == Input.Keys.ESCAPE){
+            dispose();
+            highscore.setHighScore(score);
+
+            if(adcont.isWifiConnected()) {adcont.showBannerAd();}
+            //adcont.showBannerAd();
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
         }
         return false;

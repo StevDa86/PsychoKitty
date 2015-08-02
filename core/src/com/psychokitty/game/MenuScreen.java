@@ -11,11 +11,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.StringBuilder;
 
 /**
  * Created by steven on 24.07.15.
@@ -28,11 +30,12 @@ public class MenuScreen implements Screen {
     private Texture texture = new Texture(Gdx.files.internal(Constants.backgroundMenu));
     private Image menuBackground = new Image(texture);
 
-
     private Skin skin;
 
+    private Highscore highscore;
+
     final PsychoKittyGame game;
-    public AdsController adcont;
+    public com.psychokitty.game.AdMob.AdsController adcont;
 
     private void createBasicSkin() {
         //Create a font
@@ -40,6 +43,8 @@ public class MenuScreen implements Screen {
         skin = new Skin();
         skin.add("default", font);
 
+        highscore = new Highscore();
+        highscore.config();
 
         //Create a texture
         Pixmap pixmap = new Pixmap((int) Gdx.graphics.getWidth() / 2, (int) Gdx.graphics.getHeight() / 10, Pixmap.Format.RGB888);
@@ -57,7 +62,7 @@ public class MenuScreen implements Screen {
 
     }
 
-    public MenuScreen(final PsychoKittyGame gam, AdsController adsController) {
+    public MenuScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         game = gam;
         adcont = adsController;
 
@@ -90,15 +95,15 @@ public class MenuScreen implements Screen {
 
         createBasicSkin();
         TextButton newGameButton = new TextButton("New game", skin); // Use the initialized skin
-        TextButton newDonateButton = new TextButton("Donate Paypal", skin);
+        TextButton newHighscoreButton = new TextButton("Show Highscore", skin);
         TextButton newExitButton = new TextButton("Exit", skin);
 
         newGameButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 100);
-        newDonateButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
+        newHighscoreButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
         newExitButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 100);
 
         stage.addActor(newGameButton);
-        stage.addActor(newDonateButton);
+        stage.addActor(newHighscoreButton);
         stage.addActor(newExitButton);
 
         newGameButton.addListener(new ClickListener() {
@@ -108,10 +113,14 @@ public class MenuScreen implements Screen {
                         ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game, adcont));
             }
         });
-        newDonateButton.addListener(new ClickListener() {
+        newHighscoreButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 // Do something interesting here...
-                Gdx.net.openURI("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=steven%2edanz%40t%2donline%2ede&lc=DE&item_name=Psycho%20Kitty&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest");
+                Highscore.getHighScore();
+
+                Gdx.app.log("score:",Integer.toString(Highscore.getHighScore()) );
+
+                //Gdx.net.openURI("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=steven%2edanz%40t%2donline%2ede&lc=DE&item_name=Psycho%20Kitty&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest");
             }
         });
         newExitButton.addListener(new ClickListener() {

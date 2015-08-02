@@ -10,13 +10,13 @@ public class PsychoKittyGame extends Game {
     private SpriteBatch batch;
     private BitmapFont font;
 
-    private AdsController adsController;
+    private com.psychokitty.game.AdMob.AdsController adsController;
 
-    public PsychoKittyGame(AdsController adsController) {
+    public PsychoKittyGame(com.psychokitty.game.AdMob.AdsController adsController) {
         if (adsController != null) {
             this.adsController = adsController;
         } else {
-            this.adsController = new DummyAdsController();
+            this.adsController = new com.psychokitty.game.AdMob.DummyAdsController();
         }
     }
 
