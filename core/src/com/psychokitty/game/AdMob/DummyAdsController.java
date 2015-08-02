@@ -1,9 +1,9 @@
-package com.psychokitty.game;
+package com.psychokitty.game.AdMob;
 
 /**
  * Created by Steven on 02.08.2015.
  */
-public class DummyAdsController implements AdsController{
+public class DummyAdsController implements com.psychokitty.game.AdMob.AdsController {
 
 
     @Override

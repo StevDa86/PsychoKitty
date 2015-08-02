@@ -22,10 +22,10 @@ public class SplashScreen implements Screen {
     private Music splashSound = Gdx.audio.newMusic(Gdx.files.internal(Constants.soundSplash));
 
     final PsychoKittyGame game;
-    public AdsController adcont;
+    public com.psychokitty.game.AdMob.AdsController adcont;
 
 
-    public SplashScreen(final PsychoKittyGame gam, AdsController adsController) {
+    public SplashScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         game = gam;
         adcont = adsController;
     }

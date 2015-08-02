@@ -15,7 +15,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
-import com.psychokitty.game.AdsController;
+import com.psychokitty.game.AdMob.AdsController;
 import com.psychokitty.game.PsychoKittyGame;
 
 public class AndroidLauncher extends AndroidApplication implements AdsController{
