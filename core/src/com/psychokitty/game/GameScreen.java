@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -18,14 +17,14 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -228,7 +227,15 @@ public class GameScreen implements Screen, InputProcessor {
         if(keycode == Input.Keys.BACK)
         {
             dispose();
-            highscore.setHighScore(score);
+
+            //highscore setzen und datum setzen
+            if(score > Highscore.getHighScore()){
+                highscore.setHighScore(score);
+                Calendar currentDate = Calendar.getInstance(); //Get the current date
+                SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
+                String dateNow = formatter.format(currentDate.getTime());
+                highscore.setCurrentDate(dateNow);
+            }
 
             if(adcont.isWifiConnected()) {adcont.showBannerAd();}
             //adcont.showBannerAd();
@@ -236,7 +243,16 @@ public class GameScreen implements Screen, InputProcessor {
         }
         else if (keycode == Input.Keys.ESCAPE){
             dispose();
-            highscore.setHighScore(score);
+
+            //highscore setzen und datum setzen
+            if(score > Highscore.getHighScore()){
+                highscore.setHighScore(score);
+                Calendar currentDate = Calendar.getInstance(); //Get the current date
+                SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
+                String dateNow = formatter.format(currentDate.getTime());
+                highscore.setCurrentDate(dateNow);
+            }
+
 
             if(adcont.isWifiConnected()) {adcont.showBannerAd();}
             //adcont.showBannerAd();

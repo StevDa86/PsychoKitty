@@ -2,7 +2,6 @@ package com.psychokitty.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.Screen;
 
 /**
  * Created by steven on 02.08.15.
@@ -17,6 +16,10 @@ public class Highscore{
         if (!prefs.contains("highScore")) {
             prefs.putInteger("highScore", 0);
         }
+
+        if (!prefs.contains("Date")) {
+            prefs.putString("Date", "Date");
+        }
     }
 
     public static void setHighScore(int val) {
@@ -27,5 +30,15 @@ public class Highscore{
 
     public static int getHighScore() {
         return prefs.getInteger("highScore");
+    }
+
+    public static void setCurrentDate(String val) {
+
+        prefs.putString("Date", val);
+        prefs.flush();
+    }
+
+    public static String getCurrentDate() {
+        return prefs.getString("Date");
     }
 }
