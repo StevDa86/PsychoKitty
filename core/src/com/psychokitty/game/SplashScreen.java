@@ -51,7 +51,7 @@ public class SplashScreen implements Screen {
         splashImage.setPosition(Gdx.graphics.getWidth() / 2 - splashImage.getWidth() / 2, Gdx.graphics.getHeight() / 2 - splashImage.getHeight() / 2);
         stage.addActor(splashImage);
 
-        splashImage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(1.5f),
+        splashImage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(2.0f),
                 Actions.delay(3), Actions.run(new Runnable() {
                     @Override
                     public void run() {

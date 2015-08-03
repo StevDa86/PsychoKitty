@@ -118,7 +118,9 @@ public class MenuScreen implements Screen {
                 // Do something interesting here...
                 Highscore.getHighScore();
 
-                Gdx.app.log("score:",Integer.toString(Highscore.getHighScore()) );
+                Gdx.app.log("score", Integer.toString(Highscore.getHighScore()));
+                Gdx.app.log("Date",highscore.getCurrentDate() );
+
 
                 //Gdx.net.openURI("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=steven%2edanz%40t%2donline%2ede&lc=DE&item_name=Psycho%20Kitty&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest");
             }
