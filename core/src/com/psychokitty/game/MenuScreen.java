@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
@@ -31,8 +32,10 @@ public class MenuScreen implements Screen {
     private Image menuBackground = new Image(texture);
 
     private Skin skin;
+    //private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
 
     private Highscore highscore;
+    //private ScorePopup popup = new ScorePopup("Confirm Exit",skin2);
 
     final PsychoKittyGame game;
     public com.psychokitty.game.AdMob.AdsController adcont;
@@ -82,6 +85,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
+
         menuMusic.setVolume(1);
         menuMusic.setLooping(true);
         menuMusic.play();
@@ -102,6 +106,7 @@ public class MenuScreen implements Screen {
         newHighscoreButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
         newExitButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 100);
 
+
         stage.addActor(newGameButton);
         stage.addActor(newHighscoreButton);
         stage.addActor(newExitButton);
@@ -116,11 +121,8 @@ public class MenuScreen implements Screen {
         newHighscoreButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 // Do something interesting here...
-                Highscore.getHighScore();
 
-                Gdx.app.log("score", Integer.toString(Highscore.getHighScore()));
-                Gdx.app.log("Date",highscore.getCurrentDate() );
-
+                //popup.show(stage);
 
                 //Gdx.net.openURI("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=steven%2edanz%40t%2donline%2ede&lc=DE&item_name=Psycho%20Kitty&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest");
             }
