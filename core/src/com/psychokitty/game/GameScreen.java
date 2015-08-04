@@ -230,11 +230,11 @@ public class GameScreen implements Screen, InputProcessor {
 
             //highscore setzen und datum setzen
             if(score > Highscore.getHighScore()){
-                highscore.setHighScore(score);
+                Highscore.setHighScore(score);
                 Calendar currentDate = Calendar.getInstance(); //Get the current date
                 SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
                 String dateNow = formatter.format(currentDate.getTime());
-                highscore.setCurrentDate(dateNow);
+                Highscore.setCurrentDate(dateNow);
             }
 
             if(adcont.isWifiConnected()) {adcont.showBannerAd();}
@@ -246,11 +246,11 @@ public class GameScreen implements Screen, InputProcessor {
 
             //highscore setzen und datum setzen
             if(score > Highscore.getHighScore()){
-                highscore.setHighScore(score);
+                Highscore.setHighScore(score);
                 Calendar currentDate = Calendar.getInstance(); //Get the current date
                 SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
                 String dateNow = formatter.format(currentDate.getTime());
-                highscore.setCurrentDate(dateNow);
+                Highscore.setCurrentDate(dateNow);
             }
 
             if(adcont.isWifiConnected()) {adcont.showBannerAd();}

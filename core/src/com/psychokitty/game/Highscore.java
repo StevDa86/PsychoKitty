@@ -18,8 +18,14 @@ public class Highscore{
         }
 
         if (!prefs.contains("Date")) {
-            prefs.putString("Date", "Date");
+            prefs.putString("Date", "no Score recorded");
         }
+    }
+
+    public static void resetScore(){
+        prefs.putInteger("highScore", 0);
+        prefs.putString("Date", "no Score recorded");
+        prefs.flush();
     }
 
     public static void setHighScore(int val) {
