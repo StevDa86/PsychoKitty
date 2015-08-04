@@ -21,4 +21,7 @@ public class Constants {
     public static final String musicDream = "Music/MenuMusic.wav";
     public static final String soundSplash = "Sounds/splash.mp3";
     public static final String musicMenu = "Music/MenuMusic.wav";
+
+    //UI
+    public static final String defaultJson = "ui/defaultskin.json";
 }

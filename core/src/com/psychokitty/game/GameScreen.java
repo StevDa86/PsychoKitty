@@ -253,7 +253,6 @@ public class GameScreen implements Screen, InputProcessor {
                 highscore.setCurrentDate(dateNow);
             }
 
-
             if(adcont.isWifiConnected()) {adcont.showBannerAd();}
             //adcont.showBannerAd();
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
