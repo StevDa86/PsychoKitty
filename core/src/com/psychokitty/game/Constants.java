@@ -1,5 +1,8 @@
 package com.psychokitty.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 /**
  * Created by steven on 24.07.15.
  */
@@ -24,4 +27,6 @@ public class Constants {
 
     //UI
     public static final String defaultJson = "ui/defaultskin.json";
+
+
 }
