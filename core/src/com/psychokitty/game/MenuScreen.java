@@ -22,20 +22,20 @@ import com.badlogic.gdx.utils.Scaling;
  */
 public class MenuScreen implements Screen {
 
-    private Stage stage = new Stage();
-    private Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicMenu));
-
-    private Texture texture = new Texture(Gdx.files.internal(Constants.backgroundMenu));
-    private Image menuBackground = new Image(texture);
-
-    private Skin skin;
-    private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
-
-    private Highscore highscore;
-    private ScorePopup popup = new ScorePopup("Score Menu",skin2);
-
     final PsychoKittyGame game;
     public com.psychokitty.game.AdMob.AdsController adcont;
+    private Stage stage = new Stage();
+    private Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicMenu));
+    private Texture texture = new Texture(Gdx.files.internal(Constants.backgroundMenu));
+    private Image menuBackground = new Image(texture);
+    private Skin skin;
+    private Highscore highscore;
+
+    public MenuScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
+        game = gam;
+        adcont = adsController;
+
+    }
 
     private void createBasicSkin() {
         //Create a font
@@ -62,12 +62,6 @@ public class MenuScreen implements Screen {
 
     }
 
-    public MenuScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
-        game = gam;
-        adcont = adsController;
-
-    }
-
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 255, 255, 1);
@@ -82,7 +76,6 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-
         menuMusic.setVolume(1);
         menuMusic.setLooping(true);
         menuMusic.play();
@@ -111,18 +104,16 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 adcont.hideBannerAd();
                 // Do something interesting here...
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game, adcont));
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game, adcont));
             }
         });
         newHighscoreButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 // Do something interesting here...
 
-                popup.show(stage);
 
                 //Gdx.app.log("score", Integer.toString(Highscore.getHighScore()));
                 //Gdx.app.log("Date",highscore.getCurrentDate() );
-                //Gdx.net.openURI("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=steven%2edanz%40t%2donline%2ede&lc=DE&item_name=Psycho%20Kitty&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest");
             }
         });
         newExitButton.addListener(new ClickListener() {
