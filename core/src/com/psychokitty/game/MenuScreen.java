@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 
+
 /**
  * Created by steven on 24.07.15.
  */
@@ -26,13 +28,15 @@ public class MenuScreen implements Screen {
     final PsychoKittyGame game;
     public com.psychokitty.game.AdMob.AdsController adcont;
     private Stage stage = new Stage();
-    private Stage scoreStage = new Stage();
     private Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicMenu));
     private Texture texture = new Texture(Gdx.files.internal(Constants.backgroundMenu));
     private Image menuBackground = new Image(texture);
     private Skin skin;
-    private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Highscore highscore;
+    private Group scoreItems;
+    private Group menuItems;
+
+    private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
 
     public MenuScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         game = gam;
@@ -69,8 +73,6 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-        scoreStage.act();
-        scoreStage.draw();
     }
 
     @Override
@@ -79,6 +81,9 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
+        menuItems = new Group();
+        scoreItems = new Group();
+
         menuMusic.setVolume(1);
         menuMusic.setLooping(true);
         menuMusic.play();
@@ -91,65 +96,68 @@ public class MenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);// Make the stage consume events
 
         createBasicSkin();
-        TextButton newGameButton = new TextButton("New game", skin); // Use the initialized skin
-        TextButton newHighscoreButton = new TextButton("Show Highscore", skin);
-        TextButton newExitButton = new TextButton("Exit", skin);
+        final TextButton newGameButton = new TextButton("New game", skin); // Use the initialized skin
+        final TextButton newHighscoreButton = new TextButton("Show Highscore", skin);
+        final TextButton newExitButton = new TextButton("Exit", skin);
 
         final TextButton resetScoreButton = new TextButton("Reset Highscore", skin);
         final TextButton backButton = new TextButton("Back", skin);
-        final Label scoreLabel = new Label("Score " + Integer.toString(Highscore.getHighScore()), skin2);
-
-        scoreLabel.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 100);
-        resetScoreButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
-        backButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 200);
+        final Label scoreLabel = new Label("Score: " + Integer.toString(Highscore.getHighScore()), skin2);
+        final Label scoreDate = new Label("Score Date: " + Highscore.getCurrentDate(), skin2);
+        final Label Titel = new Label("Highscore", skin2);
 
         newGameButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 100);
         newHighscoreButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
         newExitButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 100);
 
-        stage.addActor(newGameButton);
-        stage.addActor(newHighscoreButton);
-        stage.addActor(newExitButton);
+        Titel.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 200);
+        scoreDate.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 150);
+        scoreLabel.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 100);
+        resetScoreButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
+        backButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 100);
+
+        //make a group for score Items
+        scoreItems.addActor(Titel);
+        scoreItems.addActor(scoreDate);
+        scoreItems.addActor(scoreLabel);
+        scoreItems.addActor(resetScoreButton);
+        scoreItems.addActor(backButton);
+
+        //Make a group for menu items
+        menuItems.addActor(newExitButton);
+        menuItems.addActor(newHighscoreButton);
+        menuItems.addActor(newGameButton);
+
+        stage.addActor(menuItems);
 
         newGameButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 adcont.hideBannerAd();
-                // Do something interesting here...
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game, adcont));
             }
         });
         newHighscoreButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                scoreStage.getViewport().apply();
-                scoreLabel.setText("Score: " + Integer.toString(Highscore.getHighScore()));
-                scoreStage.act();
-                scoreStage.draw();
-                scoreStage.addActor(resetScoreButton);
-                scoreStage.addActor(scoreLabel);
-                scoreStage.addActor(backButton);
-                Gdx.input.setInputProcessor(scoreStage);
-
-                resetScoreButton.addListener(new ClickListener() {
-                    public void clicked(InputEvent event, float x, float y) {
-                        Highscore.resetScore();
-                        scoreLabel.setText("Score: " + Integer.toString(Highscore.getHighScore()));
-                    }
-                });
-                backButton.addListener(new ClickListener() {
-                    public void clicked(InputEvent event, float x, float y) {
-                        scoreStage.clear();
-                        Gdx.input.setInputProcessor(stage);
-                    }
-                });
-                // Do something interesting here...
-
-                //Gdx.app.log("Date", highscore.getCurrentDate());
+                menuItems.remove();
+                stage.addActor(scoreItems);
             }
         });
         newExitButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                // Do something interesting here...
                 Gdx.app.exit();
+            }
+        });
+        backButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                stage.addActor(menuItems);
+                scoreItems.remove();
+            }
+        });
+        resetScoreButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                Highscore.resetScore();
+                scoreLabel.setText("Score: " + Integer.toString(Highscore.getHighScore()));
+                scoreDate.setText("Score Date: " + Highscore.getCurrentDate());
             }
         });
     }

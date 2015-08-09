@@ -54,8 +54,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     private int score;
     private String scorename;
-
-
+    
     private Texture background;
     private Texture foreground;
     private int backgroundSpeed;
