@@ -24,7 +24,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -34,35 +33,25 @@ public class GameScreen implements Screen, InputProcessor {
 
     final PsychoKittyGame game;
     public com.psychokitty.game.AdMob.AdsController adcont;
-
+    public Array<Rectangle> raindrops;
+    Vector2 touchPos;
     private SpriteBatch batch;
     private BitmapFont font;
-
     private Texture dropImage;
     private Texture catImage;
-
     private Sound catSound;
     private Music rainMusic;
-
     private OrthographicCamera camera;
     private Viewport viewport;
     private Highscore highscore;
-
     private Rectangle cat;
-
     private float deltaTime;
-
     private int score;
     private String scorename;
-    
     private Texture background;
     private Texture foreground;
     private int backgroundSpeed;
-
-    public Array<Rectangle> raindrops;
     private long lastDropTime;
-
-    Vector2 touchPos;
 
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
@@ -223,36 +212,38 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.BACK)
-        {
+        if (keycode == Input.Keys.BACK) {
             dispose();
 
             //highscore setzen und datum setzen
-            if(score > Highscore.getHighScore()){
+            if (score > Highscore.getHighScore()) {
                 Highscore.setHighScore(score);
                 Calendar currentDate = Calendar.getInstance(); //Get the current date
-                SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
                 String dateNow = formatter.format(currentDate.getTime());
                 Highscore.setCurrentDate(dateNow);
             }
 
-            if(adcont.isWifiConnected()) {adcont.showBannerAd();}
+            if (adcont.isWifiConnected()) {
+                adcont.showBannerAd();
+            }
             //adcont.showBannerAd();
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
-        }
-        else if (keycode == Input.Keys.ESCAPE){
+        } else if (keycode == Input.Keys.ESCAPE) {
             dispose();
 
             //highscore setzen und datum setzen
-            if(score > Highscore.getHighScore()){
+            if (score > Highscore.getHighScore()) {
                 Highscore.setHighScore(score);
                 Calendar currentDate = Calendar.getInstance(); //Get the current date
-                SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
                 String dateNow = formatter.format(currentDate.getTime());
                 Highscore.setCurrentDate(dateNow);
             }
 
-            if(adcont.isWifiConnected()) {adcont.showBannerAd();}
+            if (adcont.isWifiConnected()) {
+                adcont.showBannerAd();
+            }
             //adcont.showBannerAd();
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
         }
