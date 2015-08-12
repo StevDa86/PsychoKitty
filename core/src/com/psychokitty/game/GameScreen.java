@@ -33,7 +33,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     final PsychoKittyGame game;
     public com.psychokitty.game.AdMob.AdsController adcont;
-    public Array<Rectangle> raindrops;
+    public Array<Rectangle> catfood;
     Vector2 touchPos;
     private SpriteBatch batch;
     private BitmapFont font;
@@ -96,7 +96,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         foreground = new Texture(Gdx.files.internal(Constants.foregroundImage));
 
-        raindrops = new Array<Rectangle>();
+        catfood = new Array<Rectangle>();
 
         cat = new Rectangle();
         cat.x = Gdx.graphics.getWidth() / 2 - Constants.catsize / 2;
@@ -111,13 +111,13 @@ public class GameScreen implements Screen, InputProcessor {
         viewport.update(width, height);
     }
 
-    public void spawnRaindrop() {
-        Rectangle raindrop = new Rectangle();
-        raindrop.x = MathUtils.random(0, Gdx.graphics.getWidth() - 64);
-        raindrop.y = Gdx.graphics.getHeight();
-        raindrop.width = 64;
-        raindrop.height = 64;
-        raindrops.add(raindrop);
+    public void spawnItems() {
+        Rectangle Items = new Rectangle();
+        Items.x = MathUtils.random(0, Gdx.graphics.getWidth() - 64);
+        Items.y = Gdx.graphics.getHeight();
+        Items.width = 64;
+        Items.height = 64;
+        catfood.add(Items);
         lastDropTime = TimeUtils.nanoTime();
     }
 
@@ -153,9 +153,8 @@ public class GameScreen implements Screen, InputProcessor {
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
         batch.draw(catImage, cat.x, cat.y, Constants.catsize, Constants.catsize);
 
-        for (Rectangle raindrop : raindrops) {
-
-            batch.draw(dropImage, raindrop.x, raindrop.y, 80, 80);
+        for (Rectangle Items : catfood) {
+            batch.draw(dropImage, Items.x, Items.y, 80, 80);
         }
         batch.end();
 
@@ -166,14 +165,14 @@ public class GameScreen implements Screen, InputProcessor {
             cat.x = 0;
 
         //Drop icons
-        if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnRaindrop();
+        if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnItems();
 
-        Iterator<Rectangle> iter = raindrops.iterator();
+        Iterator<Rectangle> iter = catfood.iterator();
         while (iter.hasNext()) {
-            Rectangle raindrop = iter.next();
-            raindrop.y -= 300 * Gdx.graphics.getDeltaTime();
-            if (raindrop.y + 64 < 0) iter.remove();
-            if (raindrop.overlaps(cat)) {
+            Rectangle Items = iter.next();
+            Items.y -= 300 * Gdx.graphics.getDeltaTime();
+            if (Items.y + 64 < 0) iter.remove();
+            if (Items.overlaps(cat)) {
                 catSound.play();
                 score++;
                 scorename = "Score: " + score;
@@ -192,6 +191,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void pause() {
+
     }
 
     @Override
@@ -230,10 +230,11 @@ public class GameScreen implements Screen, InputProcessor {
             //adcont.showBannerAd();
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
         } else if (keycode == Input.Keys.ESCAPE) {
-            dispose();
 
+            dispose();
             //highscore setzen und datum setzen
             if (score > Highscore.getHighScore()) {
+
                 Highscore.setHighScore(score);
                 Calendar currentDate = Calendar.getInstance(); //Get the current date
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
@@ -246,6 +247,8 @@ public class GameScreen implements Screen, InputProcessor {
             }
             //adcont.showBannerAd();
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
+
+
         }
         return false;
     }
