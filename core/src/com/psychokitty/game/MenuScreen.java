@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
 
@@ -36,6 +39,10 @@ public class MenuScreen implements Screen {
     private Group scoreItems;
     private Group menuItems;
 
+    private TextureAtlas buttonsAtlas;
+    private NinePatch buttonUpNine;
+    private NinePatch buttonDownNine;
+
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
 
     public MenuScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
@@ -44,6 +51,10 @@ public class MenuScreen implements Screen {
     }
 
     private void createBasicSkin() {
+        buttonsAtlas = new TextureAtlas("Buttons/Buttons.pack");
+        buttonUpNine = buttonsAtlas.createPatch("ButtonUp");
+        buttonDownNine = buttonsAtlas.createPatch("ButtonDown");
+
         //Create a font
         BitmapFont font = new BitmapFont();
         skin = new Skin();
@@ -60,9 +71,11 @@ public class MenuScreen implements Screen {
 
         //Create a button style
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.newDrawable("Buttons", Color.GRAY);
-        textButtonStyle.down = skin.newDrawable("Buttons", Color.DARK_GRAY);
-        textButtonStyle.over = skin.newDrawable("Buttons", Color.LIGHT_GRAY);
+
+        textButtonStyle.up = new NinePatchDrawable(buttonUpNine);
+        textButtonStyle.down = new NinePatchDrawable(buttonDownNine);
+        textButtonStyle.over = new NinePatchDrawable(buttonDownNine);
+
         textButtonStyle.font = skin.getFont("default");
         skin.add("default", textButtonStyle);
     }
@@ -102,6 +115,7 @@ public class MenuScreen implements Screen {
 
         final TextButton resetScoreButton = new TextButton("Reset Highscore", skin);
         final TextButton backButton = new TextButton("Back", skin);
+
         final Label scoreLabel = new Label("Score: " + Integer.toString(Highscore.getHighScore()), skin2);
         final Label scoreDate = new Label("Score Date: " + Highscore.getCurrentDate(), skin2);
         final Label Titel = new Label("Highscore", skin2);
