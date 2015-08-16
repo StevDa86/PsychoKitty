@@ -4,9 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -31,50 +29,55 @@ public class MenuScreen implements Screen {
     final PsychoKittyGame game;
     public com.psychokitty.game.AdMob.AdsController adcont;
     private Stage stage = new Stage();
-    private Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicMenu));
-    private Texture texture = new Texture(Gdx.files.internal(Constants.backgroundMenu));
+    private Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal(com.psychokitty.game.Utils.Constants.musicMenu));
+    private Texture texture = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.backgroundMenu));
     private Image menuBackground = new Image(texture);
-    private Skin skin;
-    private Highscore highscore;
+    private com.psychokitty.game.Utils.Highscore highscore;
     private Group scoreItems;
     private Group menuItems;
 
     private TextureAtlas buttonsAtlas;
     private NinePatch buttonUpNine;
     private NinePatch buttonDownNine;
+    private TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
 
-    private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
+    private Skin skin = new Skin();
+    private Skin skin2 = new Skin(Gdx.files.internal(com.psychokitty.game.Utils.Constants.defaultJson));
 
     public MenuScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         game = gam;
         adcont = adsController;
+        highscore = new com.psychokitty.game.Utils.Highscore();
+        highscore.config();
     }
 
-    private void createBasicSkin() {
+    private void setupBackground(){
+        menuBackground.setHeight(Gdx.graphics.getHeight());
+        menuBackground.setScaling(Scaling.fillY);
+        menuBackground.setPosition(Gdx.graphics.getWidth() / 2 - menuBackground.getWidth() / 2, Gdx.graphics.getHeight() / 2 - menuBackground.getHeight() / 2);
+        stage.addActor(menuBackground);
+    }
+
+    private void setupMusic(){
+        menuMusic.setVolume(1);
+        menuMusic.setLooping(true);
+        menuMusic.play();
+    }
+
+    private void createButtons(){
         buttonsAtlas = new TextureAtlas("Buttons/Buttons.pack");
         buttonUpNine = buttonsAtlas.createPatch("ButtonUp");
         buttonDownNine = buttonsAtlas.createPatch("ButtonDown");
 
-        //Create a font
-        BitmapFont font = new BitmapFont();
-        skin = new Skin();
-        skin.add("default", font);
-
-        highscore = new Highscore();
-        highscore.config();
-
-        //Create a texture
-        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 10, Pixmap.Format.RGB888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        skin.add("Buttons", new Texture(pixmap));
-
-        //Create a button style
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-
         textButtonStyle.up = new NinePatchDrawable(buttonUpNine);
         textButtonStyle.down = new NinePatchDrawable(buttonDownNine);
         textButtonStyle.over = new NinePatchDrawable(buttonDownNine);
+    }
+
+    private void createBasicFont() {
+        //Create a font
+        BitmapFont font = new BitmapFont();
+        skin.add("default", font);
 
         textButtonStyle.font = skin.getFont("default");
         skin.add("default", textButtonStyle);
@@ -97,18 +100,13 @@ public class MenuScreen implements Screen {
         menuItems = new Group();
         scoreItems = new Group();
 
-        menuMusic.setVolume(1);
-        menuMusic.setLooping(true);
-        menuMusic.play();
-
-        menuBackground.setHeight(Gdx.graphics.getHeight());
-        menuBackground.setScaling(Scaling.fillY);
-        menuBackground.setPosition(Gdx.graphics.getWidth() / 2 - menuBackground.getWidth() / 2, Gdx.graphics.getHeight() / 2 - menuBackground.getHeight() / 2);
-        stage.addActor(menuBackground);
+        setupBackground();
+        setupMusic();
+        createButtons();
+        createBasicFont();
 
         Gdx.input.setInputProcessor(stage);// Make the stage consume events
 
-        createBasicSkin();
         final TextButton newGameButton = new TextButton("New game", skin); // Use the initialized skin
         final TextButton newHighscoreButton = new TextButton("Show Highscore", skin);
         final TextButton newExitButton = new TextButton("Exit", skin);
@@ -116,13 +114,13 @@ public class MenuScreen implements Screen {
         final TextButton resetScoreButton = new TextButton("Reset Highscore", skin);
         final TextButton backButton = new TextButton("Back", skin);
 
-        final Label scoreLabel = new Label("Score: " + Integer.toString(Highscore.getHighScore()), skin2);
-        final Label scoreDate = new Label("Score Date: " + Highscore.getCurrentDate(), skin2);
+        final Label scoreLabel = new Label("Score: " + Integer.toString(com.psychokitty.game.Utils.Highscore.getHighScore()), skin2);
+        final Label scoreDate = new Label("Score Date: " + com.psychokitty.game.Utils.Highscore.getCurrentDate(), skin2);
         final Label Titel = new Label("Highscore", skin2);
 
-        newGameButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 100);
-        newHighscoreButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
-        newExitButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 100);
+        newGameButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
+        newHighscoreButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 100);
+        newExitButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 200);
 
         Titel.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 200);
         scoreDate.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 150);
@@ -169,9 +167,9 @@ public class MenuScreen implements Screen {
         });
         resetScoreButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                Highscore.resetScore();
-                scoreLabel.setText("Score: " + Integer.toString(Highscore.getHighScore()));
-                scoreDate.setText("Score Date: " + Highscore.getCurrentDate());
+                com.psychokitty.game.Utils.Highscore.resetScore();
+                scoreLabel.setText("Score: " + Integer.toString(com.psychokitty.game.Utils.Highscore.getHighScore()));
+                scoreDate.setText("Score Date: " + com.psychokitty.game.Utils.Highscore.getCurrentDate());
             }
         });
     }
@@ -193,5 +191,6 @@ public class MenuScreen implements Screen {
     public void dispose() {
         stage.dispose();
         menuMusic.dispose();
+        buttonsAtlas.dispose();
     }
 }

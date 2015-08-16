@@ -1,4 +1,4 @@
-package com.psychokitty.game;
+package com.psychokitty.game.Utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
