@@ -43,7 +43,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Music rainMusic;
     private OrthographicCamera camera;
     private Viewport viewport;
-    private Highscore highscore;
+    private com.psychokitty.game.Utils.Highscore highscore;
     private Rectangle cat;
     private float deltaTime;
     private int score;
@@ -57,7 +57,7 @@ public class GameScreen implements Screen, InputProcessor {
         this.game = gam;
         adcont = adsController;
         batch = new SpriteBatch();
-        highscore = new Highscore();
+        highscore = new com.psychokitty.game.Utils.Highscore();
         highscore.config();
 
         Gdx.input.setInputProcessor(this);
@@ -72,14 +72,14 @@ public class GameScreen implements Screen, InputProcessor {
         generator.dispose();
 
         // load the images for the droplet and the cat, 64x64 pixels each
-        dropImage = new Texture(Gdx.files.internal(Constants.catnipImage));
-        catImage = new Texture(Gdx.files.internal(Constants.playerImage));
+        dropImage = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.catnipImage));
+        catImage = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.playerImage));
 
         // load the drop sound effect and the rain background "music"
-        catSound = Gdx.audio.newSound(Gdx.files.internal(Constants.soundMiau));
-        rainMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.musicDream));
+        catSound = Gdx.audio.newSound(Gdx.files.internal(com.psychokitty.game.Utils.Constants.soundMiau));
+        rainMusic = Gdx.audio.newMusic(Gdx.files.internal(com.psychokitty.game.Utils.Constants.musicDream));
 
-        touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - Constants.catsize / 2, 0);
+        touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - com.psychokitty.game.Utils.Constants.catsize / 2, 0);
 
         score = 0;
         scorename = "Score:" + 0;
@@ -91,18 +91,18 @@ public class GameScreen implements Screen, InputProcessor {
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
 
-        background = new Texture(Gdx.files.internal(Constants.backgroundImage));
+        background = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.backgroundImage));
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
-        foreground = new Texture(Gdx.files.internal(Constants.foregroundImage));
+        foreground = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.foregroundImage));
 
         catfood = new Array<Rectangle>();
 
         cat = new Rectangle();
-        cat.x = Gdx.graphics.getWidth() / 2 - Constants.catsize / 2;
+        cat.x = Gdx.graphics.getWidth() / 2 - com.psychokitty.game.Utils.Constants.catsize / 2;
         cat.y = 20;
-        cat.width = Constants.catsize;
-        cat.height = Constants.catsize;
+        cat.width = com.psychokitty.game.Utils.Constants.catsize;
+        cat.height = com.psychokitty.game.Utils.Constants.catsize;
 
     }
 
@@ -131,9 +131,9 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         if (touchPos.x > cat.x)
-            cat.x += Constants.catspeed * deltaTime;
+            cat.x += com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
         else if (touchPos.x < cat.x)
-            cat.x -= Constants.catspeed * deltaTime;
+            cat.x -= com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
 
         if (Math.abs(touchPos.x - cat.x) < 5)
             cat.x = touchPos.x;
@@ -151,7 +151,7 @@ public class GameScreen implements Screen, InputProcessor {
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
 
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
-        batch.draw(catImage, cat.x, cat.y, Constants.catsize, Constants.catsize);
+        batch.draw(catImage, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
 
         for (Rectangle Items : catfood) {
             batch.draw(dropImage, Items.x, Items.y, 80, 80);
@@ -216,12 +216,12 @@ public class GameScreen implements Screen, InputProcessor {
             dispose();
 
             //highscore setzen und datum setzen
-            if (score > Highscore.getHighScore()) {
-                Highscore.setHighScore(score);
+            if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
+                com.psychokitty.game.Utils.Highscore.setHighScore(score);
                 Calendar currentDate = Calendar.getInstance(); //Get the current date
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
                 String dateNow = formatter.format(currentDate.getTime());
-                Highscore.setCurrentDate(dateNow);
+                com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
             }
 
             if (adcont.isWifiConnected()) {
@@ -233,13 +233,13 @@ public class GameScreen implements Screen, InputProcessor {
 
             dispose();
             //highscore setzen und datum setzen
-            if (score > Highscore.getHighScore()) {
+            if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
 
-                Highscore.setHighScore(score);
+                com.psychokitty.game.Utils.Highscore.setHighScore(score);
                 Calendar currentDate = Calendar.getInstance(); //Get the current date
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
                 String dateNow = formatter.format(currentDate.getTime());
-                Highscore.setCurrentDate(dateNow);
+                com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
             }
 
             if (adcont.isWifiConnected()) {

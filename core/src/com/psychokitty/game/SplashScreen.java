@@ -16,10 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class SplashScreen implements Screen {
 
-    private Texture texture = new Texture(Gdx.files.internal(Constants.splashImage));
+    private Texture texture = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.splashImage));
     private Image splashImage = new Image(texture);
     private Stage stage = new Stage();
-    private Music splashSound = Gdx.audio.newMusic(Gdx.files.internal(Constants.soundSplash));
+    private Music splashSound = Gdx.audio.newMusic(Gdx.files.internal(com.psychokitty.game.Utils.Constants.soundSplash));
 
     final PsychoKittyGame game;
     public com.psychokitty.game.AdMob.AdsController adcont;
