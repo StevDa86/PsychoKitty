@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -122,15 +124,15 @@ public class MenuScreen implements Screen {
         final Label scoreDate = new Label("Score Date: " + com.psychokitty.game.Utils.Highscore.getCurrentDate(), skin2);
         final Label Titel = new Label("Highscore", skin2);
 
-        newGameButton.setPosition(screenwidth / 2 - newGameButton.getWidth()/2, screenheight / 2);
-        newHighscoreButton.setPosition(screenwidth / 2 - newHighscoreButton.getWidth()/2, screenheight / 2 - 100);
-        newExitButton.setPosition(screenwidth / 2 - newExitButton.getWidth()/2, screenheight / 2 - 200);
+        newGameButton.setPosition(screenwidth / 2 - newGameButton.getWidth() / 2, screenheight / 2);
+        newHighscoreButton.setPosition(screenwidth / 2 - newHighscoreButton.getWidth() / 2, screenheight / 2 - 100);
+        newExitButton.setPosition(screenwidth / 2 - newExitButton.getWidth() / 2, screenheight / 2 - 200);
 
-        Titel.setPosition(screenwidth / 2 - Titel.getWidth()/2, screenheight/ 2 + 200);
-        scoreDate.setPosition(screenwidth / 2 - scoreDate.getWidth()/2, screenheight / 2 + 150);
-        scoreLabel.setPosition(screenwidth / 2 - scoreLabel.getWidth()/2, screenheight / 2 + 100);
-        resetScoreButton.setPosition(screenwidth / 2 - resetScoreButton.getWidth()/2, screenheight / 2);
-        backButton.setPosition(screenwidth / 2 - backButton.getWidth()/2, screenheight / 2 - 100);
+        Titel.setPosition(screenwidth / 2 - Titel.getWidth() / 2, screenheight / 2 + 200);
+        scoreDate.setPosition(screenwidth / 2 - scoreDate.getWidth() / 2, screenheight / 2 + 150);
+        scoreLabel.setPosition(screenwidth / 2 - scoreLabel.getWidth() / 2, screenheight / 2 + 100);
+        resetScoreButton.setPosition(screenwidth / 2 - resetScoreButton.getWidth() / 2, screenheight / 2);
+        backButton.setPosition(screenwidth / 2 - backButton.getWidth() / 2, screenheight / 2 - 100);
 
         //make a group for score Items
         scoreItems.addActor(Titel);
@@ -139,12 +141,21 @@ public class MenuScreen implements Screen {
         scoreItems.addActor(resetScoreButton);
         scoreItems.addActor(backButton);
 
+        final Table scoreTable = new Table(skin2);
+        scoreTable.setColor(Color.BLACK);
+        scoreTable.add(scoreItems);
+        scoreTable.row();
+        scoreTable.add(scoreItems);
+
+
+
         //Make a group for menu items
         menuItems.addActor(newExitButton);
         menuItems.addActor(newHighscoreButton);
         menuItems.addActor(newGameButton);
 
         stage.addActor(menuItems);
+
 
         newGameButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -155,7 +166,8 @@ public class MenuScreen implements Screen {
         newHighscoreButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 menuItems.remove();
-                stage.addActor(scoreItems);
+                //stage.addActor(scoreItems);
+                stage.addActor(scoreTable);
             }
         });
         newExitButton.addListener(new ClickListener() {
@@ -166,7 +178,8 @@ public class MenuScreen implements Screen {
         backButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 stage.addActor(menuItems);
-                scoreItems.remove();
+                scoreTable.remove();
+                // /scoreItems.remove();
             }
         });
         resetScoreButton.addListener(new ClickListener() {
