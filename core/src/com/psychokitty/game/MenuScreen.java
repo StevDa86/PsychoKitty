@@ -44,17 +44,21 @@ public class MenuScreen implements Screen {
     private Skin skin = new Skin();
     private Skin skin2 = new Skin(Gdx.files.internal(com.psychokitty.game.Utils.Constants.defaultJson));
 
+    private float screenwidth, screenheight;
+
     public MenuScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         game = gam;
         adcont = adsController;
         highscore = new com.psychokitty.game.Utils.Highscore();
         highscore.config();
+        screenwidth = Gdx.graphics.getWidth();
+        screenheight = Gdx.graphics.getHeight();
     }
 
     private void setupBackground(){
-        menuBackground.setHeight(Gdx.graphics.getHeight());
-        menuBackground.setScaling(Scaling.fillY);
-        menuBackground.setPosition(Gdx.graphics.getWidth() / 2 - menuBackground.getWidth() / 2, Gdx.graphics.getHeight() / 2 - menuBackground.getHeight() / 2);
+        menuBackground.setHeight(screenheight);
+        menuBackground.setScaling(Scaling.fillX);
+        menuBackground.setPosition(screenwidth / 2 - menuBackground.getWidth() / 2, screenheight / 2 - menuBackground.getHeight() / 2);
         stage.addActor(menuBackground);
     }
 
@@ -118,15 +122,15 @@ public class MenuScreen implements Screen {
         final Label scoreDate = new Label("Score Date: " + com.psychokitty.game.Utils.Highscore.getCurrentDate(), skin2);
         final Label Titel = new Label("Highscore", skin2);
 
-        newGameButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
-        newHighscoreButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 100);
-        newExitButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 200);
+        newGameButton.setPosition(screenwidth / 2 - newGameButton.getWidth()/2, screenheight / 2);
+        newHighscoreButton.setPosition(screenwidth / 2 - newHighscoreButton.getWidth()/2, screenheight / 2 - 100);
+        newExitButton.setPosition(screenwidth / 2 - newExitButton.getWidth()/2, screenheight / 2 - 200);
 
-        Titel.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 200);
-        scoreDate.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 150);
-        scoreLabel.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 + 100);
-        resetScoreButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2);
-        backButton.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 2 - 100);
+        Titel.setPosition(screenwidth / 2 - Titel.getWidth()/2, screenheight/ 2 + 200);
+        scoreDate.setPosition(screenwidth / 2 - scoreDate.getWidth()/2, screenheight / 2 + 150);
+        scoreLabel.setPosition(screenwidth / 2 - scoreLabel.getWidth()/2, screenheight / 2 + 100);
+        resetScoreButton.setPosition(screenwidth / 2 - resetScoreButton.getWidth()/2, screenheight / 2);
+        backButton.setPosition(screenwidth / 2 - backButton.getWidth()/2, screenheight / 2 - 100);
 
         //make a group for score Items
         scoreItems.addActor(Titel);
