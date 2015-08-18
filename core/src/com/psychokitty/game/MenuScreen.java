@@ -128,11 +128,11 @@ public class MenuScreen implements Screen {
         newHighscoreButton.setPosition(screenwidth / 2 - newHighscoreButton.getWidth() / 2, screenheight / 2 - 100);
         newExitButton.setPosition(screenwidth / 2 - newExitButton.getWidth() / 2, screenheight / 2 - 200);
 
-        Titel.setPosition(screenwidth / 2 - Titel.getWidth() / 2, screenheight / 2 + 200);
-        scoreDate.setPosition(screenwidth / 2 - scoreDate.getWidth() / 2, screenheight / 2 + 150);
-        scoreLabel.setPosition(screenwidth / 2 - scoreLabel.getWidth() / 2, screenheight / 2 + 100);
-        resetScoreButton.setPosition(screenwidth / 2 - resetScoreButton.getWidth() / 2, screenheight / 2);
-        backButton.setPosition(screenwidth / 2 - backButton.getWidth() / 2, screenheight / 2 - 100);
+        Titel.setPosition(screenwidth / 2 - Titel.getWidth() / 2, screenheight / 2 + 100);
+        scoreDate.setPosition(screenwidth / 2 - scoreDate.getWidth() / 2, screenheight / 2 + 50);
+        scoreLabel.setPosition(screenwidth / 2 - scoreLabel.getWidth() / 2, screenheight / 2 + 0);
+        resetScoreButton.setPosition(screenwidth / 2 - resetScoreButton.getWidth() / 2, screenheight /2 -100);
+        backButton.setPosition(screenwidth / 2 - backButton.getWidth() / 2, screenheight / 2 - 200);
 
         //make a group for score Items
         scoreItems.addActor(Titel);
