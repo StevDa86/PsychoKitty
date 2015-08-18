@@ -17,10 +17,15 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.psychokitty.game.Utils.CustomDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -109,6 +114,7 @@ public class GameScreen implements Screen, InputProcessor {
     public void resize(int width, int height) {
         viewport.update(width, height);
     }
+
 
     public void spawnItems() {
         Rectangle Items = new Rectangle();
@@ -226,10 +232,9 @@ public class GameScreen implements Screen, InputProcessor {
             if (adcont.isWifiConnected()) {
                 adcont.showBannerAd();
             }
-            //adcont.showBannerAd();
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
-        } else if (keycode == Input.Keys.ESCAPE) {
 
+        } else if (keycode == Input.Keys.ESCAPE) {
             dispose();
             //highscore setzen und datum setzen
             if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
@@ -244,10 +249,7 @@ public class GameScreen implements Screen, InputProcessor {
             if (adcont.isWifiConnected()) {
                 adcont.showBannerAd();
             }
-            //adcont.showBannerAd();
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
-
-
         }
         return false;
     }
