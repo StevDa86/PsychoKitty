@@ -120,6 +120,12 @@ public class GameScreen implements Screen, InputProcessor {
         lastDropTime = TimeUtils.nanoTime();
     }
 
+    public void spawnDog(){
+        Rectangle Dog = new Rectangle();
+        catfood.add(Dog);
+        lastDropTime = TimeUtils.nanoTime();
+    }
+
     @Override
     public void render(float delta) {
         deltaTime = Gdx.graphics.getDeltaTime();
@@ -128,40 +134,35 @@ public class GameScreen implements Screen, InputProcessor {
         if (Gdx.input.isTouched()) {
             touchPos.set(Gdx.input.getX() - 32, Gdx.input.getY());
         }
-
         if (touchPos.x > cat.x)
             cat.x += com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
         else if (touchPos.x < cat.x)
             cat.x -= com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
-
         if (Math.abs(touchPos.x - cat.x) < 5)
             cat.x = touchPos.x;
+        //Katze am rand aufhalten
+        if (cat.x > Gdx.graphics.getWidth() - 100)
+            cat.x = Gdx.graphics.getWidth() - 100;
+        if (cat.x < 0)
+            cat.x = 0;
 
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
         batch.setProjectionMatrix(camera.combined);
-        batch.begin();
 
-        //Zeichne hintergründe
+        // begin a new batch and draw
+        batch.begin();
         backgroundSpeed -= 1;
         batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
-
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
         batch.draw(catImage, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
-
         for (Rectangle Items : catfood) {
             batch.draw(dropImage, Items.x, Items.y, 80, 80);
         }
         batch.end();
-
-        //Katze am rand aufhalten
-        if (cat.x > Gdx.graphics.getWidth() - 100)
-            cat.x = Gdx.graphics.getWidth() - 100;
-        if (cat.x < 0)
-            cat.x = 0;
 
         //Drop icons
         if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnItems();
