@@ -17,15 +17,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.psychokitty.game.Utils.CustomDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -114,7 +109,6 @@ public class GameScreen implements Screen, InputProcessor {
     public void resize(int width, int height) {
         viewport.update(width, height);
     }
-
 
     public void spawnItems() {
         Rectangle Items = new Rectangle();
@@ -218,40 +212,29 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.BACK) {
-            dispose();
-
-            //highscore setzen und datum setzen
-            if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
-                com.psychokitty.game.Utils.Highscore.setHighScore(score);
-                Calendar currentDate = Calendar.getInstance(); //Get the current date
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
-                String dateNow = formatter.format(currentDate.getTime());
-                com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
-            }
-
-            if (adcont.isWifiConnected()) {
-                adcont.showBannerAd();
-            }
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
-
+            ExitGame();
         } else if (keycode == Input.Keys.ESCAPE) {
-            dispose();
-            //highscore setzen und datum setzen
-            if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
-
-                com.psychokitty.game.Utils.Highscore.setHighScore(score);
-                Calendar currentDate = Calendar.getInstance(); //Get the current date
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
-                String dateNow = formatter.format(currentDate.getTime());
-                com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
-            }
-
-            if (adcont.isWifiConnected()) {
-                adcont.showBannerAd();
-            }
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
+            ExitGame();
         }
         return false;
+    }
+
+    public void ExitGame() {
+        dispose();
+        //highscore setzen und datum setzen
+        if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
+
+            com.psychokitty.game.Utils.Highscore.setHighScore(score);
+            Calendar currentDate = Calendar.getInstance(); //Get the current date
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
+            String dateNow = formatter.format(currentDate.getTime());
+            com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
+        }
+
+        if (adcont.isWifiConnected()) {
+            adcont.showBannerAd();
+        }
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
     }
 
     @Override
