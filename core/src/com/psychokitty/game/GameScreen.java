@@ -35,6 +35,7 @@ public class GameScreen implements Screen, InputProcessor {
     final PsychoKittyGame game;
     public com.psychokitty.game.AdMob.AdsController adcont;
     public Array<Rectangle> catfood;
+    public Array<Rectangle> dog;
     Vector2 touchPos;
     private SpriteBatch batch;
     private BitmapFont font;
@@ -74,8 +75,8 @@ public class GameScreen implements Screen, InputProcessor {
         generator.dispose();
 
         // load the images for the droplet and the cat, 64x64 pixels each
-        dropImage = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.catnipImage));
-        catImage = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.playerImage));
+        dropImage = new Texture(Constants.catnipImage);
+        catImage = new Texture(Constants.playerImage);
         dogImage = new Texture(Constants.dogImage);
 
         // load the drop sound effect and the rain background "music"
@@ -100,6 +101,7 @@ public class GameScreen implements Screen, InputProcessor {
         foreground = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.foregroundImage));
 
         catfood = new Array<Rectangle>();
+        dog = new Array<Rectangle>();
 
         cat = new Rectangle();
         cat.x = Gdx.graphics.getWidth() / 2 - com.psychokitty.game.Utils.Constants.catsize / 2;
@@ -120,12 +122,6 @@ public class GameScreen implements Screen, InputProcessor {
         Items.width = 64;
         Items.height = 64;
         catfood.add(Items);
-        lastDropTime = TimeUtils.nanoTime();
-    }
-
-    public void spawnDog(){
-        Rectangle Dog = new Rectangle();
-        catfood.add(Dog);
         lastDropTime = TimeUtils.nanoTime();
     }
 
@@ -162,10 +158,15 @@ public class GameScreen implements Screen, InputProcessor {
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
         batch.draw(catImage, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
+
+
         for (Rectangle Items : catfood) {
             batch.draw(dropImage, Items.x, Items.y, 80, 80);
-            batch.draw(dogImage, Items.x, Items.x, 100,100);
+            batch.draw(dogImage, Items.x /2, Items.y, 100,100);
         }
+
+
+
         batch.end();
 
         //Drop icons
@@ -183,6 +184,7 @@ public class GameScreen implements Screen, InputProcessor {
                 iter.remove();
             }
         }
+
     }
 
     @Override
@@ -229,7 +231,6 @@ public class GameScreen implements Screen, InputProcessor {
         dispose();
         //highscore setzen und datum setzen
         if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
-
             com.psychokitty.game.Utils.Highscore.setHighScore(score);
             Calendar currentDate = Calendar.getInstance(); //Get the current date
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
