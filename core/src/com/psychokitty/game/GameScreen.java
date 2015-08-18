@@ -103,7 +103,6 @@ public class GameScreen implements Screen, InputProcessor {
         cat.y = 20;
         cat.width = com.psychokitty.game.Utils.Constants.catsize;
         cat.height = com.psychokitty.game.Utils.Constants.catsize;
-
     }
 
     @Override

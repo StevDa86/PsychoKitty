@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.psychokitty.game.Utils.CustomDialog;
 
 
 /**
@@ -172,7 +174,16 @@ public class MenuScreen implements Screen {
         });
         newExitButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
+                new CustomDialog("Exit game", skin2).text("Ende?")
+                        .button("Exit", new InputListener() {
+                            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+                                Gdx.app.exit();
+                                return false;
+                            }
+
+                        }).button("Keep Pleyeing").show(stage);
+
+                //Gdx.app.exit();
             }
         });
         backButton.addListener(new ClickListener() {
