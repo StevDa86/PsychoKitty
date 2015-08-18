@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.psychokitty.game.Utils.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,6 +40,7 @@ public class GameScreen implements Screen, InputProcessor {
     private BitmapFont font;
     private Texture dropImage;
     private Texture catImage;
+    private Texture dogImage;
     private Sound catSound;
     private Music rainMusic;
     private OrthographicCamera camera;
@@ -74,6 +76,7 @@ public class GameScreen implements Screen, InputProcessor {
         // load the images for the droplet and the cat, 64x64 pixels each
         dropImage = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.catnipImage));
         catImage = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.playerImage));
+        dogImage = new Texture(Constants.dogImage);
 
         // load the drop sound effect and the rain background "music"
         catSound = Gdx.audio.newSound(Gdx.files.internal(com.psychokitty.game.Utils.Constants.soundMiau));
@@ -161,6 +164,7 @@ public class GameScreen implements Screen, InputProcessor {
         batch.draw(catImage, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
         for (Rectangle Items : catfood) {
             batch.draw(dropImage, Items.x, Items.y, 80, 80);
+            batch.draw(dogImage, Items.x, Items.x, 100,100);
         }
         batch.end();
 
@@ -204,6 +208,7 @@ public class GameScreen implements Screen, InputProcessor {
         batch.dispose();
         rainMusic.dispose();
         dropImage.dispose();
+        dogImage.dispose();
         catImage.dispose();
         catSound.dispose();
         background.dispose();
