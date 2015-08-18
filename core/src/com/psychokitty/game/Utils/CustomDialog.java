@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
  */
 public class CustomDialog extends Dialog {
 
-    public Skin skin = new Skin(Gdx.files.internal(com.psychokitty.game.Utils.Constants.defaultJson));
+    public Skin skin = new Skin(Gdx.files.internal(Constants.defaultJson));
 
     public CustomDialog (String title, Skin skin) {
         super(title, skin);
