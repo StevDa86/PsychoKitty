@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.psychokitty.game.Utils.Constants;
 import com.psychokitty.game.Utils.CustomDialog;
 
 
@@ -46,7 +47,7 @@ public class MenuScreen implements Screen {
     private TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
 
     private Skin skin = new Skin();
-    private Skin skin2 = new Skin(Gdx.files.internal(com.psychokitty.game.Utils.Constants.defaultJson));
+    private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
 
     private float screenwidth, screenheight;
 
