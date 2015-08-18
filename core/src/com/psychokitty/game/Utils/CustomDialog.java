@@ -52,6 +52,6 @@ public class CustomDialog extends Dialog {
     @Override
     public float getPrefHeight() {
         // force dialog height
-        return 240f;
+        return 200f;
     }
 }

@@ -59,20 +59,20 @@ public class MenuScreen implements Screen {
         screenheight = Gdx.graphics.getHeight();
     }
 
-    private void setupBackground(){
+    private void setupBackground() {
         menuBackground.setHeight(screenheight);
         menuBackground.setScaling(Scaling.fillX);
         menuBackground.setPosition(screenwidth / 2 - menuBackground.getWidth() / 2, screenheight / 2 - menuBackground.getHeight() / 2);
         stage.addActor(menuBackground);
     }
 
-    private void setupMusic(){
+    private void setupMusic() {
         menuMusic.setVolume(1);
         menuMusic.setLooping(true);
         menuMusic.play();
     }
 
-    private void createButtons(){
+    private void createButtons() {
         buttonsAtlas = new TextureAtlas("Buttons/Buttons.pack");
         buttonUpNine = buttonsAtlas.createPatch("ButtonUp");
         buttonDownNine = buttonsAtlas.createPatch("ButtonDown");
@@ -133,7 +133,7 @@ public class MenuScreen implements Screen {
         Titel.setPosition(screenwidth / 2 - Titel.getWidth() / 2, screenheight / 2 + 100);
         scoreDate.setPosition(screenwidth / 2 - scoreDate.getWidth() / 2, screenheight / 2 + 50);
         scoreLabel.setPosition(screenwidth / 2 - scoreLabel.getWidth() / 2, screenheight / 2 + 0);
-        resetScoreButton.setPosition(screenwidth / 2 - resetScoreButton.getWidth() / 2, screenheight /2 -100);
+        resetScoreButton.setPosition(screenwidth / 2 - resetScoreButton.getWidth() / 2, screenheight / 2 - 100);
         backButton.setPosition(screenwidth / 2 - backButton.getWidth() / 2, screenheight / 2 - 200);
 
         //make a group for score Items
@@ -149,15 +149,12 @@ public class MenuScreen implements Screen {
         scoreTable.row();
         scoreTable.add(scoreItems);
 
-
-
         //Make a group for menu items
         menuItems.addActor(newExitButton);
         menuItems.addActor(newHighscoreButton);
         menuItems.addActor(newGameButton);
 
         stage.addActor(menuItems);
-
 
         newGameButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -168,29 +165,18 @@ public class MenuScreen implements Screen {
         newHighscoreButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 menuItems.remove();
-                //stage.addActor(scoreItems);
                 stage.addActor(scoreTable);
             }
         });
         newExitButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                new CustomDialog("Exit game", skin2).text("Ende?")
-                        .button("Exit", new InputListener() {
-                            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
-                                Gdx.app.exit();
-                                return false;
-                            }
-
-                        }).button("Keep Pleyeing").show(stage);
-
-                //Gdx.app.exit();
+                ExitDialog();
             }
         });
         backButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 stage.addActor(menuItems);
                 scoreTable.remove();
-                // /scoreItems.remove();
             }
         });
         resetScoreButton.addListener(new ClickListener() {
@@ -200,6 +186,16 @@ public class MenuScreen implements Screen {
                 scoreDate.setText("Score Date: " + com.psychokitty.game.Utils.Highscore.getCurrentDate());
             }
         });
+    }
+
+    public void ExitDialog() {
+        new CustomDialog("Exit game", skin2).text("Exit game?")
+                .button("Yes", new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        Gdx.app.exit();
+                        return false;
+                    }
+                }).button("No").show(stage);
     }
 
     @Override
