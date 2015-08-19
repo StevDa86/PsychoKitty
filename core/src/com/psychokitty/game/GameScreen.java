@@ -17,11 +17,16 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.psychokitty.game.Utils.Constants;
+import com.psychokitty.game.Utils.CustomDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,6 +60,9 @@ public class GameScreen implements Screen, InputProcessor {
     private Texture foreground;
     private int backgroundSpeed;
     private long lastDropTime;
+
+    private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
+    private Stage stage = new Stage();
 
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
@@ -147,9 +155,10 @@ public class GameScreen implements Screen, InputProcessor {
 
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act(delta);
 
         camera.update();
-        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(stage.getCamera().combined);
 
         // begin a new batch and draw
         batch.begin();
@@ -158,17 +167,12 @@ public class GameScreen implements Screen, InputProcessor {
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
         batch.draw(catImage, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
-
-
         for (Rectangle Items : catfood) {
             batch.draw(dropImage, Items.x, Items.y, 80, 80);
             batch.draw(dogImage, Items.x /2, Items.y, 100,100);
         }
-
-
-
         batch.end();
-
+        stage.draw();
         //Drop icons
         if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnItems();
 
@@ -184,7 +188,6 @@ public class GameScreen implements Screen, InputProcessor {
                 iter.remove();
             }
         }
-
     }
 
     @Override
@@ -215,6 +218,7 @@ public class GameScreen implements Screen, InputProcessor {
         catSound.dispose();
         background.dispose();
         foreground.dispose();
+        stage.dispose();
     }
 
     @Override
@@ -228,7 +232,22 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     public void ExitGame() {
+
+        Gdx.input.setInputProcessor(stage);
+        new CustomDialog("Exit game", skin2).text("Exit game?")
+                .button("Yes", new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        dispose();
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
+
+                        return false;
+                    }
+                }).button("No").show(stage);
+        /*
         dispose();
+        if (adcont.isWifiConnected()) {
+            adcont.showBannerAd();
+        }
         //highscore setzen und datum setzen
         if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
             com.psychokitty.game.Utils.Highscore.setHighScore(score);
@@ -237,11 +256,8 @@ public class GameScreen implements Screen, InputProcessor {
             String dateNow = formatter.format(currentDate.getTime());
             com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
         }
-
-        if (adcont.isWifiConnected()) {
-            adcont.showBannerAd();
-        }
         ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
+        */
     }
 
     @Override
