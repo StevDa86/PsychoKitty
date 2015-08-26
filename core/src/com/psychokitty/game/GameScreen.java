@@ -1,5 +1,6 @@
 package com.psychokitty.game;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -61,8 +62,22 @@ public class GameScreen implements Screen, InputProcessor {
     private int backgroundSpeed;
     private long lastDropTime;
 
+
+
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
+
+    public enum State
+    {
+        PAUSE,
+        RUN,
+        RESUME,
+        STOPPED
+    }
+    private State state = State.RUN;
+    public void setGameState(State s){
+        this.state = s;
+    }
 
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
@@ -137,55 +152,65 @@ public class GameScreen implements Screen, InputProcessor {
     public void render(float delta) {
         deltaTime = Gdx.graphics.getDeltaTime();
 
-        //setup user interaction
-        if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX() - 32, Gdx.input.getY());
-        }
-        if (touchPos.x > cat.x)
-            cat.x += com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
-        else if (touchPos.x < cat.x)
-            cat.x -= com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
-        if (Math.abs(touchPos.x - cat.x) < 5)
-            cat.x = touchPos.x;
-        //Katze am rand aufhalten
-        if (cat.x > Gdx.graphics.getWidth() - 100)
-            cat.x = Gdx.graphics.getWidth() - 100;
-        if (cat.x < 0)
-            cat.x = 0;
+        switch (state) {
+            case RUN:
+                //setup user interaction
+                if (Gdx.input.isTouched()) {
+                    touchPos.set(Gdx.input.getX() - 32, Gdx.input.getY());
+                }
+                if (touchPos.x > cat.x)
+                    cat.x += com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
+                else if (touchPos.x < cat.x)
+                    cat.x -= com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
+                if (Math.abs(touchPos.x - cat.x) < 5)
+                    cat.x = touchPos.x;
+                //Katze am rand aufhalten
+                if (cat.x > Gdx.graphics.getWidth() - 100)
+                    cat.x = Gdx.graphics.getWidth() - 100;
+                if (cat.x < 0)
+                    cat.x = 0;
 
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act(delta);
+                Gdx.gl.glClearColor(1, 1, 1, 1);
+                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        camera.update();
-        batch.setProjectionMatrix(stage.getCamera().combined);
+                camera.update();
+                batch.setProjectionMatrix(stage.getCamera().combined);
 
-        // begin a new batch and draw
-        batch.begin();
-        backgroundSpeed -= 1;
-        batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
-        font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
-        batch.draw(catImage, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
-        for (Rectangle Items : catfood) {
-            batch.draw(dropImage, Items.x, Items.y, 80, 80);
-            batch.draw(dogImage, Items.x /2, Items.y, 100,100);
-        }
-        batch.end();
-        stage.draw();
-        //Drop icons
-        if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnItems();
+                // begin a new batch and draw
+                batch.begin();
+                backgroundSpeed -= 1;
+                batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
+                font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
+                batch.draw(catImage, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
+                for (Rectangle Items : catfood) {
+                    batch.draw(dropImage, Items.x, Items.y, 80, 80);
+                    batch.draw(dogImage, Items.x / 2, Items.y, 100, 100);
+                }
+                batch.end();
 
-        Iterator<Rectangle> iter = catfood.iterator();
-        while (iter.hasNext()) {
-            Rectangle Items = iter.next();
-            Items.y -= 300 * Gdx.graphics.getDeltaTime();
-            if (Items.y + 64 < 0) iter.remove();
-            if (Items.overlaps(cat)) {
-                catSound.play();
-                score++;
-                scorename = "Score: " + score;
-                iter.remove();
+                //Drop icons
+                if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnItems();
+
+                Iterator<Rectangle> iter = catfood.iterator();
+                while (iter.hasNext()) {
+                    Rectangle Items = iter.next();
+                    Items.y -= 300 * Gdx.graphics.getDeltaTime();
+                    if (Items.y + 64 < 0) iter.remove();
+                    if (Items.overlaps(cat)) {
+                        catSound.play();
+                        score++;
+                        scorename = "Score: " + score;
+                        iter.remove();
+                    }
+                }
+                break;
+            case PAUSE:
+            {
+                stage.act(delta);
+                stage.draw();
+                ExitGame();
+                break;
             }
         }
     }
@@ -200,11 +225,12 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void pause() {
-
+        this.state = State.PAUSE;
     }
 
     @Override
     public void resume() {
+        this.state = State.RESUME;
     }
 
     @Override
@@ -226,38 +252,34 @@ public class GameScreen implements Screen, InputProcessor {
         if (keycode == Input.Keys.BACK) {
             ExitGame();
         } else if (keycode == Input.Keys.ESCAPE) {
+            pause();
             ExitGame();
         }
         return false;
     }
 
     public void ExitGame() {
-
         Gdx.input.setInputProcessor(stage);
         new CustomDialog("Exit game", skin2).text("Exit game?")
                 .button("Yes", new InputListener() {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         dispose();
+                        if (adcont.isWifiConnected()) {
+                            adcont.showBannerAd();
+                        }
+                        //highscore setzen und datum setzen
+                        if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
+                            com.psychokitty.game.Utils.Highscore.setHighScore(score);
+                            Calendar currentDate = Calendar.getInstance(); //Get the current date
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
+                            String dateNow = formatter.format(currentDate.getTime());
+                            com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
+                        }
                         ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
 
                         return false;
                     }
                 }).button("No").show(stage);
-        /*
-        dispose();
-        if (adcont.isWifiConnected()) {
-            adcont.showBannerAd();
-        }
-        //highscore setzen und datum setzen
-        if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
-            com.psychokitty.game.Utils.Highscore.setHighScore(score);
-            Calendar currentDate = Calendar.getInstance(); //Get the current date
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
-            String dateNow = formatter.format(currentDate.getTime());
-            com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
-        }
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
-        */
     }
 
     @Override
@@ -294,6 +316,4 @@ public class GameScreen implements Screen, InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
-
-
 }
