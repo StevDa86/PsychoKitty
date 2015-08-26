@@ -1,6 +1,5 @@
 package com.psychokitty.game;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -63,21 +62,15 @@ public class GameScreen implements Screen, InputProcessor {
     private long lastDropTime;
 
 
-
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
 
-    public enum State
-    {
+    public enum State {
         PAUSE,
         RUN,
-        RESUME,
-        STOPPED
     }
+
     private State state = State.RUN;
-    public void setGameState(State s){
-        this.state = s;
-    }
 
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
@@ -170,9 +163,6 @@ public class GameScreen implements Screen, InputProcessor {
                 if (cat.x < 0)
                     cat.x = 0;
 
-                Gdx.gl.glClearColor(1, 1, 1, 1);
-                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
                 camera.update();
                 batch.setProjectionMatrix(stage.getCamera().combined);
 
@@ -205,8 +195,7 @@ public class GameScreen implements Screen, InputProcessor {
                     }
                 }
                 break;
-            case PAUSE:
-            {
+            case PAUSE: {
                 stage.act(delta);
                 stage.draw();
                 ExitGame();
@@ -230,7 +219,8 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void resume() {
-        this.state = State.RESUME;
+        Gdx.input.setInputProcessor(this);
+        this.state = State.RUN;
     }
 
     @Override
@@ -250,10 +240,9 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.BACK) {
-            ExitGame();
+            pause();
         } else if (keycode == Input.Keys.ESCAPE) {
             pause();
-            ExitGame();
         }
         return false;
     }
@@ -279,7 +268,13 @@ public class GameScreen implements Screen, InputProcessor {
 
                         return false;
                     }
-                }).button("No").show(stage);
+                })
+                .button("No", new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        resume();
+                        return false;
+                    }
+                }).show(stage);
     }
 
     @Override
