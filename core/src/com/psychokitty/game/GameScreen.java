@@ -196,7 +196,7 @@ public class GameScreen implements Screen, InputProcessor {
                 }
                 break;
             case PAUSE: {
-                stage.act(delta);
+                stage.act(delta);//update all actors
                 stage.draw();
                 ExitGame();
                 break;
@@ -220,6 +220,7 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void resume() {
         Gdx.input.setInputProcessor(this);
+        stage.clear();
         this.state = State.RUN;
     }
 
