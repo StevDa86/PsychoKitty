@@ -145,8 +145,25 @@ public class GameScreen implements Screen, InputProcessor {
     public void render(float delta) {
         deltaTime = Gdx.graphics.getDeltaTime();
 
+        camera.update();
+        batch.setProjectionMatrix(stage.getCamera().combined);
+
+        // begin a new batch and draw
+        batch.begin();
+        backgroundSpeed -= 1;
+        batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
+        font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
+        batch.draw(catImage, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
+        for (Rectangle Items : catfood) {
+            batch.draw(dropImage, Items.x, Items.y, 80, 80);
+            batch.draw(dogImage, Items.x / 2, Items.y, 100, 100);
+        }
+        batch.end();
+
+
         switch (state) {
-            case RUN:
+            case RUN: {
                 //setup user interaction
                 if (Gdx.input.isTouched()) {
                     touchPos.set(Gdx.input.getX() - 32, Gdx.input.getY());
@@ -162,22 +179,6 @@ public class GameScreen implements Screen, InputProcessor {
                     cat.x = Gdx.graphics.getWidth() - 100;
                 if (cat.x < 0)
                     cat.x = 0;
-
-                camera.update();
-                batch.setProjectionMatrix(stage.getCamera().combined);
-
-                // begin a new batch and draw
-                batch.begin();
-                backgroundSpeed -= 1;
-                batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-                batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
-                font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
-                batch.draw(catImage, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
-                for (Rectangle Items : catfood) {
-                    batch.draw(dropImage, Items.x, Items.y, 80, 80);
-                    batch.draw(dogImage, Items.x / 2, Items.y, 100, 100);
-                }
-                batch.end();
 
                 //Drop icons
                 if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnItems();
@@ -195,6 +196,8 @@ public class GameScreen implements Screen, InputProcessor {
                     }
                 }
                 break;
+            }
+
             case PAUSE: {
                 stage.act(delta);//update all actors
                 stage.draw();
@@ -266,7 +269,6 @@ public class GameScreen implements Screen, InputProcessor {
                             com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
                         }
                         ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
-
                         return false;
                     }
                 })
