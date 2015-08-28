@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
@@ -60,7 +61,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Texture foreground;
     private int backgroundSpeed;
     private long lastDropTime;
-
+    private Sprite catSprite;
 
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
@@ -95,6 +96,8 @@ public class GameScreen implements Screen, InputProcessor {
         catImage = new Texture(Constants.playerImage);
         dogImage = new Texture(Constants.dogImage);
 
+        catSprite = new Sprite(catImage);
+
         // load the drop sound effect and the rain background "music"
         catSound = Gdx.audio.newSound(Gdx.files.internal(com.psychokitty.game.Utils.Constants.soundMiau));
         rainMusic = Gdx.audio.newMusic(Gdx.files.internal(com.psychokitty.game.Utils.Constants.musicDream));
@@ -124,6 +127,8 @@ public class GameScreen implements Screen, InputProcessor {
         cat.y = 20;
         cat.width = com.psychokitty.game.Utils.Constants.catsize;
         cat.height = com.psychokitty.game.Utils.Constants.catsize;
+
+
     }
 
     @Override
@@ -154,7 +159,7 @@ public class GameScreen implements Screen, InputProcessor {
         batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
-        batch.draw(catImage, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
+        batch.draw(catSprite, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
         for (Rectangle Items : catfood) {
             batch.draw(dropImage, Items.x, Items.y, 80, 80);
             batch.draw(dogImage, Items.x / 2, Items.y, 100, 100);
@@ -168,10 +173,15 @@ public class GameScreen implements Screen, InputProcessor {
                 if (Gdx.input.isTouched()) {
                     touchPos.set(Gdx.input.getX() - 32, Gdx.input.getY());
                 }
-                if (touchPos.x > cat.x)
+                if (touchPos.x > cat.x){
+
                     cat.x += com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
-                else if (touchPos.x < cat.x)
+                }
+                else if (touchPos.x < cat.x) {
+
                     cat.x -= com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
+                }
+
                 if (Math.abs(touchPos.x - cat.x) < 5)
                     cat.x = touchPos.x;
                 //Katze am rand aufhalten
@@ -253,13 +263,14 @@ public class GameScreen implements Screen, InputProcessor {
 
     public void ExitGame() {
         Gdx.input.setInputProcessor(stage);
+        if (adcont.isWifiConnected()) {
+            adcont.showBannerAd();
+        }
         new CustomDialog("Exit game", skin2).text("Exit game?")
                 .button("Yes", new InputListener() {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         dispose();
-                        if (adcont.isWifiConnected()) {
-                            adcont.showBannerAd();
-                        }
+
                         //highscore setzen und datum setzen
                         if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
                             com.psychokitty.game.Utils.Highscore.setHighScore(score);
@@ -274,6 +285,7 @@ public class GameScreen implements Screen, InputProcessor {
                 })
                 .button("No", new InputListener() {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        adcont.hideBannerAd();
                         resume();
                         return false;
                     }
