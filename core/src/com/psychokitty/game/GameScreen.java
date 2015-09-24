@@ -63,6 +63,8 @@ public class GameScreen implements Screen, InputProcessor {
     private long lastDropTime;
     private Sprite catSprite;
 
+    private int direction = 0;
+
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
 
@@ -173,13 +175,23 @@ public class GameScreen implements Screen, InputProcessor {
                 if (Gdx.input.isTouched()) {
                     touchPos.set(Gdx.input.getX() - 32, Gdx.input.getY());
                 }
+                //Move right
                 if (touchPos.x > cat.x){
 
                     cat.x += com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
+                    if(direction == 1){
+                        direction = 0;
+                        catSprite.flip(true,false);
+                    }
                 }
+                //move left
                 else if (touchPos.x < cat.x) {
 
                     cat.x -= com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
+                    if(direction == 0){
+                        direction = 1;
+                        catSprite.flip(true,false);
+                    }
                 }
 
                 if (Math.abs(touchPos.x - cat.x) < 5)
