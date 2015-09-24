@@ -8,7 +8,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -49,6 +48,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Texture catImage;
     private Texture dogImage;
     private Sound catSound;
+    private Sound catHiss;
     private Music rainMusic;
     private OrthographicCamera camera;
     private Viewport viewport;
@@ -102,6 +102,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         // load the drop sound effect and the rain background "music"
         catSound = Gdx.audio.newSound(Gdx.files.internal(com.psychokitty.game.Utils.Constants.soundMiau));
+        catHiss = Gdx.audio.newSound(Gdx.files.internal(Constants.catHiss));
         rainMusic = Gdx.audio.newMusic(Gdx.files.internal(com.psychokitty.game.Utils.Constants.musicDream));
 
         touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - com.psychokitty.game.Utils.Constants.catsize / 2, 0);
@@ -144,7 +145,16 @@ public class GameScreen implements Screen, InputProcessor {
         Items.y = Gdx.graphics.getHeight();
         Items.width = 64;
         Items.height = 64;
+
+        Rectangle Items2 = new Rectangle();
+        Items2.x = MathUtils.random(0, Gdx.graphics.getWidth() - 100);
+        Items2.y = Gdx.graphics.getHeight();
+        Items2.width = 100;
+        Items2.height = 100;
+
+
         catfood.add(Items);
+        dog.add(Items2);
         lastDropTime = TimeUtils.nanoTime();
     }
 
@@ -162,10 +172,12 @@ public class GameScreen implements Screen, InputProcessor {
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
         batch.draw(catSprite, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
+
         for (Rectangle Items : catfood) {
             batch.draw(dropImage, Items.x, Items.y, 80, 80);
-            batch.draw(dogImage, Items.x / 2, Items.y, 100, 100);
+
         }
+        for (Rectangle Items2 : dog){batch.draw(dogImage, Items2.x, Items2.y, 100, 100);}
         batch.end();
 
 
@@ -176,21 +188,21 @@ public class GameScreen implements Screen, InputProcessor {
                     touchPos.set(Gdx.input.getX() - 32, Gdx.input.getY());
                 }
                 //Move right
-                if (touchPos.x > cat.x){
+                if (touchPos.x > cat.x) {
 
                     cat.x += com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
-                    if(direction == 1){
+                    if (direction == 1) {
                         direction = 0;
-                        catSprite.flip(true,false);
+                        catSprite.flip(true, false);
                     }
                 }
                 //move left
                 else if (touchPos.x < cat.x) {
 
                     cat.x -= com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
-                    if(direction == 0){
+                    if (direction == 0) {
                         direction = 1;
-                        catSprite.flip(true,false);
+                        catSprite.flip(true, false);
                     }
                 }
 
@@ -217,7 +229,19 @@ public class GameScreen implements Screen, InputProcessor {
                         iter.remove();
                     }
                 }
+
+                Iterator<Rectangle> iter2 = dog.iterator();
+                while (iter2.hasNext()) {
+                    Rectangle Items2 = iter2.next();
+                    Items2.y -= 350 * Gdx.graphics.getDeltaTime();
+                    if (Items2.y + 100 < 0) iter2.remove();
+                    if (Items2.overlaps(cat)) {
+                        catHiss.play();
+                        iter2.remove();
+                    }
+                }
                 break;
+
             }
 
             case PAUSE: {
