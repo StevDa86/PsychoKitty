@@ -231,6 +231,7 @@ public class GameScreen implements Screen, InputProcessor {
                     if (Items2.y + 100 < 0) iter2.remove();
                     if (Items2.overlaps(cat)) {
                         catHiss.play();
+                        Gdx.input.vibrate(100);
                         iter2.remove();
                         lives--;
                         lives_text = "Lives:" + lives;
