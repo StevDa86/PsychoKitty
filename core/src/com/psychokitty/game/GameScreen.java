@@ -344,7 +344,7 @@ public class GameScreen implements Screen, InputProcessor {
         if (adcont.isWifiConnected()) {
             adcont.showBannerAd();
         }
-        new CustomDialog("Game Over", skin2).text("Game Over")
+        new CustomDialog("Game Over", skin2).text("Your Socre:" + score)
                 .button("EXIT", new InputListener() {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         dispose();

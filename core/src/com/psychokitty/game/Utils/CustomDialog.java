@@ -19,7 +19,7 @@ public class CustomDialog extends Dialog {
         initialize();
     }
     private void initialize() {
-        padTop(60); // set padding on top of the dialog title
+        padTop(50); // set padding on top of the dialog title
         getButtonTable().defaults().height(100); // set buttons height
         getButtonTable().defaults().width(100);
         setModal(true);
