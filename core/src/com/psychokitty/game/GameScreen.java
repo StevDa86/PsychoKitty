@@ -238,7 +238,6 @@ public class GameScreen implements Screen, InputProcessor {
                             GameOverState();
                         }
                     }
-
                 }
 
                 break;
