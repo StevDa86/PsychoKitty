@@ -151,7 +151,6 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void render(float delta) {
         deltaTime = Gdx.graphics.getDeltaTime();
-
         camera.update();
         batch.setProjectionMatrix(stage.getCamera().combined);
 
@@ -228,7 +227,7 @@ public class GameScreen implements Screen, InputProcessor {
                 while (iter2.hasNext()) {
                     Rectangle Items2 = iter2.next();
                     Items2.y -= 350 * Gdx.graphics.getDeltaTime();
-                    if (Items2.y + 100 < 0) iter2.remove();
+                    if (Items2.y + 50 < 0) iter2.remove();
                     if (Items2.overlaps(cat)) {
                         catHiss.play();
                         Gdx.input.vibrate(100);
