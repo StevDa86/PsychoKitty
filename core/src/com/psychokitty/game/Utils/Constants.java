@@ -30,6 +30,9 @@ public class Constants {
     //UI
     public static final String defaultJson = "ui/defaultskin.json";
 
+    //Text
+    public static final String scoreTXT = "Your Score: ";
+
 
 
 }
