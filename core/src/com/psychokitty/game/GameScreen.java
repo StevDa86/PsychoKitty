@@ -320,7 +320,7 @@ public class GameScreen implements Screen, InputProcessor {
                         //highscore setzen und datum setzen
                         if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
                             com.psychokitty.game.Utils.Highscore.setHighScore(score);
-                            Calendar currentDate = Calendar.getInstance(); //Get the current date
+                            Calendar currentDate = Calendar.getInstance(); //Get the current dat
                             SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
                             String dateNow = formatter.format(currentDate.getTime());
                             com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
