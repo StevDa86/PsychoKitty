@@ -159,8 +159,7 @@ public class GameScreen implements Screen, InputProcessor {
         backgroundSpeed -= 1;
         batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
-        font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
-        font.draw(batch, lives_text, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 20);
+
         batch.draw(catSprite, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
 
         for (Rectangle Items : catfood) {
@@ -170,6 +169,9 @@ public class GameScreen implements Screen, InputProcessor {
         for (Rectangle Items2 : dog) {
             batch.draw(dogImage, Items2.x, Items2.y, 100, 100);
         }
+
+        font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
+        font.draw(batch, lives_text, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 20);
         batch.end();
 
 
