@@ -90,8 +90,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         Gdx.input.setInputProcessor(this);
 
-//Animation test
-
+//Dog Animation
         DogwalkSheet = new Texture(Constants.dogAnimationImage); // #9
         TextureRegion[][] tmp = TextureRegion.split(DogwalkSheet, DogwalkSheet.getWidth()/FRAME_COLS, DogwalkSheet.getHeight()/FRAME_ROWS);              // #10
         DogwalkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
