@@ -10,9 +10,11 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -43,7 +45,7 @@ public class GameScreen implements Screen, InputProcessor {
     Vector2 touchPos;
     private SpriteBatch batch;
     private BitmapFont font;
-    private Texture dropImage, dogImage, catImage, background, foreground;
+    private Texture dropImage, catImage, background, foreground;
     private Sound catSound, catHiss;
     private Music rainMusic;
     private OrthographicCamera camera;
@@ -66,6 +68,19 @@ public class GameScreen implements Screen, InputProcessor {
 
     private State state = State.RUN;
 
+    //Dog Animation
+    final int        FRAME_COLS = 2;         // #1
+    final int        FRAME_ROWS = 1;         // #2
+
+    Animation DogwalkAnimation;          // #3
+    Texture DogwalkSheet;              // #4
+    TextureRegion[] DogwalkFrames;             // #5
+    SpriteBatch DogSpriteBatch;            // #6
+    TextureRegion DogcurrentFrame;           // #7
+    float stateTime;                                        // #8
+
+
+
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
         adcont = adsController;
@@ -74,6 +89,22 @@ public class GameScreen implements Screen, InputProcessor {
         highscore.config();
 
         Gdx.input.setInputProcessor(this);
+
+//Animation test
+
+        DogwalkSheet = new Texture(Constants.dogAnimationImage); // #9
+        TextureRegion[][] tmp = TextureRegion.split(DogwalkSheet, DogwalkSheet.getWidth()/FRAME_COLS, DogwalkSheet.getHeight()/FRAME_ROWS);              // #10
+        DogwalkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+        int index = 0;
+        for (int i = 0; i < FRAME_ROWS; i++) {
+            for (int j = 0; j < FRAME_COLS; j++) {
+                DogwalkFrames[index++] = tmp[i][j];
+            }
+        }
+        DogwalkAnimation = new Animation(0.225f, DogwalkFrames);      // #11
+        DogSpriteBatch = new SpriteBatch();                // #12
+        stateTime = 0f;                         // #13
+
 
         //Text definition
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Light.ttf"));
@@ -87,7 +118,6 @@ public class GameScreen implements Screen, InputProcessor {
         // load the images for the droplet and the cat, 64x64 pixels each
         dropImage = new Texture(Constants.catnipImage);
         catImage = new Texture(Constants.playerImage);
-        dogImage = new Texture(Constants.dogImage);
 
         catSprite = new Sprite(catImage);
 
@@ -148,32 +178,36 @@ public class GameScreen implements Screen, InputProcessor {
         lastDogDropTime = TimeUtils.nanoTime();
     }
 
+
+
     @Override
     public void render(float delta) {
         deltaTime = Gdx.graphics.getDeltaTime();
         camera.update();
         batch.setProjectionMatrix(stage.getCamera().combined);
 
+        //Dog Animation
+        stateTime += Gdx.graphics.getDeltaTime();           // #15
+        DogcurrentFrame = DogwalkAnimation.getKeyFrame(stateTime, true);  // #16
+
         // begin a new batch and draw
         batch.begin();
         backgroundSpeed -= 1;
         batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
-
         batch.draw(catSprite, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
-
         for (Rectangle Items : catfood) {
             batch.draw(dropImage, Items.x, Items.y, 80, 80);
 
         }
         for (Rectangle Items2 : dog) {
-            batch.draw(dogImage, Items2.x, Items2.y, 100, 100);
-        }
+            batch.draw(DogcurrentFrame, Items2.x, Items2.y, 100, 100);
+          ;
 
+        }
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
         font.draw(batch, lives_text, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 20);
         batch.end();
-
 
         switch (state) {
             case RUN: {
@@ -241,7 +275,6 @@ public class GameScreen implements Screen, InputProcessor {
                         }
                     }
                 }
-
                 break;
             }
 
@@ -287,7 +320,7 @@ public class GameScreen implements Screen, InputProcessor {
         batch.dispose();
         rainMusic.dispose();
         dropImage.dispose();
-        dogImage.dispose();
+
         catImage.dispose();
         catSound.dispose();
         background.dispose();
