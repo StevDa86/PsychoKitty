@@ -18,7 +18,8 @@ public class Constants {
     public static final String splashImage = "Backgrounds/splash.png";
     public static final String backgroundMenu = "Backgrounds/Menu.jpg";
     public static final String catnipImage = "Characters/droplet.png";
-    public static final String dogImage = "Characters/dog1.png";
+    public static final String dogAnimationImage = "Characters/dogAnim.png";
+
 
     //Sounds n Music
     public static final String soundMiau = "Sounds/cat.mp3";
