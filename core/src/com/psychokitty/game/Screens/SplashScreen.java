@@ -1,4 +1,4 @@
-package com.psychokitty.game;
+package com.psychokitty.game.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.psychokitty.game.PsychoKittyGame;
 
 /**
  * Created by steven on 24.07.15.
