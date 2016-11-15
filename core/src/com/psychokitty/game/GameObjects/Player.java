@@ -1,13 +1,13 @@
 package com.psychokitty.game.GameObjects;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.psychokitty.game.Utils.Constants;
+
 
 /**
  * Created by Steven on 10.11.2016.
@@ -17,7 +17,7 @@ public class Player {
 
     Vector2 touchPos;
     private Sprite catSprite;
-     private Texture catImage;
+    private Texture catImage;
     private int direction = 0;
     private Rectangle cat;
     private float deltaTime;
@@ -40,7 +40,6 @@ public class Player {
     }
 
     private void move( ){
-
         catSprite.setPosition(cat.x,cat.y);
 
         //setup user interaction
@@ -71,7 +70,10 @@ public class Player {
             cat.x = Gdx.graphics.getWidth() - 100;
         if (cat.x < 0)
             cat.x = 0;
+    }
 
+    public Rectangle getRectangle() {
+        return cat;
     }
 
     public void disposePlayer(){

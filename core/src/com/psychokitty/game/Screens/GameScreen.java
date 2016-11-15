@@ -192,14 +192,12 @@ public class GameScreen implements Screen, InputProcessor {
                     Rectangle Items = iter.next();
                     Items.y -= 300 * Gdx.graphics.getDeltaTime();
                     if (Items.y + 64 < 0) iter.remove();
-                   /* if (Items.overlaps(cat)) {
+                   if (Items.overlaps(CatPlayer.getRectangle())) {
                         catSound.play();
                         score++;
                         scorename = "Score: " + score;
                         iter.remove();
                     }
-                    */
-
                 }
 
                 //DropDogs
@@ -209,7 +207,7 @@ public class GameScreen implements Screen, InputProcessor {
                     Rectangle Items2 = iter2.next();
                     Items2.y -= 350 * Gdx.graphics.getDeltaTime();
                     if (Items2.y + 50 < 0) iter2.remove();
-                  /*  if (Items2.overlaps(cat)) {
+                   if (Items2.overlaps(CatPlayer.getRectangle())){
                         catHiss.play();
                         Gdx.input.vibrate(100);
                         iter2.remove();
@@ -218,7 +216,7 @@ public class GameScreen implements Screen, InputProcessor {
                         if (lives == 0) {
                             GameOverState();
                         }
-                    }*/
+                    }
                 }
                 break;
             }
