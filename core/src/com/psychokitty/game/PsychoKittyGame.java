@@ -2,7 +2,6 @@ package com.psychokitty.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -29,7 +28,7 @@ public class PsychoKittyGame extends Game {
         //Werbung nur bei aktiven WIFI
         if(adsController.isWifiConnected()) {adsController.showBannerAd();}
 
-        this.setScreen(new SplashScreen(this, adsController));
+        this.setScreen(new com.psychokitty.game.Screens.SplashScreen(this, adsController));
     }
 
     public void render() {

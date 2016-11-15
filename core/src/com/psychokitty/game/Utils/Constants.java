@@ -20,7 +20,6 @@ public class Constants {
     public static final String catnipImage = "Characters/droplet.png";
     public static final String dogAnimationImage = "Characters/dogAnim.png";
 
-
     //Sounds n Music
     public static final String soundMiau = "Sounds/cat.mp3";
     public static final String catHiss = "Sounds/cat-hiss.mp3";

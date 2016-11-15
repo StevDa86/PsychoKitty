@@ -1,4 +1,4 @@
-package com.psychokitty.game;
+package com.psychokitty.game.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -12,13 +12,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -27,8 +25,11 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.psychokitty.game.GameObjects.Player;
+import com.psychokitty.game.PsychoKittyGame;
 import com.psychokitty.game.Utils.Constants;
 import com.psychokitty.game.Utils.CustomDialog;
+import com.psychokitty.game.Utils.Highscore;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -40,46 +41,32 @@ import java.util.Iterator;
 public class GameScreen implements Screen, InputProcessor {
 
     final PsychoKittyGame game;
+    //Dog Animation
+    final int FRAME_COLS = 2;         // #1
+    final int FRAME_ROWS = 1;         // #2
     public com.psychokitty.game.AdMob.AdsController adcont;
     public Array<Rectangle> catfood, dog;
-    Vector2 touchPos;
-    private SpriteBatch batch;
-    private BitmapFont font;
-    private Texture dropImage, catImage, background, foreground;
-    private Sound catSound, catHiss;
-    private Music rainMusic;
-    private OrthographicCamera camera;
-    private Viewport viewport;
-    private com.psychokitty.game.Utils.Highscore highscore;
-    private Rectangle cat;
-    private float deltaTime;
-    private int score = 0, backgroundSpeed, direction = 0, lives = 3;
-    private String scorename, lives_text;
-    private long lastDropTime, lastDogDropTime;
-    private Sprite catSprite;
-    private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
-    private Stage stage = new Stage();
-
-    public enum State {
-        PAUSE,
-        GAMEOVER,
-        RUN,
-    }
-
-    private State state = State.RUN;
-
-    //Dog Animation
-    final int        FRAME_COLS = 2;         // #1
-    final int        FRAME_ROWS = 1;         // #2
-
     Animation DogwalkAnimation;          // #3
     Texture DogwalkSheet;              // #4
     TextureRegion[] DogwalkFrames;             // #5
     SpriteBatch DogSpriteBatch;            // #6
     TextureRegion DogcurrentFrame;           // #7
+    Player CatPlayer;
     float stateTime;                                        // #8
-
-
+    private SpriteBatch batch;
+    private BitmapFont font;
+    private Texture dropImage, background, foreground;
+    private Sound catSound, catHiss;
+    private Music rainMusic;
+    private OrthographicCamera camera;
+    private Viewport viewport;
+    private Highscore highscore;
+    private int score = 0, backgroundSpeed, lives = 3;
+    private String scorename, lives_text;
+    private long lastDropTime, lastDogDropTime;
+    private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
+    private Stage stage = new Stage();
+    private State state = State.RUN;
 
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
@@ -92,7 +79,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 //Dog Animation
         DogwalkSheet = new Texture(Constants.dogAnimationImage); // #9
-        TextureRegion[][] tmp = TextureRegion.split(DogwalkSheet, DogwalkSheet.getWidth()/FRAME_COLS, DogwalkSheet.getHeight()/FRAME_ROWS);              // #10
+        TextureRegion[][] tmp = TextureRegion.split(DogwalkSheet, DogwalkSheet.getWidth() / FRAME_COLS, DogwalkSheet.getHeight() / FRAME_ROWS);              // #10
         DogwalkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
         int index = 0;
         for (int i = 0; i < FRAME_ROWS; i++) {
@@ -104,6 +91,8 @@ public class GameScreen implements Screen, InputProcessor {
         DogSpriteBatch = new SpriteBatch();                // #12
         stateTime = 0f;                         // #13
 
+        CatPlayer = new Player();
+        CatPlayer.createPlayer();
 
         //Text definition
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Light.ttf"));
@@ -116,16 +105,11 @@ public class GameScreen implements Screen, InputProcessor {
 
         // load the images for the droplet and the cat, 64x64 pixels each
         dropImage = new Texture(Constants.catnipImage);
-        catImage = new Texture(Constants.playerImage);
-
-        catSprite = new Sprite(catImage);
 
         // load the drop sound effect and the rain background "music"
         catSound = Gdx.audio.newSound(Gdx.files.internal(com.psychokitty.game.Utils.Constants.soundMiau));
         catHiss = Gdx.audio.newSound(Gdx.files.internal(Constants.catHiss));
         rainMusic = Gdx.audio.newMusic(Gdx.files.internal(com.psychokitty.game.Utils.Constants.musicDream));
-
-        touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - com.psychokitty.game.Utils.Constants.catsize / 2, 0);
 
         scorename = "Score:" + score;
         lives_text = "Lives:" + lives;
@@ -144,17 +128,12 @@ public class GameScreen implements Screen, InputProcessor {
 
         catfood = new Array<Rectangle>();
         dog = new Array<Rectangle>();
-
-        cat = new Rectangle();
-        cat.x = Gdx.graphics.getWidth() / 2 - com.psychokitty.game.Utils.Constants.catsize / 2;
-        cat.y = 20;
-        cat.width = com.psychokitty.game.Utils.Constants.catsize;
-        cat.height = com.psychokitty.game.Utils.Constants.catsize;
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
+
     }
 
     public void spawnItems() {
@@ -177,11 +156,8 @@ public class GameScreen implements Screen, InputProcessor {
         lastDogDropTime = TimeUtils.nanoTime();
     }
 
-
-
     @Override
     public void render(float delta) {
-        deltaTime = Gdx.graphics.getDeltaTime();
         camera.update();
         batch.setProjectionMatrix(stage.getCamera().combined);
 
@@ -194,53 +170,21 @@ public class GameScreen implements Screen, InputProcessor {
         backgroundSpeed -= 1;
         batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
-        batch.draw(catSprite, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
+        CatPlayer.renderPlayer(batch);
         for (Rectangle Items : catfood) {
             batch.draw(dropImage, Items.x, Items.y, 80, 80);
 
         }
         for (Rectangle Items2 : dog) {
             batch.draw(DogcurrentFrame, Items2.x, Items2.y, 100, 100);
-          ;
-
         }
+
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
         font.draw(batch, lives_text, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 20);
         batch.end();
 
         switch (state) {
             case RUN: {
-                //setup user interaction
-                if (Gdx.input.isTouched()) {
-                    touchPos.set(Gdx.input.getX() - 32, Gdx.input.getY());
-                }
-                //Move right
-                if (touchPos.x > cat.x) {
-
-                    cat.x += com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
-                    if (direction == 1) {
-                        direction = 0;
-                        catSprite.flip(true, false);
-                    }
-                }
-                //move left
-                else if (touchPos.x < cat.x) {
-
-                    cat.x -= com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
-                    if (direction == 0) {
-                        direction = 1;
-                        catSprite.flip(true, false);
-                    }
-                }
-
-                if (Math.abs(touchPos.x - cat.x) < 5)
-                    cat.x = touchPos.x;
-                //Katze am rand aufhalten
-                if (cat.x > Gdx.graphics.getWidth() - 100)
-                    cat.x = Gdx.graphics.getWidth() - 100;
-                if (cat.x < 0)
-                    cat.x = 0;
-
                 //Drop icons
                 if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnItems();
                 Iterator<Rectangle> iter = catfood.iterator();
@@ -248,12 +192,14 @@ public class GameScreen implements Screen, InputProcessor {
                     Rectangle Items = iter.next();
                     Items.y -= 300 * Gdx.graphics.getDeltaTime();
                     if (Items.y + 64 < 0) iter.remove();
-                    if (Items.overlaps(cat)) {
+                   /* if (Items.overlaps(cat)) {
                         catSound.play();
                         score++;
                         scorename = "Score: " + score;
                         iter.remove();
                     }
+                    */
+
                 }
 
                 //DropDogs
@@ -263,16 +209,16 @@ public class GameScreen implements Screen, InputProcessor {
                     Rectangle Items2 = iter2.next();
                     Items2.y -= 350 * Gdx.graphics.getDeltaTime();
                     if (Items2.y + 50 < 0) iter2.remove();
-                    if (Items2.overlaps(cat)) {
+                  /*  if (Items2.overlaps(cat)) {
                         catHiss.play();
                         Gdx.input.vibrate(100);
                         iter2.remove();
                         lives--;
                         lives_text = "Lives:" + lives;
-                        if(lives == 0){
+                        if (lives == 0) {
                             GameOverState();
                         }
-                    }
+                    }*/
                 }
                 break;
             }
@@ -284,7 +230,7 @@ public class GameScreen implements Screen, InputProcessor {
                 break;
             }
 
-            case GAMEOVER:{
+            case GAMEOVER: {
                 stage.act(delta);//update all actors
                 stage.draw();
                 GameOver();
@@ -319,8 +265,7 @@ public class GameScreen implements Screen, InputProcessor {
         batch.dispose();
         rainMusic.dispose();
         dropImage.dispose();
-
-        catImage.dispose();
+        CatPlayer.disposePlayer();
         catSound.dispose();
         background.dispose();
         foreground.dispose();
@@ -359,7 +304,7 @@ public class GameScreen implements Screen, InputProcessor {
                             String dateNow = formatter.format(currentDate.getTime());
                             com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
                         }
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new com.psychokitty.game.Screens.MenuScreen(game, adcont));
                         return false;
                     }
                 })
@@ -390,11 +335,11 @@ public class GameScreen implements Screen, InputProcessor {
                             String dateNow = formatter.format(currentDate.getTime());
                             com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
                         }
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(game, adcont));
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new com.psychokitty.game.Screens.MenuScreen(game, adcont));
                         return false;
                     }
                 })
-              .show(stage);
+                .show(stage);
     }
 
     @Override
@@ -430,5 +375,11 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public enum State {
+        PAUSE,
+        GAMEOVER,
+        RUN,
     }
 }
