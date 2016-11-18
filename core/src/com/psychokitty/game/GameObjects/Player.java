@@ -22,7 +22,7 @@ public class Player {
     private Rectangle cat;
     private float deltaTime;
 
-    public void createPlayer(){
+    public void createPlayer() {
         catImage = new Texture(Constants.playerImage);
         catSprite = new Sprite(catImage);
         touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - com.psychokitty.game.Utils.Constants.catsize / 2, 0);
@@ -33,14 +33,14 @@ public class Player {
         cat.height = com.psychokitty.game.Utils.Constants.catsize;
     }
 
-    public void renderPlayer(SpriteBatch batch){
+    public void renderPlayer(SpriteBatch batch) {
         deltaTime = Gdx.graphics.getDeltaTime();
         batch.draw(catSprite, catSprite.getX(), catSprite.getY(), com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
         move();
     }
 
-    private void move( ){
-        catSprite.setPosition(cat.x,cat.y);
+    private void move() {
+        catSprite.setPosition(cat.x, cat.y);
 
         //setup user interaction
         if (Gdx.input.isTouched()) {
@@ -76,7 +76,7 @@ public class Player {
         return cat;
     }
 
-    public void disposePlayer(){
+    public void disposePlayer() {
         catImage.dispose();
     }
 

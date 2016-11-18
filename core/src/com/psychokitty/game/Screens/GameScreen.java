@@ -10,21 +10,18 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.psychokitty.game.GameObjects.Enemies;
 import com.psychokitty.game.GameObjects.Items;
 import com.psychokitty.game.GameObjects.Player;
 import com.psychokitty.game.PsychoKittyGame;
@@ -42,19 +39,13 @@ import java.util.Iterator;
 public class GameScreen implements Screen, InputProcessor {
 
     final PsychoKittyGame game;
-    //Dog Animation
-    final int FRAME_COLS = 2;         // #1
-    final int FRAME_ROWS = 1;         // #2
+
     public com.psychokitty.game.AdMob.AdsController adcont;
-    public Array<Rectangle> dog;
-    Animation DogwalkAnimation;          // #3
-    Texture DogwalkSheet;              // #4
-    TextureRegion[] DogwalkFrames;             // #5
-    SpriteBatch DogSpriteBatch;            // #6
-    TextureRegion DogcurrentFrame;           // #7
+
     Player CatPlayer;
     Items CatFood;
-    float stateTime;                                        // #8
+    Enemies Dog;
+
     private SpriteBatch batch;
     private BitmapFont font;
     private Texture background, foreground;
@@ -65,7 +56,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Highscore highscore;
     private int score = 0, backgroundSpeed, lives = 3;
     private String scorename, lives_text;
-    private long lastDogDropTime;
+
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
     private State state = State.RUN;
@@ -79,25 +70,14 @@ public class GameScreen implements Screen, InputProcessor {
 
         Gdx.input.setInputProcessor(this);
 
-//Dog Animation
-        DogwalkSheet = new Texture(Constants.dogAnimationImage); // #9
-        TextureRegion[][] tmp = TextureRegion.split(DogwalkSheet, DogwalkSheet.getWidth() / FRAME_COLS, DogwalkSheet.getHeight() / FRAME_ROWS);              // #10
-        DogwalkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-        int index = 0;
-        for (int i = 0; i < FRAME_ROWS; i++) {
-            for (int j = 0; j < FRAME_COLS; j++) {
-                DogwalkFrames[index++] = tmp[i][j];
-            }
-        }
-        DogwalkAnimation = new Animation(0.225f, DogwalkFrames);      // #11
-        DogSpriteBatch = new SpriteBatch();                // #12
-        stateTime = 0f;                         // #13
-
         CatPlayer = new Player();
         CatPlayer.createPlayer();
 
         CatFood = new Items();
         CatFood.createItems();
+
+        Dog = new Enemies();
+        Dog.CreateEnemies();
 
         //Text definition
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Light.ttf"));
@@ -126,8 +106,6 @@ public class GameScreen implements Screen, InputProcessor {
         background = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.backgroundImage));
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         foreground = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.foregroundImage));
-
-        dog = new Array<Rectangle>();
     }
 
     @Override
@@ -135,24 +113,12 @@ public class GameScreen implements Screen, InputProcessor {
         viewport.update(width, height);
     }
 
-    public void spawnDog() {
-        Rectangle Items2 = new Rectangle();
-        Items2.x = MathUtils.random(0, Gdx.graphics.getWidth() - 100);
-        Items2.y = Gdx.graphics.getHeight();
-        Items2.width = 100;
-        Items2.height = 100;
-        dog.add(Items2);
-        lastDogDropTime = TimeUtils.nanoTime();
-    }
 
     @Override
     public void render(float delta) {
         camera.update();
         batch.setProjectionMatrix(stage.getCamera().combined);
 
-        //Dog Animation
-        stateTime += Gdx.graphics.getDeltaTime();           // #15
-        DogcurrentFrame = DogwalkAnimation.getKeyFrame(stateTime, true);  // #16
 
         // begin a new batch and draw
         batch.begin();
@@ -162,10 +128,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         CatPlayer.renderPlayer(batch);
         CatFood.renderItems(batch);
-
-        for (Rectangle Items2 : dog) {
-            batch.draw(DogcurrentFrame, Items2.x, Items2.y, 100, 100);
-        }
+        Dog.RenderEnemies(batch);
 
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
         font.draw(batch, lives_text, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 20);
@@ -174,13 +137,14 @@ public class GameScreen implements Screen, InputProcessor {
         switch (state) {
             case RUN: {
                 //Drop icons
-                if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 800000000) CatFood.spawnItems();
+                if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 800000000)
+                    CatFood.spawnItems();
                 Iterator<Rectangle> iter = CatFood.getArray().iterator();
                 while (iter.hasNext()) {
                     Rectangle Items = iter.next();
                     Items.y -= 300 * Gdx.graphics.getDeltaTime();
                     if (Items.y + 64 < 0) iter.remove();
-                   if (Items.overlaps(CatPlayer.getRectangle())) {
+                    if (Items.overlaps(CatPlayer.getRectangle())) {
                         catSound.play();
                         score++;
                         scorename = "Score: " + score;
@@ -189,13 +153,13 @@ public class GameScreen implements Screen, InputProcessor {
                 }
 
                 //DropDogs
-                if (TimeUtils.nanoTime() - lastDogDropTime > 1000000000) spawnDog();
-                Iterator<Rectangle> iter2 = dog.iterator();
+                if (TimeUtils.nanoTime() - Dog.getLastDropTime() > 1000000000) Dog.spawnDog();
+                Iterator<Rectangle> iter2 = Dog.getArray().iterator();
                 while (iter2.hasNext()) {
                     Rectangle Items2 = iter2.next();
                     Items2.y -= 350 * Gdx.graphics.getDeltaTime();
                     if (Items2.y + 50 < 0) iter2.remove();
-                   if (Items2.overlaps(CatPlayer.getRectangle())){
+                    if (Items2.overlaps(CatPlayer.getRectangle())) {
                         catHiss.play();
                         Gdx.input.vibrate(100);
                         iter2.remove();
@@ -252,6 +216,7 @@ public class GameScreen implements Screen, InputProcessor {
         rainMusic.dispose();
         CatPlayer.disposePlayer();
         CatFood.disposeItems();
+        Dog.DisposeEnemies();
         catSound.dispose();
         background.dispose();
         foreground.dispose();
