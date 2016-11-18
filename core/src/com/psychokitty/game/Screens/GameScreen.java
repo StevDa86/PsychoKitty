@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.psychokitty.game.GameObjects.Items;
 import com.psychokitty.game.GameObjects.Player;
 import com.psychokitty.game.PsychoKittyGame;
 import com.psychokitty.game.Utils.Constants;
@@ -45,17 +46,18 @@ public class GameScreen implements Screen, InputProcessor {
     final int FRAME_COLS = 2;         // #1
     final int FRAME_ROWS = 1;         // #2
     public com.psychokitty.game.AdMob.AdsController adcont;
-    public Array<Rectangle> catfood, dog;
+    public Array<Rectangle> dog;
     Animation DogwalkAnimation;          // #3
     Texture DogwalkSheet;              // #4
     TextureRegion[] DogwalkFrames;             // #5
     SpriteBatch DogSpriteBatch;            // #6
     TextureRegion DogcurrentFrame;           // #7
     Player CatPlayer;
+    Items CatFood;
     float stateTime;                                        // #8
     private SpriteBatch batch;
     private BitmapFont font;
-    private Texture dropImage, background, foreground;
+    private Texture background, foreground;
     private Sound catSound, catHiss;
     private Music rainMusic;
     private OrthographicCamera camera;
@@ -63,7 +65,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Highscore highscore;
     private int score = 0, backgroundSpeed, lives = 3;
     private String scorename, lives_text;
-    private long lastDropTime, lastDogDropTime;
+    private long lastDogDropTime;
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
     private State state = State.RUN;
@@ -94,6 +96,9 @@ public class GameScreen implements Screen, InputProcessor {
         CatPlayer = new Player();
         CatPlayer.createPlayer();
 
+        CatFood = new Items();
+        CatFood.createItems();
+
         //Text definition
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Light.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -102,9 +107,6 @@ public class GameScreen implements Screen, InputProcessor {
         parameter.borderWidth = 1;
         font = generator.generateFont(parameter);
         generator.dispose();
-
-        // load the images for the droplet and the cat, 64x64 pixels each
-        dropImage = new Texture(Constants.catnipImage);
 
         // load the drop sound effect and the rain background "music"
         catSound = Gdx.audio.newSound(Gdx.files.internal(com.psychokitty.game.Utils.Constants.soundMiau));
@@ -123,27 +125,14 @@ public class GameScreen implements Screen, InputProcessor {
 
         background = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.backgroundImage));
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-
         foreground = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.foregroundImage));
 
-        catfood = new Array<Rectangle>();
         dog = new Array<Rectangle>();
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
-
-    }
-
-    public void spawnItems() {
-        Rectangle Items = new Rectangle();
-        Items.x = MathUtils.random(0, Gdx.graphics.getWidth() - 64);
-        Items.y = Gdx.graphics.getHeight();
-        Items.width = 64;
-        Items.height = 64;
-        catfood.add(Items);
-        lastDropTime = TimeUtils.nanoTime();
     }
 
     public void spawnDog() {
@@ -170,11 +159,10 @@ public class GameScreen implements Screen, InputProcessor {
         backgroundSpeed -= 1;
         batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
-        CatPlayer.renderPlayer(batch);
-        for (Rectangle Items : catfood) {
-            batch.draw(dropImage, Items.x, Items.y, 80, 80);
 
-        }
+        CatPlayer.renderPlayer(batch);
+        CatFood.renderItems(batch);
+
         for (Rectangle Items2 : dog) {
             batch.draw(DogcurrentFrame, Items2.x, Items2.y, 100, 100);
         }
@@ -186,8 +174,8 @@ public class GameScreen implements Screen, InputProcessor {
         switch (state) {
             case RUN: {
                 //Drop icons
-                if (TimeUtils.nanoTime() - lastDropTime > 800000000) spawnItems();
-                Iterator<Rectangle> iter = catfood.iterator();
+                if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 800000000) CatFood.spawnItems();
+                Iterator<Rectangle> iter = CatFood.getArray().iterator();
                 while (iter.hasNext()) {
                     Rectangle Items = iter.next();
                     Items.y -= 300 * Gdx.graphics.getDeltaTime();
@@ -262,8 +250,8 @@ public class GameScreen implements Screen, InputProcessor {
         font.dispose();
         batch.dispose();
         rainMusic.dispose();
-        dropImage.dispose();
         CatPlayer.disposePlayer();
+        CatFood.disposeItems();
         catSound.dispose();
         background.dispose();
         foreground.dispose();
