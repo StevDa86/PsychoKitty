@@ -19,13 +19,12 @@ public class Items {
     private Texture dropImage;
     private long lastDropTime;
 
-
-    public void createItems(){
+    public void createItems() {
         dropImage = new Texture(Constants.catnipImage);
         catfood = new Array<Rectangle>();
     }
 
-    public void renderItems(SpriteBatch batch){
+    public void renderItems(SpriteBatch batch) {
         for (Rectangle Items : catfood) {
             batch.draw(dropImage, Items.x, Items.y, 80, 80);
         }
@@ -41,13 +40,15 @@ public class Items {
         lastDropTime = TimeUtils.nanoTime();
     }
 
-    public long getLastDropTime(){return lastDropTime;}
+    public long getLastDropTime() {
+        return lastDropTime;
+    }
 
     public Array<Rectangle> getArray() {
         return catfood;
     }
 
-    public void disposeItems(){
+    public void disposeItems() {
         dropImage.dispose();
 
     }
