@@ -128,7 +128,7 @@ public class GameScreen implements Screen, InputProcessor {
         batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
 
-        //lebensanzeige als herzen
+        //lebensanzeige als Herzen
         if(lives ==3) {
             batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 40, 20, 20);
             batch.draw(Hearts, Gdx.graphics.getWidth() - 180, Gdx.graphics.getHeight() - 40, 20, 20);
@@ -160,7 +160,7 @@ public class GameScreen implements Screen, InputProcessor {
                 Iterator<Rectangle> iter = CatFood.getArray().iterator();
                 while (iter.hasNext()) {
                     Rectangle Items = iter.next();
-                    Items.y -= 300 * Gdx.graphics.getDeltaTime();
+                    Items.y -= (300+score*5) * Gdx.graphics.getDeltaTime(); //geschwindigkeit
                     if (Items.y + 64 < 0) iter.remove();
                     if (Items.overlaps(CatPlayer.getRectangle())) {
                         catSound.play();
@@ -175,7 +175,7 @@ public class GameScreen implements Screen, InputProcessor {
                 Iterator<Rectangle> iter2 = Dog.getArray().iterator();
                 while (iter2.hasNext()) {
                     Rectangle Items2 = iter2.next();
-                    Items2.y -= 350 * Gdx.graphics.getDeltaTime();
+                    Items2.y -= (350+score*5) * Gdx.graphics.getDeltaTime();
                     if (Items2.y + 50 < 0) iter2.remove();
                     if (Items2.overlaps(CatPlayer.getRectangle())) {
                         catHiss.play();
