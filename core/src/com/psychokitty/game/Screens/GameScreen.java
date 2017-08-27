@@ -119,7 +119,6 @@ public class GameScreen implements Screen, InputProcessor {
         camera.update();
         batch.setProjectionMatrix(stage.getCamera().combined);
 
-
         // begin a new batch and draw
         batch.begin();
         backgroundSpeed -= 1;
