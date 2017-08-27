@@ -21,7 +21,7 @@ public class Enemies {
     final int FRAME_COLS = 2;         // #1
     final int FRAME_ROWS = 1;         // #2
     public Array<Rectangle> dog;
-    Animation DogwalkAnimation;          // #3
+    Animation<TextureRegion> DogwalkAnimation;          // #3
     Texture DogwalkSheet;              // #4
     TextureRegion[] DogwalkFrames;             // #5
     SpriteBatch DogSpriteBatch;            // #6

@@ -2,6 +2,7 @@ package com.psychokitty.game.Utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.StringBuilder;
 
 /**
  * Created by steven on 24.07.15
@@ -19,6 +20,7 @@ public class Constants {
     public static final String backgroundMenu = "Backgrounds/Menu.jpg";
     public static final String catnipImage = "Characters/droplet.png";
     public static final String dogAnimationImage = "Characters/dogAnim.png";
+    public static final String heartImage = "ui/heart.png";
 
     //Sounds n Music
     public static final String soundMiau = "Sounds/cat.mp3";
