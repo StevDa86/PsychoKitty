@@ -56,6 +56,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Highscore highscore;
     private int score = 0, backgroundSpeed, lives = 3;
     private String scorename, lives_text;
+    private Texture Hearts;
 
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
@@ -106,6 +107,8 @@ public class GameScreen implements Screen, InputProcessor {
         background = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.backgroundImage));
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         foreground = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.foregroundImage));
+
+        Hearts = new Texture(Gdx.files.internal(Constants.heartImage));
     }
 
     @Override
@@ -125,12 +128,28 @@ public class GameScreen implements Screen, InputProcessor {
         batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
 
+        //lebensanzeige als herzen
+        if(lives ==3) {
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 40, 20, 20);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 180, Gdx.graphics.getHeight() - 40, 20, 20);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 40, 20, 20);
+        }
+        else if(lives ==2)
+        {
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 40, 20, 20);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 180, Gdx.graphics.getHeight() - 40, 20, 20);
+        }
+        else
+        {
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 40, 20, 20);
+        }
+
         CatPlayer.renderPlayer(batch);
         CatFood.renderItems(batch);
         Dog.RenderEnemies(batch);
 
         font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
-        font.draw(batch, lives_text, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 20);
+        //font.draw(batch, lives_text, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 20);
         batch.end();
 
         switch (state) {
