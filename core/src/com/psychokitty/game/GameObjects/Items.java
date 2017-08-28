@@ -2,6 +2,7 @@ package com.psychokitty.game.GameObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -18,15 +19,21 @@ public class Items {
     public Array<Rectangle> catfood;
     private Texture dropImage;
     private long lastDropTime;
+    private Sprite Drops;
 
     public void createItems() {
         dropImage = new Texture(Constants.catnipImage);
         catfood = new Array<Rectangle>();
+        Drops = new Sprite(dropImage);
     }
 
     public void renderItems(SpriteBatch batch) {
         for (Rectangle Items : catfood) {
-            batch.draw(dropImage, Items.x, Items.y, 80, 80);
+            Drops.setRotation(Items.y);
+            Drops.setX(Items.x);
+            Drops.setY(Items.y);
+            Drops.draw(batch);
+            //batch.draw(dropImage, Items.x, Items.y, 80, 80);
         }
     }
 

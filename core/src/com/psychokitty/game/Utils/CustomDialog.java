@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Align;
 
 /**
  * Created by sdanz on 18.08.2015.
@@ -14,6 +15,7 @@ public class CustomDialog extends Dialog {
 
     public Skin skin = new Skin(Gdx.files.internal(Constants.defaultJson));
 
+    //test für Titel der Box
     public CustomDialog (String title, Skin skin) {
         super(title, skin);
         initialize();
@@ -22,11 +24,13 @@ public class CustomDialog extends Dialog {
         padTop(50); // set padding on top of the dialog title
         getButtonTable().defaults().height(100); // set buttons height
         getButtonTable().defaults().width(100);
+        getTitleLabel().setAlignment(Align.center);
         setModal(true);
         setMovable(false);
         setResizable(false);
     }
 
+    //Text für Inhalt der Box
     @Override
     public CustomDialog text(String text) {
         super.text(new Label(text, skin, "default"));

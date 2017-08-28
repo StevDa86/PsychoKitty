@@ -239,6 +239,7 @@ public class GameScreen implements Screen, InputProcessor {
         background.dispose();
         foreground.dispose();
         stage.dispose();
+        Hearts.dispose();
     }
 
     @Override
