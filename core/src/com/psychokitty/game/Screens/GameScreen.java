@@ -59,7 +59,8 @@ public class GameScreen implements Screen, InputProcessor {
     private String scorename, lives_text;
     private Texture Hearts;
 
-
+    private long startTime, time;
+    private int startCnt = 1;
 
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
@@ -132,18 +133,14 @@ public class GameScreen implements Screen, InputProcessor {
         batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
 
         //lebensanzeige als Herzen
-        if(lives ==3) {
+        if (lives == 3) {
             batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, 40, 40);
             batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 60, 40, 40);
             batch.draw(Hearts, Gdx.graphics.getWidth() - 120, Gdx.graphics.getHeight() - 60, 40, 40);
-        }
-        else if(lives ==2)
-        {
+        } else if (lives == 2) {
             batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, 40, 40);
             batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 60, 40, 40);
-        }
-        else
-        {
+        } else {
             batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, 40, 40);
         }
 
@@ -157,32 +154,23 @@ public class GameScreen implements Screen, InputProcessor {
 
         switch (state) {
             //Intro counter
-            case INTRO:{
-                 float delay = 0; // seconds
-                float counter = 3;
+            case INTRO: {
 
-               while (counter >0)
-               {
-                   delay += delta;
-                   if(delay >=5) {
-                       Gdx.app.log("MyTag", "Noch" + counter);
-                       counter--;
-                       delay += delta;
-                   }
-                }
-
-                this.state= State.RUN;
+                this.state = State.RUN;
                 break;
             }
 
             case RUN: {
+
                 //Drop icons
-                if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 800000000)
+                if (time - startTime <= 1000) { //1 sekunde warten bis erster Drop.
+                    time = TimeUtils.millis();
+                } else if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 800000000)
                     CatFood.spawnItems();
                 Iterator<Rectangle> iter = CatFood.getArray().iterator();
                 while (iter.hasNext()) {
                     Rectangle Items = iter.next();
-                    Items.y -= (300+score*5) * Gdx.graphics.getDeltaTime(); //geschwindigkeit
+                    Items.y -= (300 + score * 5) * Gdx.graphics.getDeltaTime(); //geschwindigkeit
                     if (Items.y + 64 < 0) iter.remove();
                     if (Items.overlaps(CatPlayer.getRectangle())) {
                         catSound.play();
@@ -193,11 +181,14 @@ public class GameScreen implements Screen, InputProcessor {
                 }
 
                 //DropDogs
-                if (TimeUtils.nanoTime() - Dog.getLastDropTime() > 1000000000) Dog.spawnDog();
+                if (time - startTime <= 1000) {
+                    time = TimeUtils.millis();
+                } else if (TimeUtils.nanoTime() - Dog.getLastDropTime() > 1000000000)
+                    Dog.spawnDog();
                 Iterator<Rectangle> iter2 = Dog.getArray().iterator();
                 while (iter2.hasNext()) {
                     Rectangle Items2 = iter2.next();
-                    Items2.y -= (350+score*5) * Gdx.graphics.getDeltaTime();
+                    Items2.y -= (350 + score * 5) * Gdx.graphics.getDeltaTime();
                     if (Items2.y + 50 < 0) iter2.remove();
                     if (Items2.overlaps(CatPlayer.getRectangle())) {
                         catHiss.play();
@@ -231,6 +222,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void show() {
+        startTime = TimeUtils.millis();
     }
 
     @Override
@@ -310,6 +302,7 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     public void GameOver() {
+
         Gdx.input.setInputProcessor(stage);
         if (adcont.isWifiConnected()) {
             adcont.showBannerAd();
