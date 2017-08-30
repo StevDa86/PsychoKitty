@@ -130,18 +130,18 @@ public class GameScreen implements Screen, InputProcessor {
 
         //lebensanzeige als Herzen
         if(lives ==3) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 40, 20, 20);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 180, Gdx.graphics.getHeight() - 40, 20, 20);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 40, 20, 20);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, 40, 40);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 60, 40, 40);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 120, Gdx.graphics.getHeight() - 60, 40, 40);
         }
         else if(lives ==2)
         {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 40, 20, 20);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 180, Gdx.graphics.getHeight() - 40, 20, 20);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, 40, 40);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 60, 40, 40);
         }
         else
         {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 40, 20, 20);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, 40, 40);
         }
 
         CatPlayer.renderPlayer(batch);
