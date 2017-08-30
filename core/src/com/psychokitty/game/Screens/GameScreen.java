@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.psychokitty.game.GameObjects.Enemies;
@@ -58,9 +59,11 @@ public class GameScreen implements Screen, InputProcessor {
     private String scorename, lives_text;
     private Texture Hearts;
 
+
+
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
-    private State state = State.RUN;
+    private State state = State.INTRO;
 
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
@@ -153,6 +156,25 @@ public class GameScreen implements Screen, InputProcessor {
         batch.end();
 
         switch (state) {
+            //Intro counter
+            case INTRO:{
+                 float delay = 0; // seconds
+                float counter = 3;
+
+               while (counter >0)
+               {
+                   delay += delta;
+                   if(delay >=5) {
+                       Gdx.app.log("MyTag", "Noch" + counter);
+                       counter--;
+                       delay += delta;
+                   }
+                }
+
+                this.state= State.RUN;
+                break;
+            }
+
             case RUN: {
                 //Drop icons
                 if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 800000000)
@@ -351,5 +373,6 @@ public class GameScreen implements Screen, InputProcessor {
         PAUSE,
         GAMEOVER,
         RUN,
+        INTRO,
     }
 }
