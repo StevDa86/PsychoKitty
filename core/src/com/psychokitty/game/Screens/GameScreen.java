@@ -60,7 +60,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Texture Hearts;
 
     private long startTime, time;
-    private int startCnt = 1;
+    private int HeartSize = 20;
 
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
@@ -134,14 +134,14 @@ public class GameScreen implements Screen, InputProcessor {
 
         //lebensanzeige als Herzen
         if (lives == 3) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, (50 * Gdx.graphics.getDensity()), (50 * Gdx.graphics.getDensity()));
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 60, (50 * Gdx.graphics.getDensity()), (50 * Gdx.graphics.getDensity()));
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 120, Gdx.graphics.getHeight() - 60, (50 * Gdx.graphics.getDensity()), (50 * Gdx.graphics.getDensity()));
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 120, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
         } else if (lives == 2) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, (50 * Gdx.graphics.getDensity()), (50 * Gdx.graphics.getDensity()));
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 60, (50 * Gdx.graphics.getDensity()), (50 * Gdx.graphics.getDensity()));
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
         } else {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, (50 * Gdx.graphics.getDensity()), (50 * Gdx.graphics.getDensity()));
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
         }
 
         CatPlayer.renderPlayer(batch);
