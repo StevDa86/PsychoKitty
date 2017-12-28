@@ -60,7 +60,9 @@ public class GameScreen implements Screen, InputProcessor {
     private Texture Hearts;
 
     private long startTime, time;
-    private int HeartSize = 20;
+    private int HeartSize = 25;
+
+    float totalTime = 3; //starting at 3 seconds
 
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
@@ -126,11 +128,18 @@ public class GameScreen implements Screen, InputProcessor {
         camera.update();
         batch.setProjectionMatrix(stage.getCamera().combined);
 
+        float deltaTime = Gdx.graphics.getDeltaTime(); //You might prefer getRawDeltaTime()
+        totalTime -= deltaTime; //if counting down
+        int seconds = ((int)totalTime) % 60;
+
         // begin a new batch and draw
         batch.begin();
+
         backgroundSpeed -= 1;
         batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 300);
+        batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 200);
+
+        CatPlayer.renderPlayer(batch);
 
         //lebensanzeige als Herzen
         if (lives == 3) {
@@ -144,12 +153,21 @@ public class GameScreen implements Screen, InputProcessor {
             batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
         }
 
-        CatPlayer.renderPlayer(batch);
-        CatFood.renderItems(batch);
-        Dog.RenderEnemies(batch);
 
-        font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
-        //font.draw(batch, lives_text, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 20);
+        //If abfrage für 3 Sekunden Zeitanzeige
+        if(seconds < totalTime) {
+            font.draw(batch, seconds+1 + " Sekunden", 500, 500);
+        }
+        // if abfrage wenn 3 Sekunden vergangen sind, zeichne spiel
+        else {
+
+
+            CatFood.renderItems(batch);
+            Dog.RenderEnemies(batch);
+
+            font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
+            //font.draw(batch, lives_text, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 20);
+        }
         batch.end();
 
         switch (state) {
@@ -163,7 +181,7 @@ public class GameScreen implements Screen, InputProcessor {
             case RUN: {
 
                 //Drop icons
-                if (time - startTime <= 1000) { //1 sekunde warten bis erster Drop.
+                if (time - startTime <= 4000) { //5 sekunde warten bis erster Drop.
                     time = TimeUtils.millis();
                 } else if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 800000000)
                     CatFood.spawnItems();
@@ -181,7 +199,7 @@ public class GameScreen implements Screen, InputProcessor {
                 }
 
                 //DropDogs
-                if (time - startTime <= 1000) {
+                if (time - startTime <= 4000) {
                     time = TimeUtils.millis();
                 } else if (TimeUtils.nanoTime() - Dog.getLastDropTime() > 1000000000)
                     Dog.spawnDog();

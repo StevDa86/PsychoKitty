@@ -14,7 +14,7 @@ public class Constants {
 
     //Images
     public static final String backgroundImage = "Backgrounds/SC1BG.jpg";
-    public static final String foregroundImage = "Backgrounds/FGSC1.png";
+    public static final String foregroundImage = "Backgrounds/FGSC2.png";
     public static final String playerImage = "Characters/cat.png";
     public static final String splashImage = "Backgrounds/splash.png";
     public static final String backgroundMenu = "Backgrounds/Menu.jpg";
