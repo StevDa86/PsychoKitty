@@ -14,13 +14,16 @@ public class Constants {
 
     //Images
     public static final String backgroundImage = "Backgrounds/SC1BG.jpg";
-    public static final String foregroundImage = "Backgrounds/FGSC2.png";
+    public static final String foregroundImage = "Backgrounds/FGSC1.png";
     public static final String playerImage = "Characters/cat.png";
     public static final String splashImage = "Backgrounds/splash.png";
     public static final String backgroundMenu = "Backgrounds/Menu.jpg";
     public static final String catnipImage = "Characters/droplet.png";
     public static final String dogAnimationImage = "Characters/dogAnim.png";
     public static final String heartImage = "ui/heart.png";
+    public static final String Number3Image = "ui/3.png";
+    public static final String Number2Image = "ui/2.png";
+    public static final String Number1Image = "ui/1.png";
 
     //Sounds n Music
     public static final String soundMiau = "Sounds/cat.mp3";
