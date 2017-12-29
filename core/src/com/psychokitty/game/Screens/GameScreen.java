@@ -57,7 +57,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Highscore highscore;
     private int score = 0, backgroundSpeed, lives = 3;
     private String scorename, lives_text;
-    private Texture Hearts;
+    private Texture Hearts, Number3, Number2, Number1;
 
     private long startTime, time;
     private int HeartSize = 25;
@@ -115,6 +115,9 @@ public class GameScreen implements Screen, InputProcessor {
         foreground = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.foregroundImage));
 
         Hearts = new Texture(Gdx.files.internal(Constants.heartImage));
+        Number3 = new Texture(Gdx.files.internal(Constants.Number3Image));
+        Number2 = new Texture(Gdx.files.internal(Constants.Number2Image));
+        Number1 = new Texture(Gdx.files.internal(Constants.Number1Image));
     }
 
     @Override
@@ -156,7 +159,16 @@ public class GameScreen implements Screen, InputProcessor {
 
         //If abfrage für 3 Sekunden Zeitanzeige
         if(seconds < totalTime) {
-            font.draw(batch, seconds+1 + " Sekunden", 500, 500);
+            //font.draw(batch, seconds+1 + " Sekunden", 500, 500);
+            if(seconds == 2) {
+                batch.draw(Number3, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+            }
+            if(seconds == 1) {
+                batch.draw(Number2, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+            }
+            if(seconds == 0) {
+                batch.draw(Number1, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+            }
         }
         // if abfrage wenn 3 Sekunden vergangen sind, zeichne spiel
         else {
@@ -272,6 +284,7 @@ public class GameScreen implements Screen, InputProcessor {
         foreground.dispose();
         stage.dispose();
         Hearts.dispose();
+        Number3.dispose();
     }
 
     @Override
