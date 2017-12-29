@@ -46,7 +46,7 @@ public class GameScreen implements Screen, InputProcessor {
     Player CatPlayer;
     Items CatFood;
     Enemies Dog;
-
+    float totalTime = 3; //starting at 3 seconds
     private SpriteBatch batch;
     private BitmapFont font;
     private Texture background, foreground;
@@ -58,15 +58,12 @@ public class GameScreen implements Screen, InputProcessor {
     private int score = 0, backgroundSpeed, lives = 3;
     private String scorename, lives_text;
     private Texture Hearts, Number3, Number2, Number1;
-
     private long startTime, time;
     private int HeartSize = 25;
-
-    float totalTime = 3; //starting at 3 seconds
-
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
     private State state = State.INTRO;
+    private float HeartPlace;
 
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
@@ -115,6 +112,8 @@ public class GameScreen implements Screen, InputProcessor {
         foreground = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.foregroundImage));
 
         Hearts = new Texture(Gdx.files.internal(Constants.heartImage));
+        HeartPlace = HeartSize * Gdx.graphics.getDensity();
+
         Number3 = new Texture(Gdx.files.internal(Constants.Number3Image));
         Number2 = new Texture(Gdx.files.internal(Constants.Number2Image));
         Number1 = new Texture(Gdx.files.internal(Constants.Number1Image));
@@ -146,14 +145,14 @@ public class GameScreen implements Screen, InputProcessor {
 
         //lebensanzeige als Herzen
         if (lives == 3) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 120, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
         } else if (lives == 2) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 160, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
         } else {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, (HeartSize * Gdx.graphics.getDensity()), (HeartSize * Gdx.graphics.getDensity()));
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
         }
 
 
@@ -172,7 +171,6 @@ public class GameScreen implements Screen, InputProcessor {
         }
         // if abfrage wenn 3 Sekunden vergangen sind, zeichne spiel
         else {
-
 
             CatFood.renderItems(batch);
             Dog.RenderEnemies(batch);
