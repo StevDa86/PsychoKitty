@@ -50,7 +50,7 @@ public class GameScreen implements Screen, InputProcessor {
     private SpriteBatch batch;
     private BitmapFont font;
     private Texture background, foreground;
-    private Sound catSound, catHiss;
+    private Sound catSound, catHiss, beepHigh, beepLow;
     private Music rainMusic;
     private OrthographicCamera camera;
     private Viewport viewport;
@@ -96,6 +96,8 @@ public class GameScreen implements Screen, InputProcessor {
         catSound = Gdx.audio.newSound(Gdx.files.internal(com.psychokitty.game.Utils.Constants.soundMiau));
         catHiss = Gdx.audio.newSound(Gdx.files.internal(Constants.catHiss));
         rainMusic = Gdx.audio.newMusic(Gdx.files.internal(com.psychokitty.game.Utils.Constants.musicDream));
+        beepHigh = Gdx.audio.newSound(Gdx.files.internal(Constants.beepHigh));
+        beepLow = Gdx.audio.newSound(Gdx.files.internal(Constants.beepLow));
 
         scorename = "Score:" + score;
         lives_text = "Lives:" + lives;
@@ -161,12 +163,15 @@ public class GameScreen implements Screen, InputProcessor {
             //font.draw(batch, seconds+1 + " Sekunden", 500, 500);
             if(seconds == 2) {
                 batch.draw(Number3, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+
             }
             if(seconds == 1) {
                 batch.draw(Number2, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+                beepLow.play(1);
             }
             if(seconds == 0) {
                 batch.draw(Number1, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+                beepHigh.play(1);
             }
         }
         // if abfrage wenn 3 Sekunden vergangen sind, zeichne spiel
