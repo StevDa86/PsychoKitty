@@ -31,6 +31,8 @@ public class Constants {
     public static final String musicDream = "Music/MenuMusic.wav";
     public static final String soundSplash = "Sounds/splash.mp3";
     public static final String musicMenu = "Music/MenuMusic.wav";
+    public static final String beepHigh = "Sounds/beep-high.mp3";
+    public static final String beepLow = "Sounds/beep-low.mp3";
 
     //UI
     public static final String defaultJson = "ui/defaultskin.json";
