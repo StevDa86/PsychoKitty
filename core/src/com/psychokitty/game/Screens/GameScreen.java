@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -19,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.psychokitty.game.GameObjects.Enemies;
@@ -55,11 +55,10 @@ public class GameScreen implements Screen, InputProcessor {
     private OrthographicCamera camera;
     private Viewport viewport;
     private Highscore highscore;
-    private int score = 0, backgroundSpeed, lives = 3;
+    private int score = 0, backgroundSpeed, lives = 3,HeartSize = 25, SoundCounter = 0;
     private String scorename, lives_text;
     private Texture Hearts, Number3, Number2, Number1;
     private long startTime, time;
-    private int HeartSize = 25;
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
     private State state = State.INTRO;
@@ -73,6 +72,20 @@ public class GameScreen implements Screen, InputProcessor {
         highscore.config();
 
         Gdx.input.setInputProcessor(this);
+
+        // load the drop sound effect and the rain background "music"
+        catSound = Gdx.audio.newSound(Gdx.files.internal(com.psychokitty.game.Utils.Constants.soundMiau));
+        catHiss = Gdx.audio.newSound(Gdx.files.internal(Constants.catHiss));
+        rainMusic = Gdx.audio.newMusic(Gdx.files.internal(com.psychokitty.game.Utils.Constants.musicDream));
+        beepHigh = Gdx.audio.newSound(Gdx.files.internal(Constants.beepHigh));
+        beepLow = Gdx.audio.newSound(Gdx.files.internal(Constants.beepLow));
+
+        rainMusic.setLooping(true);
+        rainMusic.play();
+
+        Number3 = new Texture(Gdx.files.internal(Constants.Number3Image));
+        Number2 = new Texture(Gdx.files.internal(Constants.Number2Image));
+        Number1 = new Texture(Gdx.files.internal(Constants.Number1Image));
 
         CatPlayer = new Player();
         CatPlayer.createPlayer();
@@ -92,18 +105,9 @@ public class GameScreen implements Screen, InputProcessor {
         font = generator.generateFont(parameter);
         generator.dispose();
 
-        // load the drop sound effect and the rain background "music"
-        catSound = Gdx.audio.newSound(Gdx.files.internal(com.psychokitty.game.Utils.Constants.soundMiau));
-        catHiss = Gdx.audio.newSound(Gdx.files.internal(Constants.catHiss));
-        rainMusic = Gdx.audio.newMusic(Gdx.files.internal(com.psychokitty.game.Utils.Constants.musicDream));
-        beepHigh = Gdx.audio.newSound(Gdx.files.internal(Constants.beepHigh));
-        beepLow = Gdx.audio.newSound(Gdx.files.internal(Constants.beepLow));
 
         scorename = "Score:" + score;
         lives_text = "Lives:" + lives;
-
-        rainMusic.setLooping(true);
-        rainMusic.play();
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
@@ -116,9 +120,7 @@ public class GameScreen implements Screen, InputProcessor {
         Hearts = new Texture(Gdx.files.internal(Constants.heartImage));
         HeartPlace = HeartSize * Gdx.graphics.getDensity();
 
-        Number3 = new Texture(Gdx.files.internal(Constants.Number3Image));
-        Number2 = new Texture(Gdx.files.internal(Constants.Number2Image));
-        Number1 = new Texture(Gdx.files.internal(Constants.Number1Image));
+
     }
 
     @Override
@@ -163,15 +165,25 @@ public class GameScreen implements Screen, InputProcessor {
             //font.draw(batch, seconds+1 + " Sekunden", 500, 500);
             if(seconds == 2) {
                 batch.draw(Number3, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+                if (SoundCounter == 0) {
+                    beepLow.play(0.3f);
+                    SoundCounter++;
+                }
 
             }
             if(seconds == 1) {
                 batch.draw(Number2, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
-                beepLow.play(1);
+                if (SoundCounter == 1) {
+                    beepLow.play(0.3f);
+                    SoundCounter++;
+                }
             }
             if(seconds == 0) {
                 batch.draw(Number1, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
-                beepHigh.play(1);
+                if (SoundCounter == 2) {
+                    beepHigh.play(0.3f);
+                    SoundCounter++;
+                }
             }
         }
         // if abfrage wenn 3 Sekunden vergangen sind, zeichne spiel
@@ -188,7 +200,6 @@ public class GameScreen implements Screen, InputProcessor {
         switch (state) {
             //Intro counter
             case INTRO: {
-
                 this.state = State.RUN;
                 break;
             }
@@ -288,6 +299,8 @@ public class GameScreen implements Screen, InputProcessor {
         stage.dispose();
         Hearts.dispose();
         Number3.dispose();
+        beepHigh.dispose();
+        beepLow.dispose();
     }
 
     @Override

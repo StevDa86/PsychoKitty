@@ -1,9 +1,5 @@
 package com.psychokitty.game.Utils;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.StringBuilder;
-
 /**
  * Created by steven on 24.07.15
  */
