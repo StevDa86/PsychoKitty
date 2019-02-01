@@ -113,12 +113,12 @@ public class GameScreen implements Screen, InputProcessor {
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
 
-        background = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.backgroundImage));
+        background = new Texture(Assets.BackgroundImage);
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        foreground = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.foregroundImage));
+        foreground = new Texture(Assets.ForegroundImage);
 
         Hearts = new Texture(Gdx.files.internal(Constants.heartImage));
-        HeartPlace = HeartSize*2 * Gdx.graphics.getDensity();
+        HeartPlace = HeartSize * Gdx.graphics.getDensity();
     }
 
     @Override
@@ -292,7 +292,6 @@ public class GameScreen implements Screen, InputProcessor {
         CatFood.disposeItems();
         Dog.DisposeEnemies();
         catSound.dispose();
-        background.dispose();
         foreground.dispose();
         stage.dispose();
         Hearts.dispose();
