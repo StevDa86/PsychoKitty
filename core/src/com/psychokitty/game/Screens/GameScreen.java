@@ -119,8 +119,6 @@ public class GameScreen implements Screen, InputProcessor {
 
         Hearts = new Texture(Gdx.files.internal(Constants.heartImage));
         HeartPlace = HeartSize * Gdx.graphics.getDensity();
-
-
     }
 
     @Override

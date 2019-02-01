@@ -35,7 +35,4 @@ public class Constants {
 
     //Text
     public static final String scoreTXT = "Your Score: ";
-
-
-
 }
