@@ -25,7 +25,6 @@ public class PsychoKittyGame extends Game {
     public void create() {
         //Alle Klassen Beim Spielstart laden
         Assets.load();
-        Assets.manager.update();
 
         Gdx.input.setCatchBackKey(true);
         batch = new SpriteBatch();
