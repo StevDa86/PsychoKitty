@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -26,6 +25,7 @@ import com.psychokitty.game.GameObjects.Enemies;
 import com.psychokitty.game.GameObjects.Items;
 import com.psychokitty.game.GameObjects.Player;
 import com.psychokitty.game.PsychoKittyGame;
+import com.psychokitty.game.Utils.Assets;
 import com.psychokitty.game.Utils.Constants;
 import com.psychokitty.game.Utils.CustomDialog;
 import com.psychokitty.game.Utils.Highscore;
@@ -83,9 +83,9 @@ public class GameScreen implements Screen, InputProcessor {
         rainMusic.setLooping(true);
         rainMusic.play();
 
-        Number3 = new Texture(Gdx.files.internal(Constants.Number3Image));
-        Number2 = new Texture(Gdx.files.internal(Constants.Number2Image));
-        Number1 = new Texture(Gdx.files.internal(Constants.Number1Image));
+        Number3 = new Texture(Assets.Count3);
+        Number2 = new Texture(Assets.Count2);
+        Number1 = new Texture(Assets.Count1);
 
         CatPlayer = new Player();
         CatPlayer.createPlayer();
@@ -118,7 +118,7 @@ public class GameScreen implements Screen, InputProcessor {
         foreground = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.foregroundImage));
 
         Hearts = new Texture(Gdx.files.internal(Constants.heartImage));
-        HeartPlace = HeartSize * Gdx.graphics.getDensity();
+        HeartPlace = HeartSize*2 * Gdx.graphics.getDensity();
     }
 
     @Override
