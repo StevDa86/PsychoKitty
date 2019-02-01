@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.psychokitty.game.Utils.Assets;
 
 public class PsychoKittyGame extends Game {
 
@@ -22,6 +23,10 @@ public class PsychoKittyGame extends Game {
 
     @Override
     public void create() {
+        //Alle Klassen Beim Spielstart laden
+        Assets.load();
+        Assets.manager.update();
+
         Gdx.input.setCatchBackKey(true);
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -38,5 +43,6 @@ public class PsychoKittyGame extends Game {
     public void dispose() {
         batch.dispose();
         font.dispose();
+        Assets.dispose();
     }
 }
