@@ -55,14 +55,13 @@ public class GameScreen implements Screen, InputProcessor {
     private OrthographicCamera camera;
     private Viewport viewport;
     private Highscore highscore;
-    private int score = 0, backgroundSpeed, lives = 3, HeartSize = 25, SoundCounter = 0;
+    private int score = 0, backgroundSpeed, lives = 3, HeartSize, SoundCounter = 0;
     private String scorename;
     private Texture Hearts, Number3, Number2, Number1;
     private long startTime, time;
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage = new Stage();
     private State state = State.INTRO;
-    private float HeartPlace;
 
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
@@ -105,10 +104,12 @@ public class GameScreen implements Screen, InputProcessor {
         font = generator.generateFont(parameter);
         generator.dispose();
 
+        HeartSize = (int) (25 * Gdx.graphics.getDensity());
         scorename = "Score:" + score;
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        viewport.apply();
         camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
 
         background = Assets.manager.get(Assets.BackgroundImage);
@@ -116,7 +117,7 @@ public class GameScreen implements Screen, InputProcessor {
         foreground = Assets.manager.get(Assets.ForegroundImage);
 
         Hearts = new Texture(Gdx.files.internal(Constants.heartImage));
-        HeartPlace = HeartSize * Gdx.graphics.getDensity();
+
     }
 
     @Override
@@ -145,14 +146,14 @@ public class GameScreen implements Screen, InputProcessor {
 
         //lebensanzeige als Herzen
         if (lives == 3) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
         } else if (lives == 2) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
         } else {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60, HeartPlace, HeartPlace);
+            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
         }
 
 

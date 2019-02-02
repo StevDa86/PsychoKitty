@@ -63,6 +63,7 @@ public class MenuScreen implements Screen {
 
     private void setupBackground() {
         menuBackground.setHeight(screenheight);
+        menuBackground.setWidth(screenwidth);
         menuBackground.setScaling(Scaling.fillX);
         menuBackground.setPosition(screenwidth / 2 - menuBackground.getWidth() / 2, screenheight / 2 - menuBackground.getHeight() / 2);
         stage.addActor(menuBackground);
