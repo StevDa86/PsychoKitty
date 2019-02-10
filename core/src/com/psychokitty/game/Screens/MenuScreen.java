@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.psychokitty.game.PsychoKittyGame;
+import com.psychokitty.game.Utils.Assets;
 import com.psychokitty.game.Utils.Constants;
 import com.psychokitty.game.Utils.CustomDialog;
 
@@ -195,6 +196,7 @@ public class MenuScreen implements Screen {
         new CustomDialog("Exit game", skin2).text("Exit game?")
                 .button("Yes", new InputListener() {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        Assets.dispose();
                         Gdx.app.exit();
                         return false;
                     }

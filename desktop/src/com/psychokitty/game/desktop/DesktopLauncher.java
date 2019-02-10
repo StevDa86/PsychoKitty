@@ -10,7 +10,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
-		config.height = 768;
+		config.height = 720;
 		config.title= "Psycho Kitty";
 		//new LwjglApplication(new PsychoKittyGame(), config);
         new LwjglApplication(new PsychoKittyGame(null), config);

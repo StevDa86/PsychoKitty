@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Assets {
 
-    public static final AssetManager manager = new AssetManager();
+    public static AssetManager manager = new AssetManager();
 
     //All Images
     public static final String Count1 = Constants.Number1Image;
@@ -41,6 +41,7 @@ public class Assets {
     }
 
     public static void dispose(){
+        manager.clear();
         manager.dispose();
     }
 }

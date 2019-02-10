@@ -107,8 +107,12 @@ public class GameScreen implements Screen, InputProcessor {
         HeartSize = (int) (25 * Gdx.graphics.getDensity());
         scorename = "Score:" + score;
 
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        //camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        //camera = new OrthographicCamera(1280, 768);
+        camera = new OrthographicCamera(1280, 720);
+        viewport = new FitViewport(1280, 720, camera);
+
+        //viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
         camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
 
