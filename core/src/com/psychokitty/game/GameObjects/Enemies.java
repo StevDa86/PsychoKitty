@@ -40,7 +40,7 @@ public class Enemies {
                 DogwalkFrames[index++] = tmp[i][j];
             }
         }
-        DogwalkAnimation = new Animation(0.225f, DogwalkFrames);      // #11
+        DogwalkAnimation = new Animation<TextureRegion>(0.225f, DogwalkFrames);      // #11
         DogSpriteBatch = new SpriteBatch();                // #12
         stateTime = 0f;                         // #13
         //
