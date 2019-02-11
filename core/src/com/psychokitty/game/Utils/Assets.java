@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Assets {
 
-    public static AssetManager manager = new AssetManager();
+    public AssetManager manager = new AssetManager();
 
     //All Images
     public static final String Count1 = Constants.Number1Image;
@@ -26,7 +26,7 @@ public class Assets {
     public static final String sBeepHigh = Constants.beepHigh;
     public static final String sBeepLow = Constants.beepLow;
 
-    public static void load(){
+    public void load(){
         manager.load(Count1, Texture.class);
         manager.load(Count2, Texture.class);
         manager.load(Count3, Texture.class);
@@ -40,7 +40,7 @@ public class Assets {
         manager.finishLoading();
     }
 
-    public static void dispose(){
+    public void dispose(){
         manager.clear();
         manager.dispose();
     }

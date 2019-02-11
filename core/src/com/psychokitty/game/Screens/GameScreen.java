@@ -63,9 +63,14 @@ public class GameScreen implements Screen, InputProcessor {
     private Stage stage = new Stage();
     private State state = State.INTRO;
 
+    private Assets assets = new Assets();
+
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
         adcont = adsController;
+
+        assets.load();
+
         batch = new SpriteBatch();
         highscore = new com.psychokitty.game.Utils.Highscore();
         highscore.config();
@@ -73,18 +78,18 @@ public class GameScreen implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
 
         // load the drop sound effect and the rain background "music"
-        catSound = Assets.manager.get(Assets.sSoundMiau);
-        catHiss = Assets.manager.get(Assets.sCatHiss);
-        rainMusic = Assets.manager.get(Assets.sMusicDream);
-        beepHigh = Assets.manager.get(Assets.sBeepHigh);
-        beepLow = Assets.manager.get(Assets.sBeepLow);
+        catSound = assets.manager.get(Assets.sSoundMiau);
+        catHiss = assets.manager.get(Assets.sCatHiss);
+        rainMusic = assets.manager.get(Assets.sMusicDream);
+        beepHigh = assets.manager.get(Assets.sBeepHigh);
+        beepLow = assets.manager.get(Assets.sBeepLow);
 
         rainMusic.setLooping(true);
         rainMusic.play();
 
-        Number3 = Assets.manager.get(Assets.Count3);
-        Number2 = Assets.manager.get(Assets.Count2);
-        Number1 = Assets.manager.get(Assets.Count1);
+        Number3 = assets.manager.get(Assets.Count3);
+        Number2 = assets.manager.get(Assets.Count2);
+        Number1 = assets.manager.get(Assets.Count1);
 
         CatPlayer = new Player();
         CatPlayer.createPlayer();
@@ -116,9 +121,9 @@ public class GameScreen implements Screen, InputProcessor {
         viewport.apply();
         camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
 
-        background = Assets.manager.get(Assets.BackgroundImage);
+        background = assets.manager.get(Assets.BackgroundImage);
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        foreground = Assets.manager.get(Assets.ForegroundImage);
+        foreground = assets.manager.get(Assets.ForegroundImage);
 
         Hearts = new Texture(Gdx.files.internal(Constants.heartImage));
 
@@ -132,136 +137,144 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-        camera.update();
-        batch.setProjectionMatrix(stage.getCamera().combined);
 
-        float deltaTime = Gdx.graphics.getDeltaTime(); //You might prefer getRawDeltaTime()
-        totalTime -= deltaTime; //if counting down
-        int seconds = ((int) totalTime) % 60;
+        if (assets == null || !assets.manager.update()){
+            //maybe draw a load screen image that's not a texture that's being managed
+            //by the assetManager. You could even play an animation. Otherwise,
+            //you can leave the screen blank.
 
-        // begin a new batch and draw
-        batch.begin();
-
-        backgroundSpeed -= 1;
-        batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 200);
-
-        CatPlayer.renderPlayer(batch);
-
-        //lebensanzeige als Herzen
-        if (lives == 3) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
-        } else if (lives == 2) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
-        } else {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize -20, HeartSize, HeartSize);
+            return;
         }
+        
+            camera.update();
+            batch.setProjectionMatrix(stage.getCamera().combined);
 
+            float deltaTime = Gdx.graphics.getDeltaTime(); //You might prefer getRawDeltaTime()
+            totalTime -= deltaTime; //if counting down
+            int seconds = ((int) totalTime) % 60;
 
-        //If abfrage für 3 Sekunden Zeitanzeige
-        if (seconds < totalTime) {
-            //font.draw(batch, seconds+1 + " Sekunden", 500, 500);
-            if (seconds == 2) {
-                batch.draw(Number3, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
-                if (SoundCounter == 0) {
-                    beepLow.play(0.3f);
-                    SoundCounter++;
+            // begin a new batch and draw
+            batch.begin();
+
+            backgroundSpeed -= 1;
+            batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 200);
+
+            CatPlayer.renderPlayer(batch);
+
+            //lebensanzeige als Herzen
+            if (lives == 3) {
+                batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
+                batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
+                batch.draw(Hearts, Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
+            } else if (lives == 2) {
+                batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
+                batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
+            } else {
+                batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
+            }
+
+            //If abfrage für 3 Sekunden Zeitanzeige
+            if (seconds < totalTime) {
+                //font.draw(batch, seconds+1 + " Sekunden", 500, 500);
+                if (seconds == 2) {
+                    batch.draw(Number3, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+                    if (SoundCounter == 0) {
+                        beepLow.play(0.3f);
+                        SoundCounter++;
+                    }
+
                 }
-
-            }
-            if (seconds == 1) {
-                batch.draw(Number2, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
-                if (SoundCounter == 1) {
-                    beepLow.play(0.3f);
-                    SoundCounter++;
-                }
-            }
-            if (seconds == 0) {
-                batch.draw(Number1, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
-                if (SoundCounter == 2) {
-                    beepHigh.play(0.3f);
-                    SoundCounter++;
-                }
-            }
-        }
-        // if abfrage wenn 3 Sekunden vergangen sind, zeichne spiel
-        else {
-
-            CatFood.renderItems(batch);
-            Dog.RenderEnemies(batch);
-
-            font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
-        }
-        batch.end();
-
-        switch (state) {
-            //Intro counter
-            case INTRO: {
-                this.state = State.RUN;
-                break;
-            }
-
-            case RUN: {
-
-                //Drop icons
-                if (time - startTime <= 4000) { //5 sekunde warten bis erster Drop.
-                    time = TimeUtils.millis();
-                } else if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 800000000)
-                    CatFood.spawnItems();
-                Iterator<Rectangle> iter = CatFood.getArray().iterator();
-                while (iter.hasNext()) {
-                    Rectangle Items = iter.next();
-                    Items.y -= (300 + score * 5) * Gdx.graphics.getDeltaTime(); //geschwindigkeit
-                    if (Items.y + 64 < 0) iter.remove();
-                    if (Items.overlaps(CatPlayer.getRectangle())) {
-                        catSound.play();
-                        score++;
-                        scorename = "Score: " + score;
-                        iter.remove();
+                if (seconds == 1) {
+                    batch.draw(Number2, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+                    if (SoundCounter == 1) {
+                        beepLow.play(0.3f);
+                        SoundCounter++;
                     }
                 }
+                if (seconds == 0) {
+                    batch.draw(Number1, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+                    if (SoundCounter == 2) {
+                        beepHigh.play(0.3f);
+                        SoundCounter++;
+                    }
+                }
+            }
+            // if abfrage wenn 3 Sekunden vergangen sind, zeichne spiel
+            else {
 
-                //DropDogs
-                if (time - startTime <= 4000) {
-                    time = TimeUtils.millis();
-                } else if (TimeUtils.nanoTime() - Dog.getLastDropTime() > 1000000000)
-                    Dog.spawnDog();
-                Iterator<Rectangle> iter2 = Dog.getArray().iterator();
-                while (iter2.hasNext()) {
-                    Rectangle Items2 = iter2.next();
-                    Items2.y -= (350 + score * 5) * Gdx.graphics.getDeltaTime();
-                    if (Items2.y + 50 < 0) iter2.remove();
-                    if (Items2.overlaps(CatPlayer.getRectangle())) {
-                        catHiss.play();
-                        Gdx.input.vibrate(100);
-                        iter2.remove();
-                        lives--;
-                        if (lives == 0) {
-                            GameOverState();
+                CatFood.renderItems(batch);
+                Dog.RenderEnemies(batch);
+
+                font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
+            }
+            batch.end();
+
+            switch (state) {
+                //Intro counter
+                case INTRO: {
+                    this.state = State.RUN;
+                    break;
+                }
+
+                case RUN: {
+
+                    //Drop icons
+                    if (time - startTime <= 4000) { //5 sekunde warten bis erster Drop.
+                        time = TimeUtils.millis();
+                    } else if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 800000000)
+                        CatFood.spawnItems();
+                    Iterator<Rectangle> iter = CatFood.getArray().iterator();
+                    while (iter.hasNext()) {
+                        Rectangle Items = iter.next();
+                        Items.y -= (300 + score * 5) * Gdx.graphics.getDeltaTime(); //geschwindigkeit
+                        if (Items.y + 64 < 0) iter.remove();
+                        if (Items.overlaps(CatPlayer.getRectangle())) {
+                            catSound.play();
+                            score++;
+                            scorename = "Score: " + score;
+                            iter.remove();
                         }
                     }
+
+                    //DropDogs
+                    if (time - startTime <= 4000) {
+                        time = TimeUtils.millis();
+                    } else if (TimeUtils.nanoTime() - Dog.getLastDropTime() > 1000000000)
+                        Dog.spawnDog();
+                    Iterator<Rectangle> iter2 = Dog.getArray().iterator();
+                    while (iter2.hasNext()) {
+                        Rectangle Items2 = iter2.next();
+                        Items2.y -= (350 + score * 5) * Gdx.graphics.getDeltaTime();
+                        if (Items2.y + 50 < 0) iter2.remove();
+                        if (Items2.overlaps(CatPlayer.getRectangle())) {
+                            catHiss.play();
+                            Gdx.input.vibrate(100);
+                            iter2.remove();
+                            lives--;
+                            if (lives == 0) {
+                                GameOverState();
+                            }
+                        }
+                    }
+                    break;
                 }
-                break;
-            }
 
-            case PAUSE: {
-                stage.act(delta);//update all actors
-                stage.draw();
-                ExitGame();
-                break;
-            }
+                case PAUSE: {
+                    stage.act(delta);//update all actors
+                    stage.draw();
+                    ExitGame();
+                    break;
+                }
 
-            case GAMEOVER: {
-                stage.act(delta);//update all actors
-                stage.draw();
-                GameOver();
-                break;
+                case GAMEOVER: {
+                    stage.act(delta);//update all actors
+                    stage.draw();
+                    GameOver();
+                    break;
+                }
             }
         }
-    }
 
     @Override
     public void show() {
@@ -294,6 +307,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage.dispose();
         Hearts.dispose();
         rainMusic.dispose();
+        assets.dispose();
     }
 
     @Override

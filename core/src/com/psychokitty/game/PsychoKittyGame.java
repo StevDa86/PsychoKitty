@@ -23,15 +23,11 @@ public class PsychoKittyGame extends Game {
 
     @Override
     public void create() {
-        //Alle Klassen Beim Spielstart laden
-        Assets.load();
-
         Gdx.input.setCatchBackKey(true);
         batch = new SpriteBatch();
         font = new BitmapFont();
         //Werbung nur bei aktiven WIFI
         if(adsController.isWifiConnected()) {adsController.showBannerAd();}
-
         this.setScreen(new com.psychokitty.game.Screens.SplashScreen(this, adsController));
     }
 
@@ -42,6 +38,5 @@ public class PsychoKittyGame extends Game {
     public void dispose() {
         batch.dispose();
         font.dispose();
-        Assets.dispose();
     }
 }

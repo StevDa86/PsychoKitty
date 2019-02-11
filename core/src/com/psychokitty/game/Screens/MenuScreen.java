@@ -53,6 +53,7 @@ public class MenuScreen implements Screen {
 
     private float screenwidth, screenheight;
 
+
     public MenuScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         game = gam;
         adcont = adsController;
@@ -60,6 +61,7 @@ public class MenuScreen implements Screen {
         highscore.config();
         screenwidth = Gdx.graphics.getWidth();
         screenheight = Gdx.graphics.getHeight();
+
     }
 
     private void setupBackground() {
@@ -196,7 +198,6 @@ public class MenuScreen implements Screen {
         new CustomDialog("Exit game", skin2).text("Exit game?")
                 .button("Yes", new InputListener() {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        Assets.dispose();
                         Gdx.app.exit();
                         return false;
                     }
