@@ -17,6 +17,7 @@ public class Assets {
     public static final String Count3 = Constants.Number3Image;
     public static final String BackgroundImage = Constants.backgroundImage;
     public static final String ForegroundImage = Constants.foregroundImage;
+    public static final String Hearts = Constants.heartImage;
 
     //All Sounds
     // load the drop sound effect and the rain background "music"
@@ -27,7 +28,7 @@ public class Assets {
     public static final String sBeepLow = Constants.beepLow;
 
     public void load(){
-        manager.load(Count1, Texture.class);
+        manager.load(Constants.Number1Image, Texture.class);
         manager.load(Count2, Texture.class);
         manager.load(Count3, Texture.class);
         manager.load(BackgroundImage, Texture.class);
@@ -37,6 +38,7 @@ public class Assets {
         manager.load(sCatHiss, Sound.class);
         manager.load(sSoundMiau, Sound.class);
         manager.load(sMusicDream, Music.class);
+        manager.load(Hearts,Texture.class);
         manager.finishLoading();
     }
 
