@@ -24,7 +24,6 @@ public class Enemies {
     Animation<TextureRegion> DogwalkAnimation;          // #3
     Texture DogwalkSheet;              // #4
     TextureRegion[] DogwalkFrames;             // #5
-    SpriteBatch DogSpriteBatch;            // #6
     TextureRegion DogcurrentFrame;           // #7
     float stateTime;                                        // #8
     private long lastDogDropTime;
@@ -41,7 +40,6 @@ public class Enemies {
             }
         }
         DogwalkAnimation = new Animation<TextureRegion>(0.225f, DogwalkFrames);      // #11
-        DogSpriteBatch = new SpriteBatch();                // #12
         stateTime = 0f;                         // #13
         //
 
@@ -68,8 +66,8 @@ public class Enemies {
 
     public void spawnDog() {
         Rectangle Items2 = new Rectangle();
-        Items2.x = MathUtils.random(0, Gdx.graphics.getWidth() - 100);
-        Items2.y = Gdx.graphics.getHeight();
+        Items2.x = MathUtils.random(0, Constants.NATIVE_WIDTH - 100);
+        Items2.y = Constants.NATIVE_HEIGHT;
         Items2.width = 100;
         Items2.height = 100;
         dog.add(Items2);

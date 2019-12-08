@@ -1,24 +1,22 @@
 package com.psychokitty.game.GameObjects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.psychokitty.game.Utils.Constants;
-
 
 /**
  * Created by Steven on 10.11.2016.
  */
 
 public class Player {
-    Vector2 touchPos;
+    Vector3 touchPos;
     private Sprite catSprite;
-    private Texture catImage; //#4
+    private Texture catImage;
     private int direction = 0;
     private Rectangle cat;
     private float deltaTime;
@@ -26,27 +24,30 @@ public class Player {
     public void createPlayer() {
         catImage = new Texture(Constants.playerImage);
         catSprite = new Sprite(catImage);
-        touchPos = new Vector2(Gdx.graphics.getWidth() / 2 - com.psychokitty.game.Utils.Constants.catsize / 2, 0);
+        touchPos = new Vector3(Constants.NATIVE_WIDTH / 2 - com.psychokitty.game.Utils.Constants.catsize / 2, 50 ,0);
+
         cat = new Rectangle();
-        cat.x = Gdx.graphics.getWidth() / 2 - com.psychokitty.game.Utils.Constants.catsize / 2;
+        cat.x = Constants.NATIVE_WIDTH / 2 - com.psychokitty.game.Utils.Constants.catsize / 2;
         cat.y = 50;
         cat.width = com.psychokitty.game.Utils.Constants.catsize;
         cat.height = com.psychokitty.game.Utils.Constants.catsize;
     }
 
-    public void renderPlayer(SpriteBatch batch) {
+    public void renderPlayer(SpriteBatch batch, OrthographicCamera camera) {
         deltaTime = Gdx.graphics.getDeltaTime();
-        batch.draw(catSprite, catSprite.getX(), catSprite.getY(), com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
-        move();
+        batch.draw(catSprite, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
+        move(camera);
     }
 
-    private void move() {
-        catSprite.setPosition(cat.x, cat.y);
+    private void move(OrthographicCamera camera) {
 
         //setup user interaction
         if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX() - 32, Gdx.input.getY());
+            camera.unproject(touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0));
+            touchPos.x = touchPos.x - 75;
+            Gdx.app.log("Mouse Event","Click at " + Gdx.input.getX() + " CatX =" + cat.x);
         }
+
         //Move right
         if (touchPos.x > cat.x) {
             cat.x += com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
@@ -64,11 +65,12 @@ public class Player {
             }
         }
 
+        //Katze in lezte Richtung stehen lassen.
         if (Math.abs(touchPos.x - cat.x) < 5)
             cat.x = touchPos.x;
         //Katze am rand aufhalten
-        if (cat.x > Gdx.graphics.getWidth() - 100)
-            cat.x = Gdx.graphics.getWidth() - 100;
+        if (cat.x > Constants.NATIVE_WIDTH - 100)
+            cat.x = Constants.NATIVE_WIDTH - 100;
         if (cat.x < 0)
             cat.x = 0;
     }
@@ -80,5 +82,4 @@ public class Player {
     public void disposePlayer() {
         catImage.dispose();
     }
-
 }
