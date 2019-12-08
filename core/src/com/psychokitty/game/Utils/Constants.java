@@ -24,12 +24,19 @@ public class Constants {
     public static final String Number3Image     = "ui/3.png";
     public static final String Number2Image     = "ui/2.png";
     public static final String Number1Image     = "ui/1.png";
+
     public static final String startButton      = "Buttons/StartButton.png";
     public static final String startButtonPressed      = "Buttons/StartButtonPressed.png";
     public static final String scoreButton      = "Buttons/ScoreButton.png";
     public static final String scoreButtonPressed      = "Buttons/ScoreButtonPressed.png";
     public static final String exitButton      = "Buttons/ExitButton.png";
     public static final String exitButtonPressed      = "Buttons/ExitButtonPressed.png";
+
+    public static final String resetButton      = "Buttons/ResetButton.png";
+    public static final String resetButtonPressed      = "Buttons/ResetButtonPressed.png";
+    public static final String backButton      = "Buttons/BackButton.png";
+    public static final String backButtonPressed      = "Buttons/BackButtonPressed.png";
+
     //Sounds n Music
     public static final String soundMiau = "Sounds/cat.mp3";
     public static final String catHiss = "Sounds/cat-hiss.mp3";

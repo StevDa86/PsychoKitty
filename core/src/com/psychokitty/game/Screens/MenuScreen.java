@@ -47,11 +47,9 @@ public class MenuScreen implements Screen {
     private com.psychokitty.game.Utils.Highscore highscore;
     private Group scoreItems, menuItems;
 
-    private TextureAtlas buttonsAtlas;
-    private NinePatch buttonUpNine, buttonDownNine;
     private TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-    private int buttonwidth, buttonheight;
-    private ImageButton startButton, scoreButton, exitButton;
+    private int buttonwidth = 200, buttonheight = 70;
+    private ImageButton startButton, scoreButton, exitButton, backbutton, resetbutton;
 
     private Skin skin = new Skin();
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
@@ -66,9 +64,6 @@ public class MenuScreen implements Screen {
         highscore = new com.psychokitty.game.Utils.Highscore();
         highscore.config();
 
-        buttonwidth = 200;
-        buttonheight = 70;
-
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport = new FitViewport(Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT, camera);
@@ -76,7 +71,6 @@ public class MenuScreen implements Screen {
 
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
-
         stage = new Stage(viewport, batch);
     }
 
@@ -102,24 +96,12 @@ public class MenuScreen implements Screen {
 
         setupBackground();
         setupMusic();
-        createButtons();
         createBasicFont();
 
         Gdx.input.setInputProcessor(stage);// Make the stage consume events
 
-        final TextButton newHighscoreButton = new TextButton("Show Highscore", skin);
-        final TextButton newExitButton = new TextButton("Exit", skin);
-
-        final TextButton resetScoreButton = new TextButton("Reset Highscore", skin);
-        final TextButton backButton = new TextButton("Back", skin);
-
         final Label scoreLabel = new Label("Score: " + Integer.toString(com.psychokitty.game.Utils.Highscore.getHighScore()), skin2);
         final Label scoreDate = new Label("Score Date: " + com.psychokitty.game.Utils.Highscore.getCurrentDate(), skin2);
-
-
-
-        resetScoreButton.setSize(buttonwidth, buttonheight);
-        backButton.setSize(buttonwidth, buttonheight);
 
         //Start Button als Images
         Texture startBtnTexture = new Texture(Gdx.files.internal(Constants.startButton));
@@ -149,19 +131,36 @@ public class MenuScreen implements Screen {
                 new TextureRegionDrawable(new TextureRegion(exitBtnPressedTexture))
         );
         exitButton.setSize(buttonwidth,buttonheight);
-        exitButton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 200);  //hikeButton is an ImageButton
+        exitButton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 200);
 
+        //Reset Score Button als Images
+        Texture resetBtnTexture = new Texture(Gdx.files.internal(Constants.resetButton));
+        Texture resetBtnPressedTexture = new Texture(Gdx.files.internal(Constants.resetButtonPressed));
+        resetbutton = new ImageButton(
+                new TextureRegionDrawable(new TextureRegion(resetBtnTexture)),
+                new TextureRegionDrawable(new TextureRegion(resetBtnPressedTexture))
+        );
+        resetbutton.setSize(buttonwidth,buttonheight);
+        resetbutton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 100);
+
+        //Back Score Button als Images
+        Texture backBtnTexture = new Texture(Gdx.files.internal(Constants.backButton));
+        Texture backBtnPressedTexture = new Texture(Gdx.files.internal(Constants.backButtonPressed));
+        backbutton = new ImageButton(
+                new TextureRegionDrawable(new TextureRegion(backBtnTexture)),
+                new TextureRegionDrawable(new TextureRegion(backBtnPressedTexture))
+        );
+        backbutton.setSize(buttonwidth,buttonheight);
+        backbutton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 200);
 
         scoreDate.setPosition(Constants.NATIVE_WIDTH / 2 - scoreDate.getWidth() / 2, Constants.NATIVE_HEIGHT / 2 + 50);
         scoreLabel.setPosition(Constants.NATIVE_WIDTH / 2 - scoreLabel.getWidth() / 2, Constants.NATIVE_HEIGHT / 2 + 0);
-        resetScoreButton.setPosition(Constants.NATIVE_WIDTH / 2 - resetScoreButton.getWidth() / 2, Constants.NATIVE_HEIGHT / 2 - 100);
-        backButton.setPosition(Constants.NATIVE_WIDTH / 2 - backButton.getWidth() / 2, Constants.NATIVE_HEIGHT / 2 - 200);
 
         //make a group for score Items
         scoreItems.addActor(scoreDate);
         scoreItems.addActor(scoreLabel);
-        scoreItems.addActor(resetScoreButton);
-        scoreItems.addActor(backButton);
+        scoreItems.addActor(resetbutton);
+        scoreItems.addActor(backbutton);
 
         final Table scoreTable = new Table(skin2);
         scoreTable.setColor(Color.BLACK);
@@ -191,13 +190,13 @@ public class MenuScreen implements Screen {
                 ExitDialog();
             }
         });
-        backButton.addListener(new ClickListener() {
+        backbutton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 stage.addActor(menuItems);
                 scoreTable.remove();
             }
         });
-        resetScoreButton.addListener(new ClickListener() {
+        resetbutton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 com.psychokitty.game.Utils.Highscore.resetScore();
                 scoreLabel.setText("Score: " + Integer.toString(com.psychokitty.game.Utils.Highscore.getHighScore()));
@@ -223,7 +222,6 @@ public class MenuScreen implements Screen {
     public void dispose() {
         stage.dispose();
         menuMusic.dispose();
-        buttonsAtlas.dispose();
         batch.dispose();
     }
 
@@ -239,16 +237,6 @@ public class MenuScreen implements Screen {
         menuMusic.setVolume(1);
         menuMusic.setLooping(true);
         menuMusic.play();
-    }
-
-    private void createButtons() {
-        buttonsAtlas = new TextureAtlas("Buttons/Buttons.pack");
-        buttonUpNine = buttonsAtlas.createPatch("ButtonUp");
-        buttonDownNine = buttonsAtlas.createPatch("ButtonDown");
-
-        textButtonStyle.up = new NinePatchDrawable(buttonUpNine);
-        textButtonStyle.down = new NinePatchDrawable(buttonDownNine);
-        textButtonStyle.over = new NinePatchDrawable(buttonDownNine);
     }
 
     private void createBasicFont() {
