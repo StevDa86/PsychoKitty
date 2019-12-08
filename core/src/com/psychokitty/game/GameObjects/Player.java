@@ -2,8 +2,10 @@ package com.psychokitty.game.GameObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.psychokitty.game.Utils.Constants;
@@ -14,10 +16,9 @@ import com.psychokitty.game.Utils.Constants;
  */
 
 public class Player {
-
     Vector2 touchPos;
     private Sprite catSprite;
-    private Texture catImage;
+    private Texture catImage; //#4
     private int direction = 0;
     private Rectangle cat;
     private float deltaTime;

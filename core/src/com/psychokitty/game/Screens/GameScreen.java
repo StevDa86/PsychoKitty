@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -112,11 +113,15 @@ public class GameScreen implements Screen, InputProcessor {
         HeartSize = (int) (25 * Gdx.graphics.getDensity());
         scorename = "Score:" + score;
 
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        //Background to Black!
+        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(800, 480, camera);
+
         viewport.apply();
-        camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
+        //camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
 
         background = assets.manager.get(Assets.BackgroundImage);
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -136,7 +141,6 @@ public class GameScreen implements Screen, InputProcessor {
             //maybe draw a load screen image that's not a texture that's being managed
             //by the assetManager. You could even play an animation. Otherwise,
             //you can leave the screen blank.
-
             return;
         }
 
