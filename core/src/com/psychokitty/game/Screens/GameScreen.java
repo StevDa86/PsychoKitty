@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -50,18 +51,17 @@ public class GameScreen implements Screen, InputProcessor {
     float totalTime = 3; //starting at 3 seconds
     private SpriteBatch batch;
     private BitmapFont font;
-    private Texture background, foreground;
     private Sound catSound, catHiss, beepHigh, beepLow;
     private Music rainMusic;
     private OrthographicCamera camera;
     private Viewport viewport;
     private Highscore highscore;
-    private int score = 0, backgroundSpeed, lives = 3, HeartSize, SoundCounter = 0;
+    private int score = 0, backgroundSpeed, lives = 3, HeartSize = 30, SoundCounter = 0;
     private String scorename;
-    private Texture Hearts, Number3, Number2, Number1;
+    private Texture Hearts, Number3, Number2, Number1, background, foreground;;
     private long startTime, time;
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
-    private Stage stage = new Stage();
+    private Stage stage;
     private State state = State.INTRO;
 
     private Assets assets = new Assets();
@@ -73,6 +73,15 @@ public class GameScreen implements Screen, InputProcessor {
         assets.load();
 
         batch = new SpriteBatch();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false);
+        viewport = new FitViewport(Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT, camera);
+        viewport.apply();
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.update();
+        stage = new Stage(viewport, batch);
+
+
         highscore = new com.psychokitty.game.Utils.Highscore();
         highscore.config();
 
@@ -104,24 +113,17 @@ public class GameScreen implements Screen, InputProcessor {
         //Text definition
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Light.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = (int) (22 * Gdx.graphics.getDensity());
+        parameter.size = 30;
         parameter.borderColor = Color.BLACK;
         parameter.borderWidth = 1;
         font = generator.generateFont(parameter);
         generator.dispose();
 
-        HeartSize = (int) (25 * Gdx.graphics.getDensity());
         scorename = "Score:" + score;
 
         //Background to Black!
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(800, 480, camera);
-
-        viewport.apply();
-        //camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
 
         background = assets.manager.get(Assets.BackgroundImage);
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -132,6 +134,8 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.update();
     }
 
     @Override
@@ -144,39 +148,37 @@ public class GameScreen implements Screen, InputProcessor {
             return;
         }
 
-        camera.update();
-        batch.setProjectionMatrix(stage.getCamera().combined);
-
         float deltaTime = Gdx.graphics.getDeltaTime(); //You might prefer getRawDeltaTime()
         totalTime -= deltaTime; //if counting down
         int seconds = ((int) totalTime) % 60;
 
+        batch.setProjectionMatrix(camera.combined);
         // begin a new batch and draw
         batch.begin();
 
         backgroundSpeed -= 1;
-        batch.draw(background, 0, 0, 0, backgroundSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(foreground, 0, 0, Gdx.graphics.getWidth(), 200);
+        batch.draw(background, 0, 0, 0, backgroundSpeed, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
+        batch.draw(foreground, 0, 0, Constants.NATIVE_WIDTH, 200);
 
-        CatPlayer.renderPlayer(batch);
+        CatPlayer.renderPlayer(batch, camera);
 
         //lebensanzeige als Herzen
         if (lives == 3) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
+            batch.draw(Hearts, Constants.NATIVE_WIDTH - 200, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
+            batch.draw(Hearts, Constants.NATIVE_WIDTH - 150, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
+            batch.draw(Hearts, Constants.NATIVE_WIDTH - 100, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
         } else if (lives == 2) {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
+            batch.draw(Hearts, Constants.NATIVE_WIDTH - 200, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
+            batch.draw(Hearts, Constants.NATIVE_WIDTH - 150, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
         } else {
-            batch.draw(Hearts, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - HeartSize - 20, HeartSize, HeartSize);
+            batch.draw(Hearts, Constants.NATIVE_WIDTH - 200, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
         }
 
         //If abfrage für 3 Sekunden Zeitanzeige
         if (seconds < totalTime) {
             //font.draw(batch, seconds+1 + " Sekunden", 500, 500);
             if (seconds == 2) {
-                batch.draw(Number3, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+                batch.draw(Number3, (Constants.NATIVE_WIDTH / 2) - 150, (Constants.NATIVE_HEIGHT / 2) - 150, 300, 300);
                 if (SoundCounter == 0) {
                     beepLow.play(0.3f);
                     SoundCounter++;
@@ -184,14 +186,14 @@ public class GameScreen implements Screen, InputProcessor {
 
             }
             if (seconds == 1) {
-                batch.draw(Number2, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+                batch.draw(Number2, (Constants.NATIVE_WIDTH / 2) - 150, (Constants.NATIVE_HEIGHT / 2) - 150, 300, 300);
                 if (SoundCounter == 1) {
                     beepLow.play(0.3f);
                     SoundCounter++;
                 }
             }
             if (seconds == 0) {
-                batch.draw(Number1, (Gdx.graphics.getWidth() / 2) - 150, (Gdx.graphics.getHeight() / 2) - 150, 300, 300);
+                batch.draw(Number1, (Constants.NATIVE_WIDTH / 2) - 150, (Constants.NATIVE_HEIGHT / 2) - 150, 300, 300);
                 if (SoundCounter == 2) {
                     beepHigh.play(0.3f);
                     SoundCounter++;
@@ -200,11 +202,9 @@ public class GameScreen implements Screen, InputProcessor {
         }
         // if abfrage wenn 3 Sekunden vergangen sind, zeichne spiel
         else {
-
             CatFood.renderItems(batch);
             Dog.RenderEnemies(batch);
-
-            font.draw(batch, scorename, 20, Gdx.graphics.getHeight() - 20);
+            font.draw(batch, scorename, 20, Constants.NATIVE_HEIGHT - 20);
         }
         batch.end();
 
@@ -216,7 +216,6 @@ public class GameScreen implements Screen, InputProcessor {
             }
 
             case RUN: {
-
                 //Drop icons
                 if (time - startTime <= 4000) { //5 sekunde warten bis erster Drop.
                     time = TimeUtils.millis();
