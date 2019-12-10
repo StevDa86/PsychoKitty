@@ -45,7 +45,7 @@ public class MenuScreen implements Screen {
     private Group scoreItems, menuItems;
 
     private TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-    private int buttonwidth = 200, buttonheight = 70;
+    private int buttonwidth = 150, buttonheight = 50;
     private ImageButton startButton, scoreButton, exitButton, backbutton, resetbutton;
 
     private Skin skin = new Skin();
@@ -118,7 +118,7 @@ public class MenuScreen implements Screen {
                 new TextureRegionDrawable(new TextureRegion(scoreBtnPressedTexture))
         );
         scoreButton.setSize(buttonwidth,buttonheight);
-        scoreButton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 100);  //hikeButton is an ImageButton
+        scoreButton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 60);  //hikeButton is an ImageButton
 
         //Exit Button als Images
         Texture exitBtnTexture = new Texture(Gdx.files.internal(Constants.exitButton));
@@ -128,7 +128,7 @@ public class MenuScreen implements Screen {
                 new TextureRegionDrawable(new TextureRegion(exitBtnPressedTexture))
         );
         exitButton.setSize(buttonwidth,buttonheight);
-        exitButton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 200);
+        exitButton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 120);
 
         //Reset Score Button als Images
         Texture resetBtnTexture = new Texture(Gdx.files.internal(Constants.resetButton));
@@ -138,7 +138,7 @@ public class MenuScreen implements Screen {
                 new TextureRegionDrawable(new TextureRegion(resetBtnPressedTexture))
         );
         resetbutton.setSize(buttonwidth,buttonheight);
-        resetbutton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 100);
+        resetbutton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 60);
 
         //Back Score Button als Images
         Texture backBtnTexture = new Texture(Gdx.files.internal(Constants.backButton));
@@ -148,9 +148,9 @@ public class MenuScreen implements Screen {
                 new TextureRegionDrawable(new TextureRegion(backBtnPressedTexture))
         );
         backbutton.setSize(buttonwidth,buttonheight);
-        backbutton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 200);
+        backbutton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 120);
 
-        scoreDate.setPosition(Constants.NATIVE_WIDTH / 2 - scoreDate.getWidth() / 2, Constants.NATIVE_HEIGHT / 2 + 50);
+        scoreDate.setPosition(Constants.NATIVE_WIDTH / 2 - scoreDate.getWidth() / 2, Constants.NATIVE_HEIGHT / 2 + 30);
         scoreLabel.setPosition(Constants.NATIVE_WIDTH / 2 - scoreLabel.getWidth() / 2, Constants.NATIVE_HEIGHT / 2 + 0);
 
         //make a group for score Items

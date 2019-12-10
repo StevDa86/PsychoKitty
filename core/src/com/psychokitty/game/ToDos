@@ -1,10 +1,14 @@
-Cat animation
-Dog Animation
+Bug: Beim beenden im spiel auf Beenden Nein gehen, bleibt der bildschrim schwarz.
 
-Neue Musik
+Create 8 bit Menu Background
+Create 8 Bit Game Background
+Create 8 bit Dog Animation
+Create 8 bit Cat Animation
 
+Create Retro music with famitracker tool
+
+Change to Atlas Texture Packer for optimized performance
 Code Cleanup - Auslagern
 
 Für nächste Version
-
-- Psycho Modus(neues Item, bei berührung für 20 sekunden hippie musik, hippie hintergrund, keine hunde, nur hippie items)
+- Psycho Modus(neues Item, bei berührung für 20 sekunden hippie musik, hippie hintergrund, keine hunde bzw. hunde explodieren beim berühren, Katze ändert sich der Sprite bzw. bekommt Particle effekt)

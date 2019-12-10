@@ -45,7 +45,6 @@ public class Player {
         if (Gdx.input.isTouched()) {
             camera.unproject(touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0));
             touchPos.x = touchPos.x - 75;
-            Gdx.app.log("Mouse Event","Click at " + Gdx.input.getX() + " CatX =" + cat.x);
         }
 
         //Move right
