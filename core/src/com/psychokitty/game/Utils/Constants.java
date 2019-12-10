@@ -9,15 +9,15 @@ public class Constants {
     public static final int catsize    = 150;
 
     //Spielauflösung
-    public static final int NATIVE_WIDTH  = 800;
-    public static final int NATIVE_HEIGHT = 480;
+    public static final int NATIVE_WIDTH  = 640;
+    public static final int NATIVE_HEIGHT = 360;
 
     //Images
     public static final String backgroundImage  = "Backgrounds/SC1BG.jpg";
     public static final String foregroundImage  = "Backgrounds/FGSC1.png";
     public static final String playerImage      = "Characters/cat.png";
     public static final String splashImage      = "Backgrounds/splash.png";
-    public static final String backgroundMenu   = "Backgrounds/Menu.jpg";
+    public static final String backgroundMenu   = "Backgrounds/Menu2.jpg";
     public static final String catnipImage      = "Characters/droplet.png";
     public static final String dogAnimationImage = "Characters/dogAnim.png";
     public static final String heartImage       = "ui/heart.png";
