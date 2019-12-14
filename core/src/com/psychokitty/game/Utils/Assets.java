@@ -26,6 +26,7 @@ public class Assets {
     public static final String sMusicDream = Constants.musicDream;
     public static final String sBeepHigh = Constants.beepHigh;
     public static final String sBeepLow = Constants.beepLow;
+    public static final String sMenuSelect = Constants.menu_sound;
 
     public void load(){
         manager.load(Constants.Number1Image, Texture.class);
@@ -38,6 +39,7 @@ public class Assets {
         manager.load(sCatHiss, Sound.class);
         manager.load(sSoundMiau, Sound.class);
         manager.load(sMusicDream, Music.class);
+        manager.load(sMenuSelect,Sound.class);
         manager.load(Hearts,Texture.class);
         manager.finishLoading();
     }

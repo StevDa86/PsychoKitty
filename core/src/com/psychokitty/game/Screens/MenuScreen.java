@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -39,6 +41,8 @@ public class MenuScreen implements Screen {
     public com.psychokitty.game.AdMob.AdsController adcont;
     private Stage stage;
     private Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal(com.psychokitty.game.Utils.Constants.musicMenu));
+    private Sound menuSelectSound = Gdx.audio.newSound(Gdx.files.internal(Constants.menu_sound));
+
     private Texture texture = new Texture(Gdx.files.internal(com.psychokitty.game.Utils.Constants.backgroundMenu));
     private Image menuBackground = new Image(texture);
     private com.psychokitty.game.Utils.Highscore highscore;
@@ -94,6 +98,7 @@ public class MenuScreen implements Screen {
         setupBackground();
         setupMusic();
         createBasicFont();
+
 
         Gdx.input.setInputProcessor(stage);// Make the stage consume events
 
@@ -169,10 +174,13 @@ public class MenuScreen implements Screen {
         menuItems.addActor(scoreButton);
         menuItems.addActor(exitButton);
         stage.addActor(menuItems);
+        menuItems.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(1.0f)));
+
 
         startButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 adcont.hideBannerAd();
+                menuSelectSound.play();
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game, adcont));
             }
         });

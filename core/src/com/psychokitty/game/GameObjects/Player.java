@@ -24,11 +24,11 @@ public class Player {
     public void createPlayer() {
         catImage = new Texture(Constants.playerImage);
         catSprite = new Sprite(catImage);
-        touchPos = new Vector3(Constants.NATIVE_WIDTH / 2 - com.psychokitty.game.Utils.Constants.catsize / 2, 50 ,0);
+        touchPos = new Vector3(Constants.NATIVE_WIDTH / 2 - com.psychokitty.game.Utils.Constants.catsize / 2, 32 ,0);
 
         cat = new Rectangle();
         cat.x = Constants.NATIVE_WIDTH / 2 - com.psychokitty.game.Utils.Constants.catsize / 2;
-        cat.y = 50;
+        cat.y = 32;
         cat.width = com.psychokitty.game.Utils.Constants.catsize;
         cat.height = com.psychokitty.game.Utils.Constants.catsize;
     }
@@ -44,7 +44,7 @@ public class Player {
         //setup user interaction
         if (Gdx.input.isTouched()) {
             camera.unproject(touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0));
-            touchPos.x = touchPos.x - 75;
+            touchPos.x = touchPos.x - Constants.catsize/2;
         }
 
         //Move right
@@ -68,8 +68,8 @@ public class Player {
         if (Math.abs(touchPos.x - cat.x) < 5)
             cat.x = touchPos.x;
         //Katze am rand aufhalten
-        if (cat.x > Constants.NATIVE_WIDTH - 100)
-            cat.x = Constants.NATIVE_WIDTH - 100;
+        if (cat.x > Constants.NATIVE_WIDTH - Constants.catsize)
+            cat.x = Constants.NATIVE_WIDTH - Constants.catsize;
         if (cat.x < 0)
             cat.x = 0;
     }

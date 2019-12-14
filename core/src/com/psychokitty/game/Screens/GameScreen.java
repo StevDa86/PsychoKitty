@@ -12,10 +12,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -48,7 +49,7 @@ public class GameScreen implements Screen, InputProcessor {
     Player CatPlayer;
     Items CatFood;
     Enemies Dog;
-    float totalTime = 3; //starting at 3 seconds
+    float totalTime = 4; //starting at 3 seconds
     private SpriteBatch batch;
     private BitmapFont font;
     private Sound catSound, catHiss, beepHigh, beepLow;
@@ -58,7 +59,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Highscore highscore;
     private int score = 0, backgroundSpeed, lives = 3, HeartSize = 30, SoundCounter = 0;
     private String scorename;
-    private Texture Hearts, Number3, Number2, Number1, background, foreground;;
+    private Texture Hearts, Number3, Number2, Number1, background, foreground;
     private long startTime, time;
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage;
@@ -80,7 +81,6 @@ public class GameScreen implements Screen, InputProcessor {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
         stage = new Stage(viewport, batch);
-
 
         highscore = new com.psychokitty.game.Utils.Highscore();
         highscore.config();
@@ -127,7 +127,10 @@ public class GameScreen implements Screen, InputProcessor {
 
         background = assets.manager.get(Assets.BackgroundImage);
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
         foreground = assets.manager.get(Assets.ForegroundImage);
+        foreground.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
         Hearts = assets.manager.get(Assets.Hearts);
     }
 
@@ -153,12 +156,13 @@ public class GameScreen implements Screen, InputProcessor {
         int seconds = ((int) totalTime) % 60;
 
         batch.setProjectionMatrix(camera.combined);
+
         // begin a new batch and draw
         batch.begin();
 
         backgroundSpeed -= 1;
         batch.draw(background, 0, 0, 0, backgroundSpeed, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
-        batch.draw(foreground, 0, 0, Constants.NATIVE_WIDTH, 200);
+        batch.draw(foreground, 0, 0, 0, 0, Constants.NATIVE_WIDTH, 32);
 
         CatPlayer.renderPlayer(batch, camera);
 
@@ -174,11 +178,12 @@ public class GameScreen implements Screen, InputProcessor {
             batch.draw(Hearts, Constants.NATIVE_WIDTH - 200, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
         }
 
+
         //If abfrage für 3 Sekunden Zeitanzeige
         if (seconds < totalTime) {
             //font.draw(batch, seconds+1 + " Sekunden", 500, 500);
             if (seconds == 2) {
-                batch.draw(Number3, (Constants.NATIVE_WIDTH / 2) - 150, (Constants.NATIVE_HEIGHT / 2) - 150, 300, 300);
+                batch.draw(Number3, (Constants.NATIVE_WIDTH / 2) - 100, (Constants.NATIVE_HEIGHT / 2) - 100, 200, 200);
                 if (SoundCounter == 0) {
                     beepLow.play(0.3f);
                     SoundCounter++;
@@ -186,14 +191,14 @@ public class GameScreen implements Screen, InputProcessor {
 
             }
             if (seconds == 1) {
-                batch.draw(Number2, (Constants.NATIVE_WIDTH / 2) - 150, (Constants.NATIVE_HEIGHT / 2) - 150, 300, 300);
+                batch.draw(Number2, (Constants.NATIVE_WIDTH / 2) - 100, (Constants.NATIVE_HEIGHT / 2) - 100, 200, 200);
                 if (SoundCounter == 1) {
                     beepLow.play(0.3f);
                     SoundCounter++;
                 }
             }
             if (seconds == 0) {
-                batch.draw(Number1, (Constants.NATIVE_WIDTH / 2) - 150, (Constants.NATIVE_HEIGHT / 2) - 150, 300, 300);
+                batch.draw(Number1, (Constants.NATIVE_WIDTH / 2) - 100, (Constants.NATIVE_HEIGHT / 2) - 100, 200, 200);
                 if (SoundCounter == 2) {
                     beepHigh.play(0.3f);
                     SoundCounter++;
@@ -205,6 +210,7 @@ public class GameScreen implements Screen, InputProcessor {
             CatFood.renderItems(batch);
             Dog.RenderEnemies(batch);
             font.draw(batch, scorename, 20, Constants.NATIVE_HEIGHT - 20);
+
         }
         batch.end();
 
@@ -224,8 +230,8 @@ public class GameScreen implements Screen, InputProcessor {
                 Iterator<Rectangle> iter = CatFood.getArray().iterator();
                 while (iter.hasNext()) {
                     Rectangle Items = iter.next();
-                    Items.y -= (300 + score * 5) * Gdx.graphics.getDeltaTime(); //geschwindigkeit
-                    if (Items.y + 64 < 0) iter.remove();
+                    Items.y -= (200 + score * 5) * Gdx.graphics.getDeltaTime(); //geschwindigkeit
+                    if (Items.y + 30 < 0) iter.remove();
                     if (Items.overlaps(CatPlayer.getRectangle())) {
                         catSound.play();
                         score++;
@@ -242,7 +248,7 @@ public class GameScreen implements Screen, InputProcessor {
                 Iterator<Rectangle> iter2 = Dog.getArray().iterator();
                 while (iter2.hasNext()) {
                     Rectangle Items2 = iter2.next();
-                    Items2.y -= (350 + score * 5) * Gdx.graphics.getDeltaTime();
+                    Items2.y -= (250 + score * 5) * Gdx.graphics.getDeltaTime();
                     if (Items2.y + 50 < 0) iter2.remove();
                     if (Items2.overlaps(CatPlayer.getRectangle())) {
                         catHiss.play();

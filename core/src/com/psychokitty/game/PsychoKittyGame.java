@@ -2,6 +2,7 @@ package com.psychokitty.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.psychokitty.game.Utils.Assets;
@@ -23,7 +24,8 @@ public class PsychoKittyGame extends Game {
 
     @Override
     public void create() {
-        Gdx.input.setCatchBackKey(true);
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
+
         batch = new SpriteBatch();
         font = new BitmapFont();
         //Werbung nur bei aktiven WIFI

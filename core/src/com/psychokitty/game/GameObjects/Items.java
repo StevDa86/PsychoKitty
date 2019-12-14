@@ -20,11 +20,13 @@ public class Items {
     private Texture dropImage;
     private long lastDropTime;
     private Sprite Drops;
+    private int itemSize = 30;
 
     public void createItems() {
         dropImage = new Texture(Constants.catnipImage);
         catfood = new Array<Rectangle>();
         Drops = new Sprite(dropImage);
+        Drops.setSize(itemSize,itemSize);
     }
 
     public void renderItems(SpriteBatch batch) {
@@ -33,16 +35,15 @@ public class Items {
             Drops.setX(Items.x);
             Drops.setY(Items.y);
             Drops.draw(batch);
-            //batch.draw(dropImage, Items.x, Items.y, 80, 80);
         }
     }
 
     public void spawnItems() {
         Rectangle Items = new Rectangle();
-        Items.x = MathUtils.random(0, Gdx.graphics.getWidth() - 64);
-        Items.y = Gdx.graphics.getHeight();
-        Items.width = 64;
-        Items.height = 64;
+        Items.x = MathUtils.random(0, Constants.NATIVE_WIDTH - itemSize);
+        Items.y = Constants.NATIVE_HEIGHT;
+        Items.width = itemSize;
+        Items.height = itemSize;
         catfood.add(Items);
         lastDropTime = TimeUtils.nanoTime();
     }
