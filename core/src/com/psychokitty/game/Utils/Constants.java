@@ -5,8 +5,8 @@ package com.psychokitty.game.Utils;
  */
 public class Constants {
     //Values
-    public static final float catspeed = 500f;
-    public static final int catsize    = 150;
+    public static final float catspeed = 300f;
+    public static final int catsize    = 50;
 
     //Spielauflösung
     public static final int NATIVE_WIDTH  = 640;
@@ -14,12 +14,13 @@ public class Constants {
 
     //Images
     public static final String backgroundImage  = "Backgrounds/SC1BG.jpg";
-    public static final String foregroundImage  = "Backgrounds/FGSC1.png";
+    public static final String foregroundImage  = "Backgrounds/terrain_bottom.png";
+    //public static final String foregroundImage  = "Backgrounds/FGSC1.png";
     public static final String playerImage      = "Characters/cat.png";
     public static final String splashImage      = "Backgrounds/splash.png";
     public static final String backgroundMenu   = "Backgrounds/Menu2.jpg";
     public static final String catnipImage      = "Characters/droplet.png";
-    public static final String dogAnimationImage = "Characters/dogAnim.png";
+    public static final String dogAnimationImage = "Characters/dog.png";
     public static final String heartImage       = "ui/heart.png";
     public static final String Number3Image     = "ui/3.png";
     public static final String Number2Image     = "ui/2.png";
@@ -40,11 +41,12 @@ public class Constants {
     //Sounds n Music
     public static final String soundMiau = "Sounds/cat.mp3";
     public static final String catHiss = "Sounds/cat-hiss.mp3";
-    public static final String musicDream = "Music/MenuMusic.wav";
+    public static final String musicDream = "Music/MenuMusic2.wav";
     public static final String soundSplash = "Sounds/splash.mp3";
-    public static final String musicMenu = "Music/MenuMusic.wav";
+    public static final String musicMenu = "Music/MenuMusic2.wav";
     public static final String beepHigh = "Sounds/beep-high.mp3";
     public static final String beepLow = "Sounds/beep-low.mp3";
+    public static final String menu_sound = "Sounds/menu_select.wav";
 
     //UI
     public static final String defaultJson = "ui/defaultskin.json";

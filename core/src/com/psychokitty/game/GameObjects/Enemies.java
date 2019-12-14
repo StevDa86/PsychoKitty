@@ -18,7 +18,7 @@ import com.psychokitty.game.Utils.Constants;
 public class Enemies {
 
     //Dog Animation
-    final int FRAME_COLS = 2;         // #1
+    final int FRAME_COLS = 4;         // #1
     final int FRAME_ROWS = 1;         // #2
     public Array<Rectangle> dog;
     Animation<TextureRegion> DogwalkAnimation;          // #3
@@ -27,6 +27,7 @@ public class Enemies {
     TextureRegion DogcurrentFrame;           // #7
     float stateTime;                                        // #8
     private long lastDogDropTime;
+    private int itemSize = 50;
 
     public void CreateEnemies() {
         //Dog Animation
@@ -39,9 +40,8 @@ public class Enemies {
                 DogwalkFrames[index++] = tmp[i][j];
             }
         }
-        DogwalkAnimation = new Animation<TextureRegion>(0.225f, DogwalkFrames);      // #11
+        DogwalkAnimation = new Animation<TextureRegion>(0.300f, DogwalkFrames);      // #11
         stateTime = 0f;                         // #13
-        //
 
         dog = new Array<Rectangle>();
     }
@@ -52,7 +52,7 @@ public class Enemies {
         DogcurrentFrame = DogwalkAnimation.getKeyFrame(stateTime, true);  // #16
 
         for (Rectangle Items2 : dog) {
-            batch.draw(DogcurrentFrame, Items2.x, Items2.y, 100, 100);
+            batch.draw(DogcurrentFrame, Items2.x, Items2.y, itemSize, itemSize);
         }
     }
 
@@ -66,15 +66,15 @@ public class Enemies {
 
     public void spawnDog() {
         Rectangle Items2 = new Rectangle();
-        Items2.x = MathUtils.random(0, Constants.NATIVE_WIDTH - 100);
+        Items2.x = MathUtils.random(0, Constants.NATIVE_WIDTH - itemSize);
         Items2.y = Constants.NATIVE_HEIGHT;
-        Items2.width = 100;
-        Items2.height = 100;
+        Items2.width = itemSize;
+        Items2.height = itemSize;
         dog.add(Items2);
         lastDogDropTime = TimeUtils.nanoTime();
     }
 
     public void DisposeEnemies() {
-
+        DogwalkSheet.dispose();
     }
 }
