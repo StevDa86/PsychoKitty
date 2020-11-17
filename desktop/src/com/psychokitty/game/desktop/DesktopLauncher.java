@@ -2,7 +2,6 @@ package com.psychokitty.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-
 import com.psychokitty.game.PsychoKittyGame;
 import com.psychokitty.game.Utils.Constants;
 
