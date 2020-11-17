@@ -55,9 +55,9 @@ public class GameScreen implements Screen, InputProcessor{
     private OrthographicCamera camera;
     private Viewport viewport;
     private Highscore highscore;
-    private int score = 0, backgroundSpeed, lives = 3, HeartSize = 30, SoundCounter = 0;
+    private int score = 0, backgroundSpeed, lives = 3, HeartSize = 30, SoundCounter = 0, treeWidth, treeHeight;
     private String scorename;
-    private Texture Hearts, Number3, Number2, Number1, background, foreground;
+    private Texture Hearts, Number3, Number2, Number1, background, foreground, tree;
     private long startTime, time;
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage;
@@ -129,6 +129,9 @@ public class GameScreen implements Screen, InputProcessor{
         foreground = assets.manager.get(Assets.ForegroundImage);
         foreground.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
+        tree = assets.manager.get(Assets.TreeImage);
+        treeWidth = tree.getWidth();
+        treeHeight = tree.getHeight();
         Hearts = assets.manager.get(Assets.Hearts);
     }
 
@@ -158,8 +161,9 @@ public class GameScreen implements Screen, InputProcessor{
         // begin a new batch and draw
         batch.begin();
 
-        backgroundSpeed -= 1;
-        batch.draw(background, 0, 0, 0, backgroundSpeed, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
+        backgroundSpeed += 1;
+        batch.draw(background, 0, 0, backgroundSpeed, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
+        batch.draw(tree, Constants.NATIVE_WIDTH - 250, 30, 0, 0, treeWidth, treeHeight);
         batch.draw(foreground, 0, 0, 0, 0, Constants.NATIVE_WIDTH, 32);
 
         CatPlayer.renderPlayer(batch, camera);

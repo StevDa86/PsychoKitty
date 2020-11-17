@@ -17,6 +17,7 @@ public class Assets {
     public static final String Count3 = Constants.Number3Image;
     public static final String BackgroundImage = Constants.backgroundImage;
     public static final String ForegroundImage = Constants.foregroundImage;
+    public static final String TreeImage = Constants.treeImage;
     public static final String Hearts = Constants.heartImage;
 
     //All Sounds
@@ -34,6 +35,7 @@ public class Assets {
         manager.load(Count3, Texture.class);
         manager.load(BackgroundImage, Texture.class);
         manager.load(ForegroundImage, Texture.class);
+        manager.load(TreeImage, Texture.class);
         manager.load(sBeepHigh, Sound.class);
         manager.load(sBeepLow, Sound.class);
         manager.load(sCatHiss, Sound.class);

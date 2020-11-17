@@ -28,7 +28,7 @@ public class Player {
 
         cat = new Rectangle();
         cat.x = Constants.NATIVE_WIDTH / 2 - com.psychokitty.game.Utils.Constants.catsize / 2;
-        cat.y = 32;
+        cat.y = 22; //höhe über boden
         cat.width = com.psychokitty.game.Utils.Constants.catsize;
         cat.height = com.psychokitty.game.Utils.Constants.catsize;
     }
