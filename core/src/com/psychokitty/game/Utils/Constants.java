@@ -13,9 +13,11 @@ public class Constants {
     public static final int NATIVE_HEIGHT = 360;
 
     //Images
-    public static final String backgroundImage  = "Backgrounds/SC1BG.jpg";
-    public static final String foregroundImage  = "Backgrounds/terrain_bottom.png";
-    //public static final String foregroundImage  = "Backgrounds/FGSC1.png";
+    //public static final String backgroundImage  = "Backgrounds/SC1BG.jpg";
+    public static final String backgroundImage  = "Backgrounds/sky.png";
+    public static final String foregroundImage  = "Backgrounds/terrain_bottom2.png";
+    public static final String treeImage = "Backgrounds/tree.png";
+
     public static final String playerImage      = "Characters/cat.png";
     public static final String splashImage      = "Backgrounds/splash.png";
     public static final String backgroundMenu   = "Backgrounds/Menu2.jpg";
