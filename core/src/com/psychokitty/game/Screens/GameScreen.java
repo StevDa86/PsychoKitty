@@ -40,7 +40,7 @@ import java.util.Iterator;
 /**
  * Created by steven on 25.07.15.
  */
-public class GameScreen implements Screen, InputProcessor {
+public class GameScreen implements Screen, InputProcessor{
 
     final PsychoKittyGame game;
 
@@ -415,9 +415,10 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     @Override
-    public boolean scrolled(int amount) {
+    public boolean scrolled(float amountX, float amountY) {
         return false;
     }
+
 
     public enum State {
         PAUSE,
