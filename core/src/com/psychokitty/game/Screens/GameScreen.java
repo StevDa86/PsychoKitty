@@ -57,7 +57,7 @@ public class GameScreen implements Screen, InputProcessor{
     private Highscore highscore;
     private int score = 0, backgroundSpeed, lives = 3, HeartSize = 30, SoundCounter = 0, treeWidth, treeHeight;
     private String scorename;
-    private Texture Hearts, Number3, Number2, Number1, background, foreground, tree;
+    private Texture Hearts, Number3, Number2, Number1, background, foreground, tree, crazyBackground, tabicon;
     private long startTime, time;
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage;
@@ -123,8 +123,13 @@ public class GameScreen implements Screen, InputProcessor{
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        tabicon = assets.manager.get(Assets.tabIcon);
+
         background = assets.manager.get(Assets.BackgroundImage);
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
+        crazyBackground = assets.manager.get(Assets.crazyBackground);
+        crazyBackground.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         foreground = assets.manager.get(Assets.ForegroundImage);
         foreground.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -162,9 +167,19 @@ public class GameScreen implements Screen, InputProcessor{
         batch.begin();
 
         backgroundSpeed += 1;
-        batch.draw(background, 0, 0, backgroundSpeed, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
+        if (score <= 10) {
+            batch.draw(background, 0, 0, backgroundSpeed, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
+        }
+        else //Test für Crazy mode
+        {
+            batch.draw(crazyBackground, 0, 0, backgroundSpeed+1, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
+        }
         batch.draw(tree, Constants.NATIVE_WIDTH - 250, 30, 0, 0, treeWidth, treeHeight);
         batch.draw(foreground, 0, 0, 0, 0, Constants.NATIVE_WIDTH, 32);
+
+        //Draw Tab Icons
+        batch.draw(tabicon, 10, 10);
+        batch.draw(tabicon, Constants.NATIVE_WIDTH - 60, 10);
 
         CatPlayer.renderPlayer(batch, camera);
 

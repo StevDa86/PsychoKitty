@@ -16,9 +16,11 @@ public class Assets {
     public static final String Count2 = Constants.Number2Image;
     public static final String Count3 = Constants.Number3Image;
     public static final String BackgroundImage = Constants.backgroundImage;
+    public static final String crazyBackground = Constants.crazyBackground;
     public static final String ForegroundImage = Constants.foregroundImage;
     public static final String TreeImage = Constants.treeImage;
     public static final String Hearts = Constants.heartImage;
+    public static final String tabIcon = Constants.tabIcon;
 
     //All Sounds
     // load the drop sound effect and the rain background "music"
@@ -34,6 +36,7 @@ public class Assets {
         manager.load(Count2, Texture.class);
         manager.load(Count3, Texture.class);
         manager.load(BackgroundImage, Texture.class);
+        manager.load(crazyBackground, Texture.class);
         manager.load(ForegroundImage, Texture.class);
         manager.load(TreeImage, Texture.class);
         manager.load(sBeepHigh, Sound.class);
@@ -43,6 +46,7 @@ public class Assets {
         manager.load(sMusicDream, Music.class);
         manager.load(sMenuSelect,Sound.class);
         manager.load(Hearts,Texture.class);
+        manager.load(tabIcon, Texture.class);
         manager.finishLoading();
     }
 
