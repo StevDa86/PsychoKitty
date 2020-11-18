@@ -34,6 +34,10 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven {url "https://maven.google.com"}
     }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
 }
 
 project(":desktop") {
