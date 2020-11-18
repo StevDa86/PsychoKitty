@@ -3,8 +3,10 @@ package com.psychokitty.game.GameObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.psychokitty.game.Utils.Constants;
@@ -14,16 +16,35 @@ import com.psychokitty.game.Utils.Constants;
  */
 
 public class Player {
+
+    //cat animation
+    final int FRAME_COLS = 2;         // #1
+    final int FRAME_ROWS = 1;         // #2
+    Animation<TextureRegion> CatAnimation;          // #3
+    Texture catImage;              // #4
+    TextureRegion[] CatFrames;             // #5
+    TextureRegion CatFrame;           // #7
+    float stateTime;
+
     Vector3 touchPos;
-    private Sprite catSprite;
-    private Texture catImage;
     private int direction = 0;
     private Rectangle cat;
     private float deltaTime;
 
     public void createPlayer() {
-        catImage = new Texture(Constants.playerImage);
-        catSprite = new Sprite(catImage);
+        catImage = new Texture(Constants.playerImage); //#9
+        TextureRegion[][] tmp = TextureRegion.split(catImage, catImage.getWidth() / FRAME_COLS, catImage.getHeight() / FRAME_ROWS);//#10
+        CatFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+        int index = 0;
+        for (int i = 0; i < FRAME_ROWS; i++) {
+            for (int j = 0; j < FRAME_COLS; j++) {
+                CatFrames[index++] = tmp[i][j];
+            }
+        }
+        CatAnimation = new Animation<TextureRegion>(0.300f, CatFrames);      // #11
+        stateTime = 0f;                         // #13
+
+        //catSprite = new Sprite(catImage);
         touchPos = new Vector3(Constants.NATIVE_WIDTH / 2 - com.psychokitty.game.Utils.Constants.catsize / 2, 32 ,0);
 
         cat = new Rectangle();
@@ -35,7 +56,13 @@ public class Player {
 
     public void renderPlayer(SpriteBatch batch, OrthographicCamera camera) {
         deltaTime = Gdx.graphics.getDeltaTime();
-        batch.draw(catSprite, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
+
+        //state Time für Katzenanimation
+        stateTime += Gdx.graphics.getDeltaTime();
+
+        CatFrame = CatAnimation.getKeyFrame(stateTime, true);  // #16
+        batch.draw(CatFrame, cat.x, cat.y, com.psychokitty.game.Utils.Constants.catsize, com.psychokitty.game.Utils.Constants.catsize);
+
         move(camera);
     }
 
@@ -52,7 +79,9 @@ public class Player {
             cat.x += com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
             if (direction == 1) {
                 direction = 0;
-                catSprite.flip(true, false);
+                for (TextureRegion textureRegion:CatAnimation.getKeyFrames()) {
+                    if(textureRegion.isFlipX()) textureRegion.flip(true,false);
+                }
             }
         }
         //move left
@@ -60,7 +89,10 @@ public class Player {
             cat.x -= com.psychokitty.game.Utils.Constants.catspeed * deltaTime;
             if (direction == 0) {
                 direction = 1;
-                catSprite.flip(true, false);
+                //CatFrame.flip(true, false);
+                for (TextureRegion textureRegion:CatAnimation.getKeyFrames()) {
+                    if(!textureRegion.isFlipX()) textureRegion.flip(true,false);
+                }
             }
         }
 
