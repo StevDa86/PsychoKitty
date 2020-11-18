@@ -62,6 +62,7 @@ public class GameScreen implements Screen, InputProcessor{
     private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage;
     private State state = State.INTRO;
+    private Boolean ads_Active = false;
 
     private Assets assets = new Assets();
 
@@ -175,6 +176,7 @@ public class GameScreen implements Screen, InputProcessor{
             batch.draw(crazyBackground, 0, 0, backgroundSpeed+1, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
         }
         batch.draw(tree, Constants.NATIVE_WIDTH - 250, 30, 0, 0, treeWidth, treeHeight);
+
         batch.draw(foreground, 0, 0, 0, 0, Constants.NATIVE_WIDTH, 32);
 
         //Draw Tab Icons
@@ -345,8 +347,9 @@ public class GameScreen implements Screen, InputProcessor{
 
     public void ExitGame() {
         Gdx.input.setInputProcessor(stage);
-        if (adcont.isWifiConnected()) {
+        if (adcont.isWifiConnected() && !ads_Active) {
             adcont.showBannerAd();
+            ads_Active = true;
         }
         new CustomDialog("Exit game", skin2).text("Exit game?")
                 .button("Yes", new InputListener() {
@@ -368,6 +371,7 @@ public class GameScreen implements Screen, InputProcessor{
                 .button("No", new InputListener() {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         adcont.hideBannerAd();
+                        ads_Active = false;
                         resume();
                         return false;
                     }
@@ -377,8 +381,9 @@ public class GameScreen implements Screen, InputProcessor{
     public void GameOver() {
 
         Gdx.input.setInputProcessor(stage);
-        if (adcont.isWifiConnected()) {
+        if (adcont.isWifiConnected() && !ads_Active) {
             adcont.showBannerAd();
+            ads_Active = true;
         }
         new CustomDialog("Game Over", skin2).text(Constants.scoreTXT + score)
                 .button("EXIT", new InputListener() {
