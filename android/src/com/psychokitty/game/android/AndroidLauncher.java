@@ -2,7 +2,10 @@ package com.psychokitty.game.android;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,10 +70,23 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 
     @Override
     public boolean isWifiConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		//old Style
+        /*ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
         return (ni != null && ni.isConnected());
+        */
+
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			Network nw = connectivityManager.getActiveNetwork();
+			if (nw == null) return false;
+			NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
+			return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
+		} else {
+			NetworkInfo nwInfo = connectivityManager.getActiveNetworkInfo();
+			return nwInfo != null && nwInfo.isConnected();
+		}
     }
 
     @Override

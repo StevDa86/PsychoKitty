@@ -46,9 +46,9 @@ public class Constants {
     //Sounds n Music
     public static final String soundMiau = "Sounds/cat.mp3";
     public static final String catHiss = "Sounds/cat-hiss.mp3";
-    public static final String musicDream = "Music/MenuMusic2.wav";
+    public static final String musicDream = "Music/MenuMusic2.mp3";
     public static final String soundSplash = "Sounds/splash.mp3";
-    public static final String musicMenu = "Music/MenuMusic2.wav";
+    public static final String musicMenu = "Music/MenuMusic2.mp3";
     public static final String beepHigh = "Sounds/beep-high.mp3";
     public static final String beepLow = "Sounds/beep-low.mp3";
     public static final String menu_sound = "Sounds/menu_select.wav";
