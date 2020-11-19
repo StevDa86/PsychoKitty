@@ -24,7 +24,8 @@ public class Constants {
     public static final String playerImage      = "Characters/cat.png";
     public static final String splashImage      = "Backgrounds/splash.png";
     public static final String backgroundMenu   = "Backgrounds/Menu2.jpg";
-    public static final String catnipImage      = "Characters/droplet.png";
+    public static final String burgerImage      = "Characters/droplet.png";
+    public static final String powerItemImage      = "Characters/powericon.png";
     public static final String dogAnimationImage = "Characters/dog.png";
     public static final String heartImage       = "ui/heart.png";
     public static final String Number3Image     = "ui/3.png";
@@ -47,6 +48,7 @@ public class Constants {
     public static final String soundMiau = "Sounds/cat.mp3";
     public static final String catHiss = "Sounds/cat-hiss.mp3";
     public static final String musicDream = "Music/MenuMusic2.mp3";
+    public static final String psychoMusic = "Music/psycho_music.mp3";
     public static final String soundSplash = "Sounds/splash.mp3";
     public static final String musicMenu = "Music/MenuMusic2.mp3";
     public static final String beepHigh = "Sounds/beep-high.mp3";
