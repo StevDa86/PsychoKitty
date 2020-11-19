@@ -22,7 +22,7 @@ public class Items {
     private int itemSize = 30;
 
     public void createItems() {
-        dropImage = new Texture(Constants.catnipImage);
+        dropImage = new Texture(Constants.burgerImage);
         catfood = new Array<Rectangle>();
         Drops = new Sprite(dropImage);
         Drops.setSize(itemSize,itemSize);

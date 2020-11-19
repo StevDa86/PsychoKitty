@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.psychokitty.game.GameObjects.Enemies;
 import com.psychokitty.game.GameObjects.Items;
 import com.psychokitty.game.GameObjects.Player;
+import com.psychokitty.game.GameObjects.PowerItem;
 import com.psychokitty.game.PsychoKittyGame;
 import com.psychokitty.game.Utils.Assets;
 import com.psychokitty.game.Utils.Constants;
@@ -38,7 +39,7 @@ import java.util.Iterator;
 /**
  * Created by steven on 25.07.15.
  */
-public class GameScreen implements Screen, InputProcessor{
+public class GameScreen implements Screen, InputProcessor {
 
     final PsychoKittyGame game;
 
@@ -46,29 +47,35 @@ public class GameScreen implements Screen, InputProcessor{
 
     Player CatPlayer;
     Items CatFood;
+    PowerItem PowerItems;
     Enemies Dog;
     float totalTime = 4; //starting at 3 seconds
     private SpriteBatch batch;
     private BitmapFont font;
     private Sound catSound, catHiss, beepHigh, beepLow;
-    private Music rainMusic;
+    private Music rainMusic, psychoMusic;
     private OrthographicCamera camera;
     private Viewport viewport;
     private Highscore highscore;
-    private int score = 0, backgroundSpeed, lives = 3, HeartSize = 30, SoundCounter = 0, treeWidth, treeHeight;
+    private int score = 0, crazySpeed, backgroundSpeed, lives = 3, HeartSize = 30, SoundCounter = 0, treeWidth, treeHeight, count;
     private String scorename;
     private Texture Hearts, Number3, Number2, Number1, background, foreground, tree, crazyBackground, tabicon;
     private long startTime, time;
-    private Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
+    private final Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage;
     private State state = State.INTRO;
     private Boolean ads_Active = false;
+    private Boolean crazymode = false;
+
+    float timeState;
 
     private Assets assets = new Assets();
 
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
         adcont = adsController;
+
+        count = 1;
 
         assets.load();
 
@@ -90,11 +97,11 @@ public class GameScreen implements Screen, InputProcessor{
         catSound = assets.manager.get(Assets.sSoundMiau);
         catHiss = assets.manager.get(Assets.sCatHiss);
         rainMusic = assets.manager.get(Assets.sMusicDream);
+        psychoMusic = assets.manager.get(Assets.sMusicPsycho);
         beepHigh = assets.manager.get(Assets.sBeepHigh);
         beepLow = assets.manager.get(Assets.sBeepLow);
 
         rainMusic.setLooping(true);
-        rainMusic.play();
 
         Number3 = assets.manager.get(Assets.Count3);
         Number2 = assets.manager.get(Assets.Count2);
@@ -105,6 +112,9 @@ public class GameScreen implements Screen, InputProcessor{
 
         CatFood = new Items();
         CatFood.createItems();
+
+        PowerItems = new PowerItem();
+        PowerItems.createItems();
 
         Dog = new Enemies();
         Dog.CreateEnemies();
@@ -168,16 +178,36 @@ public class GameScreen implements Screen, InputProcessor{
         batch.begin();
 
         backgroundSpeed += 1;
-        if (score <= 10) {
-            batch.draw(background, 0, 0, backgroundSpeed, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
-        }
-        else //Test für Crazy mode
-        {
-            batch.draw(crazyBackground, 0, 0, backgroundSpeed+1, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
-        }
-        batch.draw(tree, Constants.NATIVE_WIDTH - 250, 30, 0, 0, treeWidth, treeHeight);
+        crazySpeed += 3;
 
-        batch.draw(foreground, 0, 0, 0, 0, Constants.NATIVE_WIDTH, 32);
+        //Test crazy mode for music long
+        if (score > 2 && count < 800) {
+            timeState += Gdx.graphics.getDeltaTime();
+            if (timeState <= 2f) {
+                crazymode = true;
+
+                batch.draw(crazyBackground, 0, 0, crazySpeed, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
+                batch.draw(tree, Constants.NATIVE_WIDTH - 250, 30, 0, 0, treeWidth, treeHeight);
+
+                batch.draw(foreground, 0, 0, crazySpeed, 0, Constants.NATIVE_WIDTH, 32);
+                rainMusic.pause();
+                psychoMusic.setLooping(true);
+                psychoMusic.play();
+
+                timeState = 0f;
+                count++;
+                Gdx.app.log("count", "Count:" + count);
+            }
+        } else {
+            crazymode = false;
+            psychoMusic.stop();
+            rainMusic.play();
+            batch.draw(background, 0, 0, backgroundSpeed, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
+            batch.draw(tree, Constants.NATIVE_WIDTH - 250, 30, 0, 0, treeWidth, treeHeight);
+
+            batch.draw(foreground, 0, 0, 0, 0, Constants.NATIVE_WIDTH, 32);
+        }
+
 
         //Draw Tab Icons
         batch.draw(tabicon, 10, 10);
@@ -227,6 +257,7 @@ public class GameScreen implements Screen, InputProcessor{
         // if abfrage wenn 3 Sekunden vergangen sind, zeichne spiel
         else {
             CatFood.renderItems(batch);
+            PowerItems.renderItems(batch);
             Dog.RenderEnemies(batch);
             font.draw(batch, scorename, 20, Constants.NATIVE_HEIGHT - 20);
 
@@ -241,10 +272,10 @@ public class GameScreen implements Screen, InputProcessor{
             }
 
             case RUN: {
-                //Drop icons
+                //Drop Burger
                 if (time - startTime <= 4000) { //5 sekunde warten bis erster Drop.
                     time = TimeUtils.millis();
-                } else if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 800000000)
+                } else if (TimeUtils.nanoTime() - CatFood.getLastDropTime() > 700000000)
                     CatFood.spawnItems();
                 Iterator<Rectangle> iter = CatFood.getArray().iterator();
                 while (iter.hasNext()) {
@@ -259,6 +290,24 @@ public class GameScreen implements Screen, InputProcessor{
                     }
                 }
 
+                //Drop PowerItem
+                if (time - startTime <= 4000) { //5 sekunde warten bis erster Drop.
+                    time = TimeUtils.millis();
+                } else if (TimeUtils.nanoTime() - PowerItems.getLastDropTime() > 1000000000) //anzahl der drops
+                    PowerItems.spawnItems();
+                Iterator<Rectangle> iter3 = PowerItems.getArray().iterator();
+                while (iter3.hasNext()) {
+                    Rectangle Items = iter3.next();
+                    Items.y -= (200 + score * 5) * Gdx.graphics.getDeltaTime(); //geschwindigkeit
+                    if (Items.y + 30 < 0) iter3.remove();
+                    if (Items.overlaps(CatPlayer.getRectangle())) {
+                        catSound.play();
+                        score++;
+                        scorename = "Score: " + score;
+                        iter3.remove();
+                    }
+                }
+
                 //DropDogs
                 if (time - startTime <= 4000) {
                     time = TimeUtils.millis();
@@ -270,13 +319,17 @@ public class GameScreen implements Screen, InputProcessor{
                     Items2.y -= (250 + score * 5) * Gdx.graphics.getDeltaTime();
                     if (Items2.y + 50 < 0) iter2.remove();
                     if (Items2.overlaps(CatPlayer.getRectangle())) {
-                        catHiss.play();
                         Gdx.input.vibrate(100);
                         iter2.remove();
-                        lives--;
+                        //only remove hearts wihtout crazy mode
+                        if(crazymode == false) {
+                            catHiss.play();
+                            lives--;
+                        }
                         if (lives == 0) {
                             GameOverState();
                         }
+
                     }
                 }
                 break;
@@ -324,11 +377,13 @@ public class GameScreen implements Screen, InputProcessor{
         batch.dispose();
         CatPlayer.disposePlayer();
         CatFood.disposeItems();
+        PowerItems.disposeItems();
         Dog.DisposeEnemies();
         stage.dispose();
         Hearts.dispose();
         rainMusic.dispose();
         assets.dispose();
+        psychoMusic.dispose();
     }
 
     @Override
@@ -439,7 +494,6 @@ public class GameScreen implements Screen, InputProcessor{
     public boolean scrolled(float amountX, float amountY) {
         return false;
     }
-
 
     public enum State {
         PAUSE,
