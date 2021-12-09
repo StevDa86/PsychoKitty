@@ -180,8 +180,9 @@ public class GameScreen implements Screen, InputProcessor {
         backgroundSpeed += 1;
         crazySpeed += 3;
 
+
         //Test crazy mode for music long
-        if (score > 2 && count < 800) {
+        if (crazymode && count < 800) {
             timeState += Gdx.graphics.getDeltaTime();
             if (timeState <= 2f) {
                 crazymode = true;
@@ -199,6 +200,7 @@ public class GameScreen implements Screen, InputProcessor {
                 Gdx.app.log("count", "Count:" + count);
             }
         } else {
+            if (count == 800 ){count = 1;}
             crazymode = false;
             psychoMusic.stop();
             rainMusic.play();
@@ -293,7 +295,7 @@ public class GameScreen implements Screen, InputProcessor {
                 //Drop PowerItem
                 if (time - startTime <= 4000) { //5 sekunde warten bis erster Drop.
                     time = TimeUtils.millis();
-                } else if (TimeUtils.nanoTime() - PowerItems.getLastDropTime() > 1000000000) //anzahl der drops
+                } else if (TimeUtils.nanoTime() - PowerItems.getLastDropTime() > 20000000000f ) //anzahl der drops
                     PowerItems.spawnItems();
                 Iterator<Rectangle> iter3 = PowerItems.getArray().iterator();
                 while (iter3.hasNext()) {
@@ -302,9 +304,10 @@ public class GameScreen implements Screen, InputProcessor {
                     if (Items.y + 30 < 0) iter3.remove();
                     if (Items.overlaps(CatPlayer.getRectangle())) {
                         catSound.play();
-                        score++;
+                        score = score +10;
                         scorename = "Score: " + score;
                         iter3.remove();
+                        crazymode = true;
                     }
                 }
 
