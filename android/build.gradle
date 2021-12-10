@@ -1,3 +1,9 @@
+
+
+def apikeyPropertiesFile = rootProject.file("apikey.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
 android {
     buildToolsVersion '29.0.2'
     compileSdkVersion 29
@@ -17,6 +23,11 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 29
+
+        // should correspond to key/value pairs inside the file
+        buildConfigField("String", "BANNER_AD_UNIT_ID", apikeyProperties['BANNER_AD_UNIT_ID'])
+        resValue ("string", "ADMOB_ID", apikeyProperties['ADMOB_ID'])
+
     }
 }
 
