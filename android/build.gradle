@@ -5,7 +5,7 @@ def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
-    buildToolsVersion '29.0.2'
+    buildToolsVersion '29.0.3'
     compileSdkVersion 29
     sourceSets {
         main {
@@ -43,7 +43,6 @@ task copyAndroidNatives() {
     configurations.natives.files.each { jar ->
         def outputDir = null
         if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
-        if(jar.name.endsWith("natives-armeabi.jar")) outputDir = file("libs/armeabi")
         if(jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
         if(outputDir != null) {
             copy {
