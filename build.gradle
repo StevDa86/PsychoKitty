@@ -32,10 +32,10 @@ allprojects {
     version = '1.0'
     ext {
         appName = 'psychokitty'
-        gdxVersion = '1.10.0'
-        roboVMVersion = '2.3.12'
+        gdxVersion = '1.11.0'
+        roboVMVersion = '2.3.16'
         box2DLightsVersion = '1.5'
-        ashleyVersion = '1.7.3'
+        ashleyVersion = '1.7.4'
         aiVersion = '1.8.2'
         gdxUtilsVersion = '0.13.4'
     }

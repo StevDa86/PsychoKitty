@@ -82,6 +82,7 @@ public class GameScreen implements Screen, InputProcessor {
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         camera.setToOrtho(false);
+
         viewport = new FitViewport(Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT, camera);
         viewport.apply();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);

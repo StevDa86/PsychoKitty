@@ -19,7 +19,7 @@ public class Items {
     private Texture dropImage;
     private long lastDropTime;
     private Sprite Drops;
-    private int itemSize = 30;
+    private final int itemSize = 30;
 
     public void createItems() {
         dropImage = new Texture(Constants.burgerImage);
@@ -31,6 +31,7 @@ public class Items {
     public void renderItems(SpriteBatch batch) {
         for (Rectangle Items : catfood) {
             Drops.setRotation(Items.y);
+            Drops.setOrigin(0,0);
             Drops.setX(Items.x);
             Drops.setY(Items.y);
             Drops.draw(batch);
