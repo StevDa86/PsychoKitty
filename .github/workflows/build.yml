@@ -17,7 +17,8 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 11
-      - name: test 3
+          distribution: 'zulu'
+      - name: Setup Dummy API-Keys
         run:
           touch apikey.properties
           echo ADMOB_ID="ca-app-pub-3940256099942544~3347511713" >> apikey.properties
