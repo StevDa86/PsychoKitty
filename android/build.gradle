@@ -5,8 +5,8 @@ def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
-    buildToolsVersion '33.0.2'
-    compileSdkVersion 32
+    buildToolsVersion = '33.0.2'
+    compileSdk 32
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -22,6 +22,7 @@ android {
     }
     defaultConfig {
         minSdkVersion 14
+        multiDexEnabled = true;
         targetSdkVersion 32
 
         // should correspond to key/value pairs inside the file

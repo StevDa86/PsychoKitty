@@ -118,7 +118,7 @@ public class GameScreen implements Screen, InputProcessor {
         PowerItems.createItems();
 
         Dog = new Enemies();
-        Dog.CreateEnemies();
+        Dog.createEnemies();
 
         //Text definition
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Light.ttf"));
@@ -261,7 +261,7 @@ public class GameScreen implements Screen, InputProcessor {
         else {
             CatFood.renderItems(batch);
             PowerItems.renderItems(batch);
-            Dog.RenderEnemies(batch);
+            Dog.renderEnemies(batch);
             font.draw(batch, scorename, 20, Constants.NATIVE_HEIGHT - 20);
 
         }
@@ -382,7 +382,7 @@ public class GameScreen implements Screen, InputProcessor {
         CatPlayer.disposePlayer();
         CatFood.disposeItems();
         PowerItems.disposeItems();
-        Dog.DisposeEnemies();
+        Dog.disposeEnemies();
         stage.dispose();
         Hearts.dispose();
         rainMusic.dispose();

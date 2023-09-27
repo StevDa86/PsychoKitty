@@ -31,10 +31,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.psychokitty.game.PsychoKittyGame;
 import com.psychokitty.game.Utils.Constants;
 import com.psychokitty.game.Utils.CustomDialog;
+import com.psychokitty.game.Utils.Highscore;
 
-/**
- * Created by steven on 24.07.15.
- */
 public class MenuScreen implements Screen {
 
     final PsychoKittyGame game;
@@ -59,10 +57,10 @@ public class MenuScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
 
-    public MenuScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
-        game = gam;
+    public MenuScreen(final PsychoKittyGame game, com.psychokitty.game.AdMob.AdsController adsController) {
+        this.game = game;
         adcont = adsController;
-        highscore = new com.psychokitty.game.Utils.Highscore();
+        highscore = new Highscore();
         highscore.config();
 
         batch = new SpriteBatch();
@@ -79,7 +77,7 @@ public class MenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act();
+        stage.act(delta);
         stage.draw();
     }
 
@@ -112,7 +110,7 @@ public class MenuScreen implements Screen {
                 new TextureRegionDrawable(new TextureRegion(startBtnTexture)),
                 new TextureRegionDrawable(new TextureRegion(startBtnPressedTexture))
         );
-        startButton.setSize(buttonwidth,buttonheight);
+        startButton.setSize(buttonwidth, buttonheight);
         startButton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2);  //hikeButton is an ImageButton
 
         //Score Button als Images
@@ -122,7 +120,7 @@ public class MenuScreen implements Screen {
                 new TextureRegionDrawable(new TextureRegion(scoreBtnTexture)),
                 new TextureRegionDrawable(new TextureRegion(scoreBtnPressedTexture))
         );
-        scoreButton.setSize(buttonwidth,buttonheight);
+        scoreButton.setSize(buttonwidth, buttonheight);
         scoreButton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 60);  //hikeButton is an ImageButton
 
         //Exit Button als Images
@@ -132,7 +130,7 @@ public class MenuScreen implements Screen {
                 new TextureRegionDrawable(new TextureRegion(exitBtnTexture)),
                 new TextureRegionDrawable(new TextureRegion(exitBtnPressedTexture))
         );
-        exitButton.setSize(buttonwidth,buttonheight);
+        exitButton.setSize(buttonwidth, buttonheight);
         exitButton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 120);
 
         //Reset Score Button als Images
@@ -142,7 +140,7 @@ public class MenuScreen implements Screen {
                 new TextureRegionDrawable(new TextureRegion(resetBtnTexture)),
                 new TextureRegionDrawable(new TextureRegion(resetBtnPressedTexture))
         );
-        resetbutton.setSize(buttonwidth,buttonheight);
+        resetbutton.setSize(buttonwidth, buttonheight);
         resetbutton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 60);
 
         //Back Score Button als Images
@@ -152,7 +150,7 @@ public class MenuScreen implements Screen {
                 new TextureRegionDrawable(new TextureRegion(backBtnTexture)),
                 new TextureRegionDrawable(new TextureRegion(backBtnPressedTexture))
         );
-        backbutton.setSize(buttonwidth,buttonheight);
+        backbutton.setSize(buttonwidth, buttonheight);
         backbutton.setPosition(Constants.NATIVE_WIDTH / 2 - buttonwidth / 2, Constants.NATIVE_HEIGHT / 2 - 120);
 
         scoreDate.setPosition(Constants.NATIVE_WIDTH / 2 - scoreDate.getWidth() / 2, Constants.NATIVE_HEIGHT / 2 + 30);
@@ -192,7 +190,7 @@ public class MenuScreen implements Screen {
         });
         exitButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                ExitDialog();
+                exitDialog();
             }
         });
         backbutton.addListener(new ClickListener() {
@@ -231,8 +229,7 @@ public class MenuScreen implements Screen {
     }
 
     private void setupBackground() {
-        menuBackground.setHeight(Constants.NATIVE_HEIGHT);
-        menuBackground.setWidth(Constants.NATIVE_WIDTH);
+        menuBackground.setSize(Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT); // Set size directly
         menuBackground.setScaling(Scaling.fillX);
         stage.addActor(menuBackground);
     }
@@ -243,22 +240,24 @@ public class MenuScreen implements Screen {
         menuMusic.play();
     }
 
-    private void createBasicFont() {
-        //Create a font
-        BitmapFont font = new BitmapFont();
-        skin.add("default", font);
 
-        textButtonStyle.font = skin.getFont("default");
+    private void createBasicFont() {
+        // Create a font
+        BitmapFont font = new BitmapFont();
+        textButtonStyle.font = font; // Set the font directly in the style
         skin.add("default", textButtonStyle);
     }
 
-    public void ExitDialog() {
-        new CustomDialog("Exit game", skin2).text("Exit game?")
-                .button("Yes", new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        Gdx.app.exit();
-                        return false;
-                    }
-                }).button("No").show(stage);
+    public void exitDialog() {
+        CustomDialog dialog = new CustomDialog("Exit game", skin2);
+        dialog.text("Exit game?");
+        dialog.button("Yes", new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.exit();
+                return false;
+            }
+        });
+        dialog.button("No");
+        dialog.show(stage);
     }
 }

@@ -11,35 +11,36 @@ import com.psychokitty.game.Utils.Constants;
 
 public class PowerItem {
 
-    public Array<Rectangle> poweritem;
+    private static final int ITEM_SIZE = 32;
+
+    private Array<Rectangle> poweritem;
     private Texture powerImage;
     private long lastDropTime;
     private Sprite powerItems;
-    private int itemSize = 32;
 
     public void createItems() {
         powerImage = new Texture(Constants.powerItemImage);
-        poweritem = new Array<Rectangle>();
+        poweritem = new Array<>();
         powerItems = new Sprite(powerImage);
-        powerItems.setSize(itemSize,itemSize);
+        powerItems.setSize(ITEM_SIZE, ITEM_SIZE);
     }
 
     public void renderItems(SpriteBatch batch) {
-        for (Rectangle Items : poweritem) {
-            powerItems.setRotation(Items.y);
-            powerItems.setX(Items.x);
-            powerItems.setY(Items.y);
+        for (Rectangle item : poweritem) {
+            powerItems.setRotation(item.y);
+            powerItems.setX(item.x);
+            powerItems.setY(item.y);
             powerItems.draw(batch);
         }
     }
 
     public void spawnItems() {
-        Rectangle Items3 = new Rectangle();
-        Items3.x = MathUtils.random(0, Constants.NATIVE_WIDTH - itemSize);
-        Items3.y = Constants.NATIVE_HEIGHT;
-        Items3.width = itemSize;
-        Items3.height = itemSize;
-        poweritem.add(Items3);
+        Rectangle item = new Rectangle();
+        item.x = MathUtils.random(0, Constants.NATIVE_WIDTH - ITEM_SIZE);
+        item.y = Constants.NATIVE_HEIGHT;
+        item.width = ITEM_SIZE;
+        item.height = ITEM_SIZE;
+        poweritem.add(item);
         lastDropTime = TimeUtils.nanoTime();
     }
 

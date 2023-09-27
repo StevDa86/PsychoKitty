@@ -9,42 +9,39 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.psychokitty.game.Utils.Constants;
 
-/**
- * Created by Steven on 15.11.2016.
- */
-
 public class Items {
 
-    public Array<Rectangle> catfood;
+    private static final int ITEM_SIZE = 30;
+
+    private Array<Rectangle> catfood;
     private Texture dropImage;
     private long lastDropTime;
-    private Sprite Drops;
-    private final int itemSize = 30;
+    private Sprite drops;
 
     public void createItems() {
         dropImage = new Texture(Constants.burgerImage);
-        catfood = new Array<Rectangle>();
-        Drops = new Sprite(dropImage);
-        Drops.setSize(itemSize,itemSize);
+        catfood = new Array<>();
+        drops = new Sprite(dropImage);
+        drops.setSize(ITEM_SIZE, ITEM_SIZE);
     }
 
     public void renderItems(SpriteBatch batch) {
-        for (Rectangle Items : catfood) {
-            Drops.setRotation(Items.y);
-            Drops.setOrigin(0,0);
-            Drops.setX(Items.x);
-            Drops.setY(Items.y);
-            Drops.draw(batch);
+        for (Rectangle item : catfood) {
+            drops.setRotation(item.y);
+            drops.setOrigin(0, 0);
+            drops.setX(item.x);
+            drops.setY(item.y);
+            drops.draw(batch);
         }
     }
 
     public void spawnItems() {
-        Rectangle Items = new Rectangle();
-        Items.x = MathUtils.random(0, Constants.NATIVE_WIDTH - itemSize);
-        Items.y = Constants.NATIVE_HEIGHT;
-        Items.width = itemSize;
-        Items.height = itemSize;
-        catfood.add(Items);
+        Rectangle item = new Rectangle();
+        item.x = MathUtils.random(0, Constants.NATIVE_WIDTH - ITEM_SIZE);
+        item.y = Constants.NATIVE_HEIGHT;
+        item.width = ITEM_SIZE;
+        item.height = ITEM_SIZE;
+        catfood.add(item);
         lastDropTime = TimeUtils.nanoTime();
     }
 
@@ -58,6 +55,5 @@ public class Items {
 
     public void disposeItems() {
         dropImage.dispose();
-
     }
 }

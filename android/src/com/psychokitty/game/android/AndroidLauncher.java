@@ -70,12 +70,6 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 
     @Override
     public boolean isWifiConnected() {
-		//old Style
-        /*ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        return (ni != null && ni.isConnected());
-        */
 
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -85,7 +79,7 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 			return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
 		} else {
 			NetworkInfo nwInfo = connectivityManager.getActiveNetworkInfo();
-			return nwInfo != null && nwInfo.isConnected();
+			return nwInfo != null && nwInfo.isConnectedOrConnecting();
 		}
     }
 
