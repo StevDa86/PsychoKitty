@@ -19,7 +19,7 @@ jobs:
           java-version: 11
           distribution: 'zulu'
       - name: Setup Dummy API-Keys
-        run:
+        run: |
           touch apikey.properties
           echo ADMOB_ID="ca-app-pub-3940256099942544~3347511713" >> apikey.properties
           echo BANNER_AD_UNIT_ID="ca-app-pub-3940256099942544/6300978111" >> apikey.properties
