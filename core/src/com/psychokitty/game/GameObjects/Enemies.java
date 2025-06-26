@@ -69,5 +69,6 @@ public class Enemies {
 
     public void disposeEnemies() {
         dogwalkAnimation = null; // Setting animation to null can help with freeing resources.
+        dogwalkFrames= null;
     }
 }

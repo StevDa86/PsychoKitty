@@ -5,8 +5,9 @@ def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
-    buildToolsVersion = '33.0.2'
-    compileSdk 32
+    namespace 'com.psychokitty.game'
+    buildToolsVersion = '35.0.0'
+    compileSdk 35
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -21,24 +22,46 @@ android {
         androidTest.setRoot('tests')
     }
     defaultConfig {
-        minSdkVersion 14
-        multiDexEnabled = true;
-        targetSdkVersion 32
+        applicationId "com.psychokitty.game"
+        minSdkVersion 21
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.0"
 
-        // should correspond to key/value pairs inside the file
         buildConfigField("String", "BANNER_AD_UNIT_ID", apikeyProperties['BANNER_AD_UNIT_ID'])
         resValue ("string", "ADMOB_ID", apikeyProperties['ADMOB_ID'])
+    }
 
+    buildFeatures {
+        buildConfig true
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
+dependencies {
+    implementation project(":core")
+    api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
 
-// called every time gradle gets executed, takes the native dependencies of
-// the natives configuration, and extracts them to the proper libs/ folders
-// so they get packed with the APK.
-task copyAndroidNatives() { 
-    file("libs/armeabi/").mkdirs();
+    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+}
+
+// Move this task AFTER the dependencies block
+task copyAndroidNatives() {
     file("libs/armeabi-v7a/").mkdirs();
+    file("libs/arm64-v8a/").mkdirs();
+    file("libs/x86_64/").mkdirs();
     file("libs/x86/").mkdirs();
 
     configurations.natives.files.each { jar ->
@@ -77,4 +100,6 @@ task run(type: Exec) {
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.psychokitty.game.android/com.psychokitty.game.android.AndroidLauncher'
 }
 
-
+dependencies {
+    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+}

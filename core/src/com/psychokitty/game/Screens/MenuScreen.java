@@ -179,7 +179,11 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 adcont.hideBannerAd();
                 menuSelectSound.play();
+                Screen currentScreen = ((Game) Gdx.app.getApplicationListener()).getScreen();
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(game, adcont));
+                if (currentScreen != null) {
+                    currentScreen.dispose();
+                }
             }
         });
         scoreButton.addListener(new ClickListener() {
@@ -210,7 +214,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void hide() {
-        dispose();
+        // Dont Dispose here
     }
 
     @Override

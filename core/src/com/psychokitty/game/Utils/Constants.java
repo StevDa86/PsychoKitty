@@ -21,7 +21,7 @@ public class Constants {
 
     public static final String tabIcon = "Buttons/TabIcon.png";
 
-    public static final String playerImage      = "Characters/cat.png";
+    public static final String playerImage      = "Characters/cat2.png";
     public static final String splashImage      = "Backgrounds/splash.png";
     public static final String backgroundMenu   = "Backgrounds/Menu2.jpg";
     public static final String burgerImage      = "Characters/droplet.png";

@@ -41,6 +41,13 @@ import java.util.Iterator;
  */
 public class GameScreen implements Screen, InputProcessor {
 
+    public enum State {
+        PAUSE,
+        GAMEOVER,
+        RUN,
+        INTRO,
+    }
+
     final PsychoKittyGame game;
 
     public com.psychokitty.game.AdMob.AdsController adcont;
@@ -50,22 +57,42 @@ public class GameScreen implements Screen, InputProcessor {
     PowerItem PowerItems;
     Enemies Dog;
     float totalTime = 4; //starting at 3 seconds
+    // Graphics components
     private SpriteBatch batch;
-    private BitmapFont font;
-    private Sound catSound, catHiss, beepHigh, beepLow;
-    private Music rainMusic, psychoMusic;
     private OrthographicCamera camera;
     private Viewport viewport;
-    private Highscore highscore;
-    private int score = 0, crazySpeed, backgroundSpeed, lives = 3, HeartSize = 30, SoundCounter = 0, treeWidth, treeHeight, count;
-    private String scorename;
-    private Texture Hearts, Number3, Number2, Number1, background, foreground, tree, crazyBackground, tabicon;
-    private long startTime, time;
-    private final Skin skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
     private Stage stage;
+
+    // UI elements
+    private BitmapFont font;
+    private Skin skin2;
+
+    // Audio
+    private Sound catSound, catHiss, beepHigh, beepLow;
+    private Music rainMusic, psychoMusic;
+
+    // Game state
     private State state = State.INTRO;
-    private Boolean ads_Active = false;
-    private Boolean crazymode = false;
+    private Highscore highscore;
+    private int score = 0;
+    private String scorename;
+    private int lives = 3;
+    private long startTime, time;
+    private boolean ads_Active = false;
+    private boolean crazymode = false;
+
+    // Game objects and properties
+    private float crazyModeTimer = 0f;
+    private static final float CRAZY_MODE_DURATION = 10f; // 10 seconds of crazy mode
+
+    private int crazySpeed, backgroundSpeed;
+    private int HeartSize = 30, SoundCounter = 0;
+    private int treeWidth, treeHeight;
+    private Texture Hearts, Number3, Number2, Number1;
+    private Texture background, foreground, tree, crazyBackground, tabicon;
+
+    int heartX = Constants.NATIVE_WIDTH - 200;
+    int heartY = Constants.NATIVE_HEIGHT - HeartSize - 20;
 
     float timeState;
 
@@ -73,11 +100,15 @@ public class GameScreen implements Screen, InputProcessor {
 
     public GameScreen(final PsychoKittyGame gam, com.psychokitty.game.AdMob.AdsController adsController) {
         this.game = gam;
-        adcont = adsController;
+        this.adcont = adsController;
 
-        count = 1;
+        if(this.adcont == null) {
+            Gdx.app.log("GameScreen", "AdMob controller is null, ads will not be shown.");
+        }
+
 
         assets.load();
+        assets.manager.finishLoading();
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
@@ -107,6 +138,9 @@ public class GameScreen implements Screen, InputProcessor {
         Number3 = assets.manager.get(Assets.Count3);
         Number2 = assets.manager.get(Assets.Count2);
         Number1 = assets.manager.get(Assets.Count1);
+
+        // Now initialize skin2 after assets are loaded
+        skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
 
         CatPlayer = new Player();
         CatPlayer.createPlayer();
@@ -163,10 +197,12 @@ public class GameScreen implements Screen, InputProcessor {
     public void render(float delta) {
 
         if (assets == null || !assets.manager.update()) {
-            //maybe draw a load screen image that's not a texture that's being managed
-            //by the assetManager. You could even play an animation. Otherwise,
-            //you can leave the screen blank.
             return;
+        }
+
+        // Add this check to ensure skin2 is initialized
+        if (skin2 == null) {
+            skin2 = new Skin(Gdx.files.internal(Constants.defaultJson));
         }
 
         float deltaTime = Gdx.graphics.getDeltaTime(); //You might prefer getRawDeltaTime()
@@ -183,32 +219,38 @@ public class GameScreen implements Screen, InputProcessor {
 
 
         //Test crazy mode for music long
-        if (crazymode && count < 800) {
-            timeState += Gdx.graphics.getDeltaTime();
-            if (timeState <= 2f) {
-                crazymode = true;
+        if (crazymode) {
+            crazyModeTimer += Gdx.graphics.getDeltaTime();
 
+            if (crazyModeTimer < CRAZY_MODE_DURATION) {
+                // Crazy mode is active
                 batch.draw(crazyBackground, 0, 0, crazySpeed, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
                 batch.draw(tree, Constants.NATIVE_WIDTH - 250, 30, 0, 0, treeWidth, treeHeight);
-
                 batch.draw(foreground, 0, 0, crazySpeed, 0, Constants.NATIVE_WIDTH, 32);
-                rainMusic.pause();
-                psychoMusic.setLooping(true);
-                psychoMusic.play();
 
-                timeState = 0f;
-                count++;
-                Gdx.app.log("count", "Count:" + count);
+                if (!psychoMusic.isPlaying()) {
+                    rainMusic.pause();
+                    psychoMusic.setLooping(true);
+                    psychoMusic.play();
+                }
+            } else {
+                // Crazy mode duration exceeded, turn it off
+                crazymode = false;
+                crazyModeTimer = 0f;
+                psychoMusic.stop();
+                if (!rainMusic.isPlaying()) {
+                    rainMusic.play();
+                }
             }
         } else {
-            if (count == 800 ){count = 1;}
-            crazymode = false;
-            psychoMusic.stop();
-            rainMusic.play();
+            // Normal mode
             batch.draw(background, 0, 0, backgroundSpeed, 0, Constants.NATIVE_WIDTH, Constants.NATIVE_HEIGHT);
             batch.draw(tree, Constants.NATIVE_WIDTH - 250, 30, 0, 0, treeWidth, treeHeight);
-
             batch.draw(foreground, 0, 0, 0, 0, Constants.NATIVE_WIDTH, 32);
+
+            if (!rainMusic.isPlaying()) {
+                rainMusic.play();
+            }
         }
 
 
@@ -219,15 +261,8 @@ public class GameScreen implements Screen, InputProcessor {
         CatPlayer.renderPlayer(batch, camera);
 
         //lebensanzeige als Herzen
-        if (lives == 3) {
-            batch.draw(Hearts, Constants.NATIVE_WIDTH - 200, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
-            batch.draw(Hearts, Constants.NATIVE_WIDTH - 150, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
-            batch.draw(Hearts, Constants.NATIVE_WIDTH - 100, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
-        } else if (lives == 2) {
-            batch.draw(Hearts, Constants.NATIVE_WIDTH - 200, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
-            batch.draw(Hearts, Constants.NATIVE_WIDTH - 150, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
-        } else {
-            batch.draw(Hearts, Constants.NATIVE_WIDTH - 200, Constants.NATIVE_HEIGHT - HeartSize - 20, HeartSize, HeartSize);
+        for (int i = 0; i < lives; i++) {
+            batch.draw(Hearts, heartX + i * 50, heartY, HeartSize, HeartSize);
         }
 
 
@@ -311,6 +346,7 @@ public class GameScreen implements Screen, InputProcessor {
                         crazymode = true;
                     }
                 }
+
 
                 //DropDogs
                 if (time - startTime <= 4000) {
@@ -405,109 +441,137 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     public void ExitGame() {
-        Gdx.input.setInputProcessor(stage);
-        if (adcont.isWifiConnected() && !ads_Active) {
-            adcont.showBannerAd();
-            ads_Active = true;
-        }
-        new CustomDialog("Exit game", skin2).text("Exit game?")
-                .button("Yes", new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        dispose();
+        if (skin2 != null && adcont != null) {
+            Gdx.input.setInputProcessor(stage);
 
-                        //highscore setzen und datum setzen
-                        if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
-                            com.psychokitty.game.Utils.Highscore.setHighScore(score);
-                            Calendar currentDate = Calendar.getInstance(); //Get the current dat
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
-                            String dateNow = formatter.format(currentDate.getTime());
-                            com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
+            if (adcont.isWifiConnected() && !ads_Active) {
+                adcont.showBannerAd();
+                ads_Active = true;
+            }
+
+            new CustomDialog("Exit game", skin2).text("Exit game?")
+                    .button("Yes", new InputListener() {
+                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                            // Store final variables for use in anonymous class
+                            final int finalScore = score;
+                            final com.psychokitty.game.AdMob.AdsController finalAdcont = adcont;
+
+                            // Highscore setzen und datum setzen
+                            if (finalScore > com.psychokitty.game.Utils.Highscore.getHighScore()) {
+                                com.psychokitty.game.Utils.Highscore.setHighScore(finalScore);
+                                Calendar currentDate = Calendar.getInstance();
+                                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd");
+                                String dateNow = formatter.format(currentDate.getTime());
+                                com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
+                            }
+
+                            // Properly exit the application
+                            if (finalAdcont != null) {
+                                finalAdcont.hideBannerAd();
+                            }
+
+                            // For desktop version, exit the application completely
+                            Gdx.app.exit();
+                            return false;
                         }
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new com.psychokitty.game.Screens.MenuScreen(game, adcont));
-                        return false;
-                    }
-                })
-                .button("No", new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        adcont.hideBannerAd();
-                        ads_Active = false;
-                        resume();
-                        return false;
-                    }
-                }).show(stage);
+                    })
+                    .button("No", new InputListener() {
+                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                            // Store final reference for anonymous class
+                            final com.psychokitty.game.AdMob.AdsController finalAdcont = adcont;
+
+                            if (finalAdcont != null) {
+                                finalAdcont.hideBannerAd();
+                            }
+                            ads_Active = false;
+                            resume();
+                            return false;
+                        }
+                    }).show(stage);
+        }
     }
 
     public void GameOver() {
+        if (adcont != null && skin2 != null) {
+            Gdx.input.setInputProcessor(stage);
 
-        Gdx.input.setInputProcessor(stage);
-        if (adcont.isWifiConnected() && !ads_Active) {
-            adcont.showBannerAd();
-            ads_Active = true;
-        }
-        new CustomDialog("Game Over", skin2).text(Constants.scoreTXT + score)
-                .button("EXIT", new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        dispose();
+            if (adcont.isWifiConnected() && !ads_Active) {
+                adcont.showBannerAd();
+                ads_Active = true;
+            }
 
-                        //highscore setzen und datum setzen
-                        if (score > com.psychokitty.game.Utils.Highscore.getHighScore()) {
-                            com.psychokitty.game.Utils.Highscore.setHighScore(score);
-                            Calendar currentDate = Calendar.getInstance(); //Get the current date
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd"); //format it as per your requirement
-                            String dateNow = formatter.format(currentDate.getTime());
-                            com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
+            String gameOverMessage = "Game Over";
+            String scoreText = Constants.scoreTXT + score;
+
+            new CustomDialog(gameOverMessage, skin2)
+                    .text(scoreText)
+                    .button("EXIT", new InputListener() {
+                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                            // Store final variables for use in anonymous class
+                            final int finalScore = score;
+                            final PsychoKittyGame finalGame = game;
+                            final com.psychokitty.game.AdMob.AdsController finalAdcont = adcont;
+
+                            // Update high score and current date
+                            if (finalScore > com.psychokitty.game.Utils.Highscore.getHighScore()) {
+                                com.psychokitty.game.Utils.Highscore.setHighScore(finalScore);
+                                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd");
+                                String dateNow = formatter.format(Calendar.getInstance().getTime());
+                                com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
+                            }
+
+                            if (finalAdcont != null) {
+                                finalAdcont.hideBannerAd();
+                            }
+
+                            // Don't call dispose() here - let LibGDX handle it
+                            if (finalGame != null && finalAdcont != null) {
+                                ((Game) Gdx.app.getApplicationListener()).setScreen(new com.psychokitty.game.Screens.MenuScreen(finalGame, finalAdcont));
+                            }
+                            return false;
                         }
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new com.psychokitty.game.Screens.MenuScreen(game, adcont));
-                        return false;
-                    }
-                })
-                .show(stage);
+                    })
+                    .show(stage);
+        }
     }
 
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
+@Override
+public boolean keyUp(int keycode) {
+    return false;
+}
 
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
+@Override
+public boolean keyTyped(char character) {
+    return false;
+}
 
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
+@Override
+public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    return false;
+}
 
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
+@Override
+public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+    return false;
+}
 
-    @Override
-    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
+@Override
+public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+    return false;
+}
 
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
+@Override
+public boolean touchDragged(int screenX, int screenY, int pointer) {
+    return false;
+}
 
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
+@Override
+public boolean mouseMoved(int screenX, int screenY) {
+    return false;
+}
 
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
-    }
-
-    public enum State {
-        PAUSE,
-        GAMEOVER,
-        RUN,
-        INTRO,
-    }
+@Override
+public boolean scrolled(float amountX, float amountY) {
+    return false;
+}
 }

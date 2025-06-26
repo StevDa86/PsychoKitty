@@ -17,6 +17,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.psychokitty.game.AdMob.AdsController;
+import com.psychokitty.game.BuildConfig;
 import com.psychokitty.game.PsychoKittyGame;
 
 public class AndroidLauncher extends AndroidApplication implements AdsController{
@@ -51,46 +52,72 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 		bannerAd.setVisibility(View.INVISIBLE);
 		bannerAd.setBackgroundColor(0xff000000); // black
 		bannerAd.setAdUnitId(BANNER_AD_UNIT_ID);
-		bannerAd.setAdSize(AdSize.SMART_BANNER);
+		AdSize adSize = getAdaptiveBannerSize();
+		bannerAd.setAdSize(adSize);
+	}
+
+	private AdSize getAdaptiveBannerSize() {
+		// Get the display metrics to determine screen width
+		android.util.DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+		int adWidthPixels = displayMetrics.widthPixels;
+
+		// Convert pixels to dp
+		float density = displayMetrics.density;
+		int adWidth = (int) (adWidthPixels / density);
+
+		// Return the optimal size for the screen
+		return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
 	}
 
 	@Override
 	public void showBannerAd() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				bannerAd.setVisibility(View.VISIBLE);
-				AdRequest.Builder builder = new AdRequest.Builder();
-				AdRequest ad = builder.build();
-				bannerAd.loadAd(ad);
-
-			}
-		});
+		runOnUiThread(new ShowBannerAdRunnable());
 	}
 
-    @Override
-    public boolean isWifiConnected() {
-
+	@Override
+	public boolean isWifiConnected() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connectivityManager == null) return false;
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			Network nw = connectivityManager.getActiveNetwork();
 			if (nw == null) return false;
 			NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
-			return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
+			return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+					actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+					actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+					actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
 		} else {
+			// For older versions, suppress all deprecation warnings
+			@SuppressWarnings("deprecation")
 			NetworkInfo nwInfo = connectivityManager.getActiveNetworkInfo();
-			return nwInfo != null && nwInfo.isConnectedOrConnecting();
+			@SuppressWarnings("deprecation")
+			boolean isConnected = nwInfo != null && (nwInfo.isConnected() || nwInfo.getState() == NetworkInfo.State.CONNECTING);
+			return isConnected;
 		}
-    }
+	}
 
     @Override
 	public void hideBannerAd() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				bannerAd.setVisibility(View.INVISIBLE);
-				AdRequest.Builder builder = new AdRequest.Builder();
-			}
-		});
+		runOnUiThread(new HideBannerAdRunnable());
+	}
+
+	private class ShowBannerAdRunnable implements Runnable {
+		@Override
+		public void run() {
+			bannerAd.setVisibility(View.VISIBLE);
+			AdRequest.Builder builder = new AdRequest.Builder();
+			AdRequest ad = builder.build();
+			bannerAd.loadAd(ad);
+		}
+	}
+
+	private class HideBannerAdRunnable implements Runnable {
+		@Override
+		public void run() {
+			bannerAd.setVisibility(View.INVISIBLE);
+			new AdRequest.Builder();
+		}
 	}
 }
+
