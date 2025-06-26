@@ -52,22 +52,42 @@ dependencies {
     implementation project(":core")
     api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+
+
+    // Add FreeType dependencies
+    api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
+
 
     implementation 'com.google.android.gms:play-services-ads:22.6.0'
 }
 
+// Make sure copyAndroidNatives runs before preBuild
+tasks.whenTaskAdded { packageTask ->
+    if (packageTask.name.contains("package")) {
+        packageTask.dependsOn 'copyAndroidNatives'
+    }
+}
 // Move this task AFTER the dependencies block
 task copyAndroidNatives() {
+    file("libs/armeabi/").mkdirs();
     file("libs/armeabi-v7a/").mkdirs();
     file("libs/arm64-v8a/").mkdirs();
-    file("libs/x86_64/").mkdirs();
     file("libs/x86/").mkdirs();
+    file("libs/x86_64/").mkdirs();
 
     configurations.natives.files.each { jar ->
         def outputDir = null
         if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
+        if(jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("libs/arm64-v8a")
         if(jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
+        if(jar.name.endsWith("natives-x86_64.jar")) outputDir = file("libs/x86_64")
         if(outputDir != null) {
             copy {
                 from zipTree(jar)
@@ -100,6 +120,7 @@ task run(type: Exec) {
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.psychokitty.game.android/com.psychokitty.game.android.AndroidLauncher'
 }
 
-dependencies {
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+// Ensure natives are copied before any build task
+project.afterEvaluate {
+    tasks.preBuild.dependsOn copyAndroidNatives
 }
