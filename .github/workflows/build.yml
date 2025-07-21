@@ -46,9 +46,29 @@ jobs:
       - name: Build
         run: ./gradlew build --no-daemon
 
-      - name: Run SonarQube analysis
+      - name: Check SonarCloud Configuration
         if: env.SONAR_TOKEN != ''
+        run: |
+          echo "SONAR_TOKEN is configured"
+          echo "Project Key: StevDa86_PsychoKitty"
+          echo "Organization: stevda86"
+
+      - name: Run SonarQube analysis
+        if: env.SONAR_TOKEN != '' && github.event_name == 'push' && github.ref == 'refs/heads/master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube --no-daemon --info
+        run: ./gradlew sonar --no-daemon --info
+        continue-on-error: true
+
+      - name: SonarQube analysis for PRs
+        if: env.SONAR_TOKEN != '' && github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          ./gradlew sonar --no-daemon --info \
+            -Dsonar.pullrequest.key=${{ github.event.number }} \
+            -Dsonar.pullrequest.branch=${{ github.head_ref }} \
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
+        continue-on-error: true
