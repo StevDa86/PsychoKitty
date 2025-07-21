@@ -75,7 +75,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
@@ -96,7 +96,6 @@ public class MenuScreen implements Screen {
         setupBackground();
         setupMusic();
         createBasicFont();
-
 
         Gdx.input.setInputProcessor(stage);// Make the stage consume events
 
@@ -239,7 +238,13 @@ public class MenuScreen implements Screen {
     }
 
     private void setupMusic() {
-        menuMusic.setVolume(1);
+        // Stop any existing music first
+        if (menuMusic != null && menuMusic.isPlaying()) {
+            menuMusic.stop();
+        }
+
+        // Set volume to full and restart
+        menuMusic.setVolume(1.0f);
         menuMusic.setLooping(true);
         menuMusic.play();
     }
@@ -265,3 +270,4 @@ public class MenuScreen implements Screen {
         dialog.show(stage);
     }
 }
+

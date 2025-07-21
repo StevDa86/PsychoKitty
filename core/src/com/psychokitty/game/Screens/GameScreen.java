@@ -166,7 +166,7 @@ public class GameScreen implements Screen, InputProcessor {
         scorename = "Score:" + score;
 
         //Background to Black!
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         tabicon = assets.manager.get(Assets.tabIcon);
@@ -195,6 +195,10 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
+
+        // Clear the screen with black color every frame to fix letterbox corruption
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (assets == null || !assets.manager.update()) {
             return;
@@ -518,6 +522,14 @@ public class GameScreen implements Screen, InputProcessor {
                                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MMM/dd");
                                 String dateNow = formatter.format(Calendar.getInstance().getTime());
                                 com.psychokitty.game.Utils.Highscore.setCurrentDate(dateNow);
+                            }
+
+                            // Stop all music before transitioning
+                            if (rainMusic != null && rainMusic.isPlaying()) {
+                                rainMusic.stop();
+                            }
+                            if (psychoMusic != null && psychoMusic.isPlaying()) {
+                                psychoMusic.stop();
                             }
 
                             if (finalAdcont != null) {
