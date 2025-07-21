@@ -1,4 +1,6 @@
-
+plugins {
+    id 'com.android.application'
+}
 
 def apikeyPropertiesFile = rootProject.file("apikey.properties")
 def apikeyProperties = new Properties()
